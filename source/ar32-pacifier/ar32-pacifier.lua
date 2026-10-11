@@ -425,7 +425,7 @@ local function apply(api,game)
     end
     if matches~=1 then reject('unique magazine component') end
     local changes={
-        {damage+4,bytes('37000000'),bytes('41000000'),'normal damage'},
+        {damage+4,bytes('37000000'),bytes('4b000000'),'normal damage'},
         {damage+8,bytes('0a000000'),bytes('0f000000'),'durable damage'},
         {damage+48,f32(2),f32(3),'stun buildup'},
         {weapon+104,f32(1),f32(0.6),'sway'},
@@ -451,7 +451,7 @@ local function apply(api,game)
 end
 local function start(make_api)
     if rawget(_G,'AR32PacifierLuaV1') then return end
-    local state={version='0.1.3-test',active=false,status='Waiting for game update'}
+    local state={version='0.1.4-test',active=false,status='Waiting for game update'}
     _G.AR32PacifierLuaV1=state
     local previous=update
     local callback

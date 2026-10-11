@@ -1,6 +1,6 @@
-# AR-32 Pacifier Tuning v1.0.0
+# AR-32 Pacifier Tuning v1.0.1
 
-The AR-32 Pacifier deals **65 normal damage** and **15 durable damage** per bullet, up from 55 and 10. Each hit builds Stun Medium at **strength 3**, up from 2. The default magazine holds **65 rounds**, up from 40, and weapon sway falls from 1 to **0.6**. Stun duration and other effects stay the same.
+The AR-32 Pacifier deals **75 normal damage** and **15 durable damage** per bullet, up from 55 and 10. Each hit builds Stun Medium at **strength 3**, up from 2. The default magazine holds **65 rounds**, up from 40, and weapon sway falls from 1 to **0.6**. Stun duration and other effects stay the same.
 
 ## Install
 

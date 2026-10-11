@@ -8,7 +8,7 @@ For one package containing all 19 mods, see the [Super-Earth Arsenal Modpack](ht
 
 | Package | Settings | SHA-256 |
 |---|---|---|
-| [AR-32 Pacifier](AR-32-Pacifier-v1.0.0.zip) | 65 normal / 15 durable bullet damage; Stun Medium buildup 3 per hit; 65-round default magazine; sway 0.6. | 5EC13B8185B16ABBB300E18FB5EBDBA782F07A8F253B04E9E979096BD3B2CBA2 |
+| [AR-32 Pacifier](AR-32-Pacifier-v1.0.1.zip) | 75 normal / 15 durable bullet damage; Stun Medium buildup 3 per hit; 65-round default magazine; sway 0.6. | 4741061B238673F3F8FCD33FC27CA7F2EE2C6DC833008E0BFA47CB73E40F6D25 |
 | [AC-8 Autocannon](AC-8-Autocannon-v1.0.1.zip) | Backpackless, 10 loaded + 60 reserve, moving top reload, 60-round resupply; ergonomics 30; 25% lower recoil drift and climb; APHET 375/340 direct/AP5/180 blast; FLAK 210 blast/8 m outer, also shared with JAR-5 High Explosive ammo. | 28B67315AFDFA0C005F76C2FE13F9058334DA8E7AD0AAF2E917787B589CF6014 |
 | [ARC-12 Blitzer](ARC-12-Blitzer-v1.0.2.zip) | `durable=45`, `damage=100`, `arc_range=30`, `arc_rpm=80` | `1C976146F1A2CC943ECA1FBB2670B5742F0183E107EF7DF959FA32FA0F070245` |
 | [CQC-20 Breaching Hammer](CQC-20-Breaching-Hammer-v1.0.2.zip) | `blast_ap_direct=7`, `blast_ap_slight=7`, `blast_ap_large=7`, `mags_start=21`, `mags_supply=21`, `mags_max=21` | `7D353744ABA3EE9FEA485E79D38241AB8C8EDB8F848B48E092989F19D9C65864` |
