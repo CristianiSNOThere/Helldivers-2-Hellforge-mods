@@ -1,4 +1,4 @@
-# AC-8 Autocannon Backpackless Rework v1.0.1
+# AC-8 Autocannon Backpackless Rework v1.0.2
 
 The AC-8 is now a self-contained support weapon. Its call-in pod delivers the Autocannon without the Automatic Cannon Backpack, leaving the backpack slot free. You can reload the gun yourself without carrying that backpack.
 
@@ -29,3 +29,7 @@ Use the Autocannon's normal Weapon Functions selector to switch between APHET an
 ## Install
 
 Requires the supported Helldivers 2 Steam build 25480438 and Bingus Shared Loader v19. Import this ZIP into Arsenal, enable its option, Purge and Deploy, then restart the game. Use either this individual package or the complete Super Earth Arsenal Mod Pack; do not enable both.
+
+## Compatibility
+
+Use v1.0.2 when installing PLAS-45 Epoch Highest-Charge Rework alongside the individual AC-8 mod. The Autocannon retains the ammunition, reload, handling and damage settings listed above.

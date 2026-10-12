@@ -537,13 +537,13 @@ local EXPECT_ARC11=unhex("0b0000000000fa4400007a43000000000000000000003443000000
 local EXPECT_DAMAGE197=unhex("c5000000e20000005a0000000700000007000000070000000000000004000000190000000200000002000000250000009a99993f000000000000000000000000000000000000000000000000")
 local EXPECT_DAMAGE547=unhex("23020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")
 local SUPER_ARC11=unhex("0b000000000096430000344200002042000020420000704200004040010000000000000023020000000000000000000000000000000000000000803e00000000b4a0b4fab308326c030000000be365f29a53f7846429b4690a000000010000000100000001000000")
-local SUPER_DAMAGE547=unhex("230200000e0600000e06000007000000070000000700000000000000040000001900000002000000020000002500000000004041270000000000c84100000000000000000000000000000000")
+local SUPER_DAMAGE547=unhex("23020000150900001509000007000000070000000700000000000000040000001900000002000000020000002500000000004041270000000000c84100000000000000000000000000000000")
 local FUNC3=unhex('0300000000000000')
 local TYPE7=unhex('07000000')
 local TYPE11=unhex('0b000000')
-local F49=unhex('cdcc9c40')
-local F5=unhex('0000a040')
-local F525=unhex('0000a840')
+local F34=unhex('9a995940')
+local F35=unhex('00006040')
+local F375=unhex('00007040')
 local F1=unhex('0000803f')
 local DAMAGE_DELTA=26144
 local ARC_DELTA=1352
@@ -584,13 +584,13 @@ end
 
 local function desired_charge(src,super)
  if not super then return src end
- local s=replace(src,0,F49)
- s=replace(s,24,F5);s=replace(s,48,F525)
+ local s=replace(src,0,F34)
+ s=replace(s,24,F35);s=replace(s,48,F375)
  -- Rapid source is balanced with 0.85x damage. Supercharge owns dedicated Damage547,
  -- so restore both charge damage multipliers to exactly 1.0 in its private row.
  s=replace(s,80,F1);s=replace(s,84,F1)
  -- Preserve the native ARC charge start/stop pair in both profiles.
- -- Those events are guaranteed resident with the equipped ARC bank. The 5-second
+ -- Those events are guaranteed resident with the equipped ARC bank. The 3.5-second
  -- Supercharge simply sustains the native electrical charge loop much longer.
  -- Ready/danger remain the ARC source values (both zero).
  -- Damage multiplier remains the source 1.0/1.0. Supercharge damage lives in Damage547.

@@ -1,15 +1,16 @@
 # Weapon and Sentry Mods
 
-Eleven Arsenal mods, each with settings for exactly one weapon or sentry. Enable any combination of these packages.
+Twelve Arsenal mods, each with settings for exactly one weapon or sentry. Enable any combination of these packages.
 
-For one package containing all 18 mods, see the [Super-Earth Arsenal Modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). Choose the complete pack or individual packages, not both.
+For one package containing all 19 mods, see the [Super-Earth Arsenal Modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). Choose the complete pack or individual packages, not both.
 
 ## Packages
 
 | Package | Settings | SHA-256 |
 |---|---|---|
+| [PLAS-45 Epoch](PLAS-45-Epoch-v1.0.0.zip) | PLAS-45 Epoch highest-charge shots gain 30% more normal and durable direct-hit and blast damage, burning on blast hits, a 5 m full-damage radius, 6 m outer damage radius and 7 m shockwave radius. Magazine capacity increases from 3 to 4 rounds and maximum spare magazines from 4 to 5. Reload while walking with the existing reload animation. | B6B0A59B3622B461CBE3EAD269F7E2875CC1AF1C136FCFC6B436616C54FD5A18 |
 | [AR-32 Pacifier](AR-32-Pacifier-v1.0.1.zip) | 75 normal / 15 durable bullet damage; Stun Medium buildup 3 per hit; 65-round default magazine; sway 0.6. | 4741061B238673F3F8FCD33FC27CA7F2EE2C6DC833008E0BFA47CB73E40F6D25 |
-| [AC-8 Autocannon](AC-8-Autocannon-v1.0.1.zip) | Backpackless, 10 loaded + 60 reserve, moving top reload, 60-round resupply; ergonomics 30; 25% lower recoil drift and climb; APHET 375/340 direct/AP5/180 blast; FLAK 210 blast/8 m outer, also shared with JAR-5 High Explosive ammo. | 28B67315AFDFA0C005F76C2FE13F9058334DA8E7AD0AAF2E917787B589CF6014 |
+| [AC-8 Autocannon](AC-8-Autocannon-v1.0.2.zip) | Backpackless, 10 loaded + 60 reserve, moving top reload, 60-round resupply; ergonomics 30; 25% lower recoil drift and climb; APHET 375/340 direct/AP5/180 blast; FLAK 210 blast/8 m outer, also shared with JAR-5 High Explosive ammo. | 1BF2FEF6284E1D76E78D784D77DF1C58F7BD5CD7BCAA66C0AFC5B2B66034FAB0 |
 | [ARC-12 Blitzer](ARC-12-Blitzer-v1.0.2.zip) | `durable=45`, `damage=100`, `arc_range=30`, `arc_rpm=80` | `1C976146F1A2CC943ECA1FBB2670B5742F0183E107EF7DF959FA32FA0F070245` |
 | [CQC-20 Breaching Hammer](CQC-20-Breaching-Hammer-v1.0.2.zip) | `blast_ap_direct=7`, `blast_ap_slight=7`, `blast_ap_large=7`, `mags_start=21`, `mags_supply=21`, `mags_max=21` | `7D353744ABA3EE9FEA485E79D38241AB8C8EDB8F848B48E092989F19D9C65864` |
 | [PLAS-39 Accelerator Rifle](PLAS-39-Accelerator-Rifle-v1.1.9.zip) | Semi at 200 RPM or charged three-round Burst via the left-side selector; `capacity=21`, `recoil_dh=2`, `recoil_ch=2`, `recoil_dv=2`, `recoil_cv=2`, `spread_h=0.3`, `spread_v=0.3`, `sway=0.4`, `stagger=25`, `ap_direct=4`, `ap_slight=4`, `ap_large=4`, `blast_outer=2.5`, `blast_shockwave=2.5` | `B6E948CE4BF19CC8233C35B0DBD9BBD5DB9AFAC96F745E71A61AE505C8624A41` |
