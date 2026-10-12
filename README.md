@@ -1,19 +1,6 @@
-# WARNING: CHANGE YOUR PRIMARY WEAPON BEFORE REMOVING THIS MOD
-
-> [!CAUTION]
-> **UNEQUIP PUNISHER PLASMA BEFORE DISABLING, PURGING, REMOVING OR REPLACING THIS MOD OR THE MODPACK.**
-> With the mod still installed, equip a different primary weapon, close Helldivers 2 completely, then remove or replace the package. Removing it while Punisher Plasma is equipped can prevent the game from starting.
-> **Recovery:** Reinstall the mod or modpack, equip a different primary, close the game completely, then remove it again.
-
-> [!WARNING]
-> **START THE GAME WITH A DIFFERENT PRIMARY WEAPON EQUIPPED.** Punisher Plasma must not already be equipped while this mod initializes. If it is, the safety check stops installation and Punisher remains stock. Equip another primary, close the game completely with the mod still installed, then relaunch. Allow up to two minutes for initialization before equipping Punisher Plasma. Keep the game focused during startup/loading.
-
-> [!WARNING]
-> **DO NOT USE LOYALIST OR ONE-TWO WHILE THIS MOD OR THE MODPACK IS INSTALLED.** Their records and attachment systems have been repurposed for Punisher Plasma. Equipping or using these donor weapons may crash the game.
-
 # Super Earth Arsenal Pack
 
-A collection of 19 Helldivers 2 mods, each available as its own ZIP and option. For the full set in one package, see the [Super-Earth Arsenal Modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). Choose either the individual ZIPs or the modpack ZIP; enabling both duplicates the same add-on resources.
+A collection of 18 Helldivers 2 mods, each available as its own ZIP and option. For the full set in one package, see the [Super-Earth Arsenal Modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). Choose either the individual ZIPs or the modpack ZIP; enabling both duplicates the same add-on resources.
 
 ## Mods
 
@@ -36,7 +23,6 @@ A collection of 19 Helldivers 2 mods, each available as its own ZIP and option. 
 - [A/GM-17 Gas Mortar Sentry v1.0.2 release](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases/tag/agm17-gas-mortar-sentry-v1.0.2) | [Download ZIP](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases/download/agm17-gas-mortar-sentry-v1.0.2/A-GM-17-Gas-Mortar-Sentry-v1.0.2.zip): Sets sentry health to 600.  [Details](mods/A-GM-17-Gas-Mortar-Sentry-README.md).
 - [RS-422 Railgun v1.0.2 release](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases/tag/rs422-railgun-v1.0.2) | [Download ZIP](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases/download/rs422-railgun-v1.0.2/RS-422-Railgun-v1.0.2.zip): Sets durable damage to 240.  [Details](mods/RS-422-Railgun-README.md).
 
-- [SG-8P Punisher Plasma v1.0.1 release](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases/tag/sg8p-punisher-plasma-v1.0.1) | [Download ZIP](mods/SG-8P-Punisher-Plasma-v1.0.1.zip): **Normal mode:** Stock → modified: explosion damage **225 → 350 normal**, with **225 → 225 durable**; inner/full-damage radius **2.3 → 3.5 m**, outer damage radius **3 → 6.5 m**, and shockwave radius **4 → 8 m**. Standard burning is added to the blast. Fire rate changes **80 → 60 RPM** and magazine capacity **10 → 17 rounds**. Starting spare magazines change **6 → 1**, resupply magazines **8 → 1**, and maximum spare magazines **8 → 1**, without armor bonuses such as Siege Ready. Projectile drag changes **4 → 1.2** and gravity multiplier **3 → 1**, producing a flatter trajectory; sway changes **1 → 0.5** (50% less). Demolition strength changes **10 → 30**, stagger **35 → 25**, and push remains **30 → 30**. It retains one projectile and one round consumed per shot.<br><br>**Shotgun mode:** Stock Punisher Plasma has no shotgun attachment or separate shotgun ammunition; this mod adds **SHOTGUN** alongside **NORMAL** in the left-side Weapon Functions selector. The new mode fires **9 explosive plasma pellets at 100 RPM**, consuming **one round total per trigger pull**. Each pellet deals **25 normal/9 durable direct damage plus 25 normal/9 durable explosion damage**: a nominal **450 normal/162 durable** across all nine pellets if every direct hit and full-strength blast connects, before armor, falloff and hit-location effects. Inner/outer/shockwave radii are **0.5/0.5/0.5 m per pellet**, with **AP3 at every impact angle**, **100 horizontal/90 vertical MRAD** spread, and **25 stagger/25 push**. The added independent ammo pool holds **20 loaded rounds plus 60 loose spares**. Its native underbarrel reload runs at **2× the donor reload speed**. The fitted StA-11 magazine replaces the grenade-launcher appearance and provides the support-hand hold, with its cross-section enlarged **10%** while keeping the top mount and length fixed.<br><br>**Two sacrificed weapons: Loyalist and One-Two.** Loyalist supplies the existing plasma projectile, explosion effects and damage profile used for the shotgun pellets; these donor records are repurposed for the new pellet behavior. One-Two supplies the native grenade-launcher attachment, separate ammunition and underbarrel reload system; its attachment appearance and hand placement are replaced for the fitted magazine grip. Reusing these existing game systems made the plasma shotgun and independent reloadable ammo pool possible. **Both weapons lose their original stock behavior while this mod is installed.** AR-11 Arbitrator, Scorcher AR and other pack weapons retain their existing settings. [Details](mods/SG-8P-Punisher-Plasma-README.md).
 
 Each weapon or sentry mod can be installed alone or alongside other individual mods. These packages require Bingus Shared Loader v15 or newer and Steam build 25480438. Allow up to about two minutes after reaching the ship for weapon changes to take effect. See the [weapon and sentry mod index](mods/Weapon-Mods-README.md) for package details.
 
@@ -49,3 +35,7 @@ Each weapon or sentry mod can be installed alone or alongside other individual m
 5. After loading onto the ship, allow up to about 2 minutes for the mods to initialize before use.
 
 The packages target Steam build 25480438. Flag Damage and AR-11 require Bingus Shared Loader v17 or newer; Gas Overhaul, ARC-3, and the modpack require v18 or newer. Each weapon or sentry mod requires v15 or newer. See each release and ZIP README for details and compatibility.
+
+## Temporarily unavailable
+
+SG-8P Punisher Plasma is temporarily unavailable. Its changes are omitted from the current modpack; Punisher Plasma, Loyalist and One-Two retain their stock behavior.

@@ -2,7 +2,7 @@
 
 Eleven Arsenal mods, each with settings for exactly one weapon or sentry. Enable any combination of these packages.
 
-For one package containing all 19 mods, see the [Super-Earth Arsenal Modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). Choose the complete pack or individual packages, not both.
+For one package containing all 18 mods, see the [Super-Earth Arsenal Modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). Choose the complete pack or individual packages, not both.
 
 ## Packages
 
