@@ -397,6 +397,9 @@ local function peer_damage(state,kind)
         assert(state.status=='Applied: AR-11 rifle damage 70 -> 80; rifle magazine 45 -> 65; underbarrel magazine remains 4 and reserve ammo 20 -> 30; stagger 20 -> 25 with push force 20 unchanged; ergonomics 29 -> 40 with the default optic.','AR-11 companion status is not a supported v0.2 result')
         return 80,25
     end
+    if state.version=='0.10' and state.status=='Applied: SAI normal damage 80 -> 90; durable damage 4 -> 21; Standard Lens spread 140 -> 42 MRAD; Focus Lens spread 75 -> 22.5 MRAD on both axes; Standard/Focus fire rate 800/600 -> 900/900 RPM; projectile speed 100 -> 1300 m/s; drag 0 -> 1.244.' then return 90,21 end
+    if state.version=='0.10' and state.status=='Applied: SAI normal damage 80 -> 90; durable damage 4 -> 21; Standard Lens spread 140 -> 42 MRAD; Focus Lens spread 75 -> 22.5 MRAD on both axes; Standard/Focus fire rate 800/600 -> 900/900 RPM; projectile speed 100 -> 1300 m/s; drag 0 -> 1.244; recoil horizontal/vertical multipliers 1/1 -> 0.666667/0.666667; base/heat-capacity heatsink heat per shot 2/1.5 -> 1.333333/1.' then return 90,21 end
+    if state.version=='0.10' and state.status=='Applied: SAI normal damage 80 -> 90; durable damage 4 -> 21; Standard Lens spread 140 -> 70 MRAD; Focus Lens spread 75 -> 37.5 MRAD on both axes; Standard/Focus fire rate 800/600 -> 900/900 RPM; projectile speed 100 -> 1300 m/s; drag 0 -> 1.244; recoil horizontal/vertical multipliers 1/1 -> 0.666667/0.666667; base/heat-capacity heatsink heat per shot 2/1.5 -> 1.333333/1.' then return 90,21 end
     local normal,durable=state.status:match('^Applied: SAI normal damage 80 %-> (%d+); durable damage 4 %-> (%d+); Focus Lens spread 75 %-> 0%.5 MRAD on both axes%.?$')
     normal,durable=tonumber(normal),tonumber(durable)
     assert(normal and durable,'SAI companion status is not a supported v0.4 result')

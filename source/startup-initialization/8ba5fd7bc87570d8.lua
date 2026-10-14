@@ -77,7 +77,7 @@ return function()
         return true
     end
     function api.write_attachment(p,s)
-        assert(#s==8,'Only the two spread floats may be written')
+        assert(#s==4 or #s==8 or #s==12 or #s==16 or #s==32,'Only the guarded SAI rate, spread, ballistics or Focus block may be written')
         local info=ffi.new('SaiFocusMemoryInfoV1[1]')
         if k.VirtualQuery(p,ffi.cast('void *',info),ffi.sizeof(info[0]))~=ffi.sizeof(info[0]) then return false end
         if not api.data_access(p,#s) or api.distance(p,info[0].base)+#s>tonumber(info[0].size) then return false end
@@ -360,8 +360,11 @@ local function focus(api,address)
     end
     if api.sha256(s:sub(109))~='3A394B39EE2AEEBD916179E8199F11D5F135D56C0F074694CF4E051AF70CDB85' then return nil,'attachment checksum mismatch' end
     if s:sub(181582,181681)~=FOCUS_SIGNATURE then return nil,'complete Focus Lens payload mismatch' end
-    -- IEEE 754 float 0.5, horizontal and vertical. All other lens fields stay stock.
-    return {address=address,size=size,source=s,offset=181609,bytes=unhex('0000003f0000003f'),attachment=true}
+    -- IEEE 754 float 37.5: 50% below the stock Focus spread of 75 per axis.
+    return {address=address,size=size,source=s,attachment=true,writes={
+        {offset=181601,bytes=unhex('00006144000000000000164200001642')},
+        {offset=175452,bytes=unhex('0000803f')} -- Heat-capacity heatsink: 1.5 -> 1 heat per shot.
+    }}
 end
 
 local function find(api,module,validator,signature,offset,header,label)
@@ -382,23 +385,143 @@ local function find(api,module,validator,signature,offset,header,label)
     return plans[1]
 end
 
+local WEAPON_HEADER=unhex('b1dbe4884c444c4401000000b1dbe488000f07000100000000000000')
+local SAI_OWNER=unhex('4761085e6d575fc8')
+local function standard(api,module)
+    local owner=api.pointer(api.read(module+0x346bf98,8),0)
+    local map=owner and api.pointer(api.read(owner+0xf12bd8,8),0)
+    assert(map,'Expected one supported SAI WeaponData table; found 0. No edit applied.')
+    local group=map-28
+    assert(api.read(group,28)==WEAPON_HEADER,'SAI WeaponData header mismatch. No edit applied.')
+    local owners=api.read(map,730*16)
+    assert(owners and #owners==730*16,'SAI WeaponData owner map unreadable. No edit applied.')
+    local hits=0
+    for i=0,729 do
+        local entry=owners:sub(i*16+1,i*16+16)
+        if entry:sub(1,8)==SAI_OWNER then
+            hits=hits+1
+            assert(u32(entry,8)==297 and u32(entry,12)==0,'SAI WeaponData owner row mismatch. No edit applied.')
+        end
+    end
+    assert(hits==1,'Expected one supported SAI WeaponData owner; found '..hits..'. No edit applied.')
+    local row=group+28+11680+297*1232
+    assert(api.data_access(row,1232),'SAI WeaponData row permissions unsupported. No edit applied.')
+    local source=api.read(row,1232)
+    assert(source and #source==1232 and api.sha256(source)=='D0AE90ED63432665CD8CF8F6D493175FDC8004A8BB23716A36176531F186D933',
+        'SAI WeaponData row checksum mismatch. No edit applied.')
+    local fire_group=group+20253184
+    local fire_header=unhex('681b17454c444c4401000000681b174560b002000100000000000000')
+    assert(api.read(fire_group,28)==fire_header,'SAI fire group header mismatch. No edit applied.')
+    local fire_owners=api.read(fire_group+28,542*16)
+    assert(fire_owners and #fire_owners==542*16,'SAI fire owner map unreadable. No edit applied.')
+    local fire_hits=0
+    for i=0,541 do
+        local entry=fire_owners:sub(i*16+1,i*16+16)
+        if entry:sub(1,8)==SAI_OWNER then
+            fire_hits=fire_hits+1
+            assert(u32(entry,8)==215 and u32(entry,12)==0,'SAI fire owner row mismatch. No edit applied.')
+        end
+    end
+    assert(fire_hits==1,'SAI fire owner is not unique. No edit applied.')
+    local fire_row=fire_group+28+8672+215*616
+    local fire_source=api.read(fire_row,616)
+    assert(fire_source and api.sha256(fire_source)=='116B8D91381B6F5917276DD68E04C7C25CF80C6032973C6536C74B3A6AD3B310',
+        'SAI stock 800 RPM fire row mismatch. No edit applied.')
+    assert(api.data_access(fire_row,616),'SAI fire data permissions unsupported. No edit applied.')
+    local function proof()
+        local current_owner=api.pointer(api.read(module+0x346bf98,8),0)
+        local current_map=current_owner and api.pointer(api.read(current_owner+0xf12bd8,8),0)
+        return current_owner and current_map and api.distance(current_owner,owner)==0
+            and api.distance(current_map,map)==0 and api.read(group,28)==WEAPON_HEADER
+            and api.read(map,730*16)==owners
+            and api.read(fire_group,28)==fire_header and api.read(fire_group+28,542*16)==fire_owners
+    end
+    -- Standard Lens retains the weapon's base spread; Focus overrides it in its delta.
+    return {address=row,size=1232,source=source,offset=60,bytes=unhex('abaa2a3fabaa2a3f')..source:sub(69,84)..unhex('00008c4200008c42'),attachment=true,proof=proof,
+        fire={address=fire_row,size=616,source=fire_source,offset=8,bytes=unhex('00006144'),attachment=true,proof=proof}}
+end
+
+local BALLISTIC_PINS={
+    {0x13AA095,'f30f104018'},{0x13AA0B6,'f30f594028'},{0x13AAF54,'f30f5eb42400010000'},
+    {0x13AD060,'f30f5e4f2c'},{0x13AD06E,'f30f59c9'},{0x13AD07B,'f3440f59153c980101'},{0x13AD084,'f3440f58d1'}
+}
+local function ballistics(api,module)
+    for _,pin in ipairs(BALLISTIC_PINS) do
+        assert(api.read(module+pin[1],#pin[2]/2)==unhex(pin[2]),'Unsupported SAI ballistics code. No edit applied.')
+    end
+    local slot=module+0x37c7670+236*8
+    local row=api.pointer(api.read(slot,8),0)
+    assert(row,'Expected one supported SAI projectile table; found 0. No edit applied.')
+    assert(api.data_access(row,272),'SAI projectile data permissions unsupported. No edit applied.')
+    local source=api.read(row,272)
+    assert(source and #source==272 and api.sha256(source)=='C4D6C76A0DE9B41A6C3FA0AF9C5F1B883681BEBD41E3AAD11C5A485728BCD8A8',
+        'SAI projectile row checksum mismatch. No edit applied.')
+    local function proof()
+        local current=api.pointer(api.read(slot,8),0)
+        return current and api.distance(current,row)==0
+    end
+    -- Change launch speed and drag; preserve the intervening 12 g mass word.
+    return {address=row,size=272,source=source,offset=32,
+        bytes=unhex('0080a244')..source:sub(37,40)..unhex('643b9f3f'),attachment=true,proof=proof}
+end
+
+local function heat(api,module)
+    local owner=api.pointer(api.read(module+0x346bf98,8),0)
+    local map=owner and api.pointer(api.read(owner+0xf12bd8,8),0)
+    assert(map,'Expected one supported SAI heat table; found 0. No edit applied.')
+    local group=map-28+1342072
+    local header=unhex('d91c984c4c444c4401000000d91c984c004900000100000000000000')
+    assert(api.read(group,28)==header,'SAI heat header mismatch. No edit applied.')
+    local owners=api.read(group+28,58*16)
+    assert(owners and #owners==58*16,'SAI heat owner map unreadable. No edit applied.')
+    local hits=0
+    for i=0,57 do
+        local entry=owners:sub(i*16+1,i*16+16)
+        if entry:sub(1,8)==SAI_OWNER then
+            hits=hits+1
+            assert(u32(entry,8)==23 and u32(entry,12)==0,'SAI heat owner row mismatch. No edit applied.')
+        end
+    end
+    assert(hits==1,'SAI heat owner is not unique. No edit applied.')
+    local row=group+28+928+23*592
+    assert(api.data_access(row,592),'SAI heat permissions unsupported. No edit applied.')
+    local source=api.read(row,592)
+    assert(source and #source==592 and api.sha256(source)=='86669EB76901EDC9B03AE251833838CF137242BD5E7D5A93E509F52C5349C8BA',
+        'SAI heat row checksum mismatch. No edit applied.')
+    local function proof()
+        local current_owner=api.pointer(api.read(module+0x346bf98,8),0)
+        local current_map=current_owner and api.pointer(api.read(current_owner+0xf12bd8,8),0)
+        return current_owner and current_map and api.distance(current_owner,owner)==0 and api.distance(current_map,map)==0
+            and api.read(group,28)==header and api.read(group+28,58*16)==owners
+    end
+    return {address=row,size=592,source=source,offset=116,bytes=unhex('abaaaa3f'),attachment=true,proof=proof}
+end
+
 function patch.apply(api,module)
     local ok,result=pcall(function()
+        module=require('ffi').cast('uint8_t *',module)
+        local weapon=standard(api,module)
         local plans={find(api,module,damage,DAMAGE_SIGNATURE,4204,nil,'damage'),
-          find(api,module,focus,FOCUS_SIGNATURE,181581,nil,'Focus Lens')}
-        -- Discovery can yield. Recheck both complete tables before committing.
+          find(api,module,focus,FOCUS_SIGNATURE,181581,nil,'Focus Lens'),weapon,weapon.fire,ballistics(api,module),heat(api,module)}
+        -- Discovery can yield. Recheck complete snapshots and SAI ownership before committing.
         for _,p in ipairs(plans) do
-            assert(api.read(p.address,p.size)==p.source,'Data changed before edit. No edit applied.')
+            assert(api.read(p.address,p.size)==p.source and (not p.proof or p.proof()),'Data changed before edit. No edit applied.')
         end
         local attempted={}
         local applied,reason=pcall(function()
             for _,p in ipairs(plans) do
-                attempted[#attempted+1]=p
-                local write=p.attachment and api.write_attachment or api.write
-                assert(write(p.address+p.offset,p.bytes),'Write incomplete')
+                local expected=p.source
+                for _,edit in ipairs(p.writes or {p}) do
+                    local op={address=p.address,size=p.size,source=expected,offset=edit.offset,bytes=edit.bytes,attachment=p.attachment}
+                    attempted[#attempted+1]=op
+                    local write=op.attachment and api.write_attachment or api.write
+                    assert(write(op.address+op.offset,op.bytes),'Write incomplete')
+                    expected=replace(expected,op.offset,op.bytes)
+                end
+                p.expected=expected
             end
             for _,p in ipairs(plans) do
-                assert(api.read(p.address,p.size)==replace(p.source,p.offset,p.bytes),'Full table verification failed')
+                assert(api.read(p.address,p.size)==p.expected and (not p.proof or p.proof()),'Full table verification failed')
             end
         end)
         if not applied then
@@ -421,7 +544,7 @@ function patch.apply(api,module)
             end
             error(tostring(reason)..'; restored='..tostring(restored))
         end
-        return 'Applied: SAI normal damage 80 -> 90; durable damage 4 -> 21; Focus Lens spread 75 -> 0.5 MRAD on both axes.'
+        return 'Applied: SAI normal damage 80 -> 90; durable damage 4 -> 21; Standard Lens spread 140 -> 70 MRAD; Focus Lens spread 75 -> 37.5 MRAD on both axes; Standard/Focus fire rate 800/600 -> 900/900 RPM; projectile speed 100 -> 1300 m/s; drag 0 -> 1.244; recoil horizontal/vertical multipliers 1/1 -> 0.666667/0.666667; base/heat-capacity heatsink heat per shot 2/1.5 -> 1.333333/1.'
     end)
     return ok,tostring(result)
 end
@@ -431,7 +554,7 @@ end)()
 local start=(function()
 return function(make_api,patch)
     if rawget(_G,'SaiFocusModV1') then return end
-    local state={version='0.5',active=false,status='Waiting for first game update',scanned=0,candidates=0,diagnostics={}}
+    local state={version='0.10',active=false,status='Waiting for first game update',scanned=0,candidates=0,diagnostics={}}
     _G.SaiFocusModV1=state
     local previous=update
     local callback
@@ -440,7 +563,7 @@ return function(make_api,patch)
             local logger=rawget(_G,'CowboyBingusModLoader')
             local file=logger and logger.open_log and logger.open_log('SaiFocusMod.log')
             if file then
-                file:write('SaiFocusMod v0.5 FOCUS LENS PRECISION / 90 NORMAL / 21 DURABLE\nstatus='..state.status..'\nscanned_bytes='..state.scanned..'\ncandidates='..state.candidates..'\n'..table.concat(state.diagnostics,'\n')..'\n')
+                file:write('SaiFocusMod v0.10 STANDARD 70 / FOCUS 37.5 MRAD / 900 RPM / 1300 M/S / DRAG 1.244 / 90 NORMAL / 21 DURABLE\nstatus='..state.status..'\nscanned_bytes='..state.scanned..'\ncandidates='..state.candidates..'\n'..table.concat(state.diagnostics,'\n')..'\n')
                 file:close()
             end
         end)

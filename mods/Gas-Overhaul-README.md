@@ -1,4 +1,4 @@
-# Gas Overhaul v0.15
+# Gas Overhaul v0.16
 
 Gas weapons now apply the Acid Storm effect, temporarily reducing enemy armor effectiveness for 15 seconds. Extends the Sterilizer's existing effect to AX/TX-13 Guard Dog Dog Breath, P-35 Re-Educator, S-11 Speargun, G-4 Gas grenades, MD-8 Gas Mines, A/GM-17 Gas Mortar Sentry, Eagle Gas Airstrike and Orbital Gas Strike. Armor plates are not permanently destroyed.
 
@@ -22,4 +22,4 @@ Compared with Sterilizer v0.11, this release adds armor reduction to the other s
 
 Replaces TX-41 Sterilizer Armor Control. Import this ZIP into Arsenal, enable its option, keep Bingus Shared Loader at its documented priority, Purge and Deploy, then restart Helldivers 2. Use either individual packages or the combined modpack. Do not enable Gas Overhaul alongside an older Sterilizer package or a modpack that already contains it.
 
-Requires Helldivers 2 Steam build 25480438 and Bingus Shared Loader v19. Can be used alongside ARC-3 Rapid/Supercharge v0.14, including its 2325/2325-damage Supercharge. Allow up to two minutes after reaching the ship for initialization.
+Requires Helldivers 2 Steam build 25480438 and Bingus Shared Loader v19. Can be used alongside SAI Focus Precision v0.10 and ARC-3 Rapid/Supercharge v0.14, including its 2325/2325-damage Supercharge. Allow up to two minutes after reaching the ship for initialization.

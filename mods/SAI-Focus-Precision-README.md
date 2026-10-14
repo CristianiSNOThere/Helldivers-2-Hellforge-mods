@@ -1,25 +1,26 @@
-# SAI Focus Precision
+# SAI Focus Precision v0.10
 
-## Current gameplay changes
+Rebalances LAS-12 SAI as a short-range laser SMG.
 
-Sets LAS-12 SAI normal damage to 90 and durable damage to 21 with any lens. Sets Focus Lens horizontal and vertical spread to 0.5 MRAD.
+## Gameplay changes
 
-## Controls and compatibility
+| Setting | Stock | Modded |
+|---|---|---|
+| Normal / durable damage at the muzzle, either lens | 80 / 4 | 90 / 21 |
+| Standard lens horizontal / vertical spread | 140 / 140 MRAD | 70 / 70 MRAD |
+| Focus lens horizontal / vertical spread | 75 / 75 MRAD | 37.5 / 37.5 MRAD |
+| Standard lens fire rate | 800 RPM | 900 RPM |
+| Focus lens fire rate | 600 RPM | 900 RPM |
+| Recoil with either lens | 100% | 66.67%, one-third less |
+| Heat per shot with Standard or cooldown heatsink | 2 | 1.333333 |
+| Heat per shot with heat-capacity heatsink | 1.5 | 1 |
+| Projectile launch speed | 100 m/s | 1,300 m/s |
+| Projectile drag | 0 | 1.244 |
 
-Equip the Focus Lens for the precision spread. Compatible with the supported shared damage-table edits from One True Flag, AR-11 Arbitrator, and ARC-3 Rapid Arc Thrower v0.9, v0.10, v0.11 and v0.12. ARC-3 v0.12 retains the v0.11 damage-table contract.
+Both lenses have 50% less spread than their own stock values. Focus remains the tighter lens. Recoil and heat per shot are reduced by one-third with both lenses. The heatsinks retain their heat-capacity and cooling effects. Bullets now lose speed and damage over distance.
 
-## Install
+## Install and controls
 
-Import the ZIP into Arsenal and enable its option. Keep Bingus Shared Loader at its documented priority, Purge and Deploy, and restart Helldivers 2. Choose the individual packages or the modpack to avoid duplicate addon resources.
+Import the ZIP into Arsenal and enable its option. Keep Bingus Shared Loader at its documented priority, Purge and Deploy, then restart Helldivers 2. Choose Standard or Focus in the weapon customization menu. Allow up to two minutes after reaching the ship for initialization.
 
-Requires Helldivers 2 Steam build 25480438 and Bingus Shared Loader v17 or newer.
-
-## Initialization
-
-Startup discovery limits work per frame and searches game data libraries. Weapon and sentry tuning waits for installed companion mods to finish initializing.
-
-Version 0.8 adds compatibility with Arc Thrower v0.11. SAI damage and spread are unchanged.
-
-Version 0.9 retains those settings and the supported shared-table checks; it joins the refreshed 17-mod release set.
-
-Validation: packaged LuaJIT scope, conflict, compatibility and rollback checks passed offline. Fresh startup and gameplay checks for this update remain pending.
+Requires Helldivers 2 Steam build 25480438 and Bingus Shared Loader v19. When using individual Gas Overhaul alongside this mod, use Gas Overhaul v0.16. Use the individual packages or the complete modpack; enabling both duplicates addon resources.
