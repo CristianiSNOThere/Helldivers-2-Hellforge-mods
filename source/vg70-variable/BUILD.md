@@ -1,0 +1,5 @@
+# VG-70 Variable release source
+
+The entry resource is `mods/codex/vg70_variable_runtime`; it loads `mods/codex/vg70_variable_runtime_impl`. `entry.lua` is the released entry payload. `implementation.lua` is the exact readable compiler input, including supported component/profile definitions and helper modules. Compile it with the game LuaJIT compiler using chunk name `@vg70_variable_runtime.lua`. Place these two Lua resources in a pure-Lua Shared Loader archive from the `9ba626afa44a3aa3.patch_<number>` scan family. Resource hashes are EDC85A4997E8A37B and F157B721BA21CD57, Lua type A14E8DFA2CD117E2. The individual GUID is f73eda09-32a6-5db8-b941-ab7992a936d4.
+
+The workspace packaging script is `work/vg70-variable-20261013/build_candidate_rev12.py`, which requires the extracted data and shared archive/compiler helpers. Use a fresh output directory for changed builds. Preserve source/private owner guards, bounded companion readiness, transactions and rollback, native sounds, stock Total self-effects, and exact equality of shared resource payloads. Build and audit the individual and full pack together under the repository compatibility guidance.

@@ -1,13 +1,14 @@
 # Weapon and Sentry Mods
 
-Twelve Arsenal mods, each with settings for exactly one weapon or sentry. Enable any combination of these packages.
+Thirteen Arsenal mods, each with settings for exactly one weapon or sentry. Enable any combination of these packages.
 
-For one package containing all 19 mods, see the [Super-Earth Arsenal Modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). Choose the complete pack or individual packages, not both.
+For one package containing all 20 mods, see the [Super-Earth Arsenal Modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). Choose the complete pack or individual packages, not both.
 
 ## Packages
 
 | Package | Settings | SHA-256 |
 |---|---|---|
+| [VG-70 Variable](VG-70-Variable-v0.1.0.zip) | The primary-slot VG-70 Variable keeps its mobile, backpack-free reload and gains a 150-round magazine. Auto offers 550, 750 and 1,000 RPM, with 110/29, 90/24 and 75/20 normal/durable damage per bullet, AP3. Volley fires 15 simultaneous bullets at 40/11 damage each, AP3, following the selected native RPM. Total fires all remaining rounds at 28/8 damage per bullet, AP4, with spread reduced to 0.75 on both axes. The weapon keeps 6 starting spare magazines, up to 7 maximum and 7 per resupply, along with its existing reload, projectile speed and sound. Recoil is reduced by 15% in every mode: drift 4.25/8.5 and climb 3.4/6.8 horizontal/vertical. Base ergonomics is 40 and sway is 0.9. Total retains its stock right-arm self-injury and knockdown behavior. Sustained Auto muzzle flashes stay aligned. | D11CDC42CBB18F22EDD7E80FC1FC3D8D6E62A7C3BA32F190B69539112FD34A0E |
 | [PLAS-45 Epoch](PLAS-45-Epoch-v1.0.0.zip) | PLAS-45 Epoch highest-charge shots gain 30% more normal and durable direct-hit and blast damage, burning on blast hits, a 5 m full-damage radius, 6 m outer damage radius and 7 m shockwave radius. Magazine capacity increases from 3 to 4 rounds and maximum spare magazines from 4 to 5. Reload while walking with the existing reload animation. | B6B0A59B3622B461CBE3EAD269F7E2875CC1AF1C136FCFC6B436616C54FD5A18 |
 | [AR-32 Pacifier](AR-32-Pacifier-v1.0.1.zip) | 75 normal / 15 durable bullet damage; Stun Medium buildup 3 per hit; 65-round default magazine; sway 0.6. | 4741061B238673F3F8FCD33FC27CA7F2EE2C6DC833008E0BFA47CB73E40F6D25 |
 | [AC-8 Autocannon](AC-8-Autocannon-v1.0.2.zip) | Backpackless, 10 loaded + 60 reserve, moving top reload, 60-round resupply; ergonomics 30; 25% lower recoil drift and climb; APHET 375/340 direct/AP5/180 blast; FLAK 210 blast/8 m outer, also shared with JAR-5 High Explosive ammo. | 1BF2FEF6284E1D76E78D784D77DF1C58F7BD5CD7BCAA66C0AFC5B2B66034FAB0 |
