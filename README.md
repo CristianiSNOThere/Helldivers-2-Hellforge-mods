@@ -2,7 +2,7 @@
 
 Standalone Helldivers 2 runtime mods and weapon projects, including **SG-8P Punisher Plasma**.
 
-The Super Earth Arsenal weapon collection is now maintained as a [selectable modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack): one ZIP with 22 independent mod switches and a single One True Flag damage dropdown. Use that repository for current Arsenal weapon-pack updates.
+The Super Earth Arsenal weapon collection is now maintained as a [selectable modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack): one ZIP with 23 independent mod switches and a single One True Flag damage dropdown. Use that repository for current Arsenal weapon-pack updates.
 
 ## Projects
 
@@ -17,4 +17,4 @@ The previous 22 individual weapon and equipment releases remain available with t
 - [Package details](mods/Weapon-Mods-README.md)
 - [Release archive](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases)
 
-For the current selectable package, [download Super Earth Arsenal Mod Pack v2.0.0](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack/releases/tag/v2.0.0). Use the modpack or the corresponding individual weapon packages when choosing those changes.
+For the current selectable package, [download Super Earth Arsenal Mod Pack v2.1.1](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack/releases/tag/v2.1.1). Use the modpack or the corresponding individual weapon packages when choosing those changes.
