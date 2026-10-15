@@ -1,3 +1,5 @@
+> Earlier individual Arsenal packages. Current weapon-pack updates are in the [selectable Super Earth Arsenal Mod Pack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack). This repository now hosts standalone runtime and weapon projects.
+
 # Weapon and Sentry Mods
 
 Individual weapon and sentry packages from the 22-mod Super Earth Arsenal collection.
