@@ -1,0 +1,9 @@
+{
+  "guid": "8b086a81-7eaa-4d12-a465-abc93d51be5e",
+  "module": "mods/codex/tenderizer_armor",
+  "implementation": "mods/codex/tenderizer_armor_impl",
+  "global_name": "TenderizerArmorV1",
+  "version": "0.1.2",
+  "key": "8702CC7E904DD733",
+  "implementation_key": "3F6806D454115A81"
+}
