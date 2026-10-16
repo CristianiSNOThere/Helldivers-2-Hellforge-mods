@@ -17,4 +17,4 @@ The previous 22 individual weapon and equipment releases remain available with t
 - [Package details](mods/Weapon-Mods-README.md)
 - [Release archive](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases)
 
-For the current selectable package, [download Super Earth Arsenal Mod Pack v2.1.1](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack/releases/tag/v2.1.1). Use the modpack or the corresponding individual weapon packages when choosing those changes.
+For the current selectable package, [download Super Earth Arsenal Mod Pack v2.1.2](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack/releases/tag/v2.1.2). Use the modpack or the corresponding individual weapon packages when choosing those changes.
