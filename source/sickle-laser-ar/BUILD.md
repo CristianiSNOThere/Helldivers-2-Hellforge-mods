@@ -2,9 +2,9 @@
 
 Published with the 21-mod set / pack v1.0.25. The individual release is byte-identical to the tested rev3 ZIP; the final pack changes only README.md from the tested rev3 ZIP. Current work and evidence: `work/sickle-double-edge-20261015/README.md` in the HD2 Mods workspace.
 
-Use the bundled Python at `C:\Users\crife\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe`:
+Use Python 3:
 
-1. `work/sickle-double-edge-20261015/prepare.py` generates the guarded profile, Windows adapter, startup wrapper and entry source from extracted data and the authorized saved code capture.
+1. `work/sickle-double-edge-20261015/prepare.py` generates the guarded profile, Windows adapter, startup wrapper and entry source from extracted data and the saved native-code capture.
 2. `work/sickle-double-edge-20261015/verify.py` runs 50 actual isolated LuaJIT transaction, scope, refusal and rollback fixtures.
 3. `work/sickle-double-edge-20261015/verify_native.py` runs 15 cases against the actual captured x64 instructions, including the per-weapon damage addend and mixed durability calculation. Local Unicorn dependency is under the older Sickle research folder.
 4. `work/sickle-double-edge-20261015/verify_extended.py` runs five bounded startup contract cases.
@@ -17,4 +17,4 @@ The captured native initialization establishes authored ProjectileWeapon +128/+1
 
 Only dedicated heat DamageInfo542/543/544 becomes15/15,30/30,75/75. General Fire519 and status5 are excluded. Maximum heat still applies ordinary ignition, so combined damage while burning is not promised to fall by25%. Heat thresholds, buildup per shot, cooling, status timing and ignition strength remain stock. All four projectile variants get2000m/s.
 
-The plaintext Shared Loader declaration requires the compiled implementation resource. Individual and pack contain identical new resource payloads with stable GUID/module/key identities. Both repositories carry identical source mirrors. Offline checks pass; the user accepted individual gameplay and authorized publication after the full pack startup. Saved full-pack startup reports60 loaded/0failed with all21 mod final states and complete deployed Addon byte matches. Independent loaded-resource inspection and detailed per-tier measurements are not claimed. Publication evidence is retained in workspace work/release-sickle-20261015/. Build scripts perform no deployment, settings change, external game process inspection or publication.
+The plaintext Shared Loader declaration requires the compiled implementation resource. Individual and pack contain identical new resource payloads with stable GUID/module/key identities. Both repositories carry identical source mirrors. Offline checks and the individual gameplay baseline passed before the full-pack startup. Saved full-pack startup reports60 loaded/0failed with all21 mod final states and complete deployed Addon byte matches. Independent loaded-resource inspection and detailed per-tier measurements are not claimed. Publication evidence is retained in workspace work/release-sickle-20261015/. Build scripts perform no deployment, settings change, external game process inspection or publication.

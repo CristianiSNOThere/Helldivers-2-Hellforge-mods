@@ -29,8 +29,4 @@ Requires Bingus Shared Loader v18 or newer and Helldivers 2 Steam build 25480438
 
 **Two sacrificed weapons: Loyalist and One-Two.** Loyalist supplies the existing plasma projectile, explosion effects and damage profile used for the shotgun pellets; these donor records are repurposed for the new pellet behavior. One-Two supplies the native grenade-launcher attachment, separate ammunition and underbarrel reload system; its attachment appearance and hand placement are replaced for the fitted magazine grip. Reusing these existing game systems made the plasma shotgun and independent reloadable ammo pool possible. **Both weapons lose their original stock behavior while this mod is installed.** AR-11 Arbitrator, Scorcher AR and other pack weapons retain their existing settings.
 
-Keep the game focused during startup/loading. Switching from Chrome into the game during loading reproduced startup crashes in user testing; the cause is unresolved.
-
-## Validation
-
-The user accepted the finished weapon design. Offline checks verify the packaged profiles, radius/ammo edits, resource composition and preservation of native thread safety, refusal, rollback, protection restoration and retained allocation lifetime. The combined pack has no duplicate resource identities or conflicting packaged files in the checked inputs. Fresh combined-pack startup and gameplay have not been independently audited.
+Keep the game focused during startup/loading. Switching from Chrome into the game during loading reproduced startup crashes during testing; the cause is unresolved.

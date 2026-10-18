@@ -1,6 +1,6 @@
 # SAI Focus Precision v0.10 release source
 
-`entry.lua` is the exact shipped Lua resource, also mirrored at `source/startup-initialization/8ba5fd7bc87570d8.lua`. Its module identity is `mods/codex/sai_focus_precision`, resource hash `8BA5FD7BC87570D8`, Lua type `A14E8DFA2CD117E2`; package GUID `3c8fb9f1-f1c2-4c81-bf48-a97722c1e902`.
+`entry.lua` is the exact shipped Lua resource, also mirrored at `source/startup-initialization/8ba5fd7bc87570d8.lua`. Its module identity is declared in `entry.lua`; resource hash `8BA5FD7BC87570D8`, Lua type `A14E8DFA2CD117E2`; package GUID `3c8fb9f1-f1c2-4c81-bf48-a97722c1e902`.
 
 Place the UTF-8 Lua payload in the Shared Loader version-2 envelope: little-endian u32 payload length, u32 version2, then payload bytes. Preserve the pure Lua archive and stable package/module identity. Check source row hashes, unique resource ownership, native code pins, source snapshots, bounded retries, transactions and reverse rollback. The attachment transaction performs two edits in one snapshot and records the expected preceding snapshot for each operation.
 

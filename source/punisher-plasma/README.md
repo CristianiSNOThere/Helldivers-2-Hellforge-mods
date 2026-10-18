@@ -23,8 +23,4 @@ Requires Bingus Shared Loader v18 or newer and Helldivers 2 Steam build 25480438
 
 This mod repurposes the Loyalist projectile/explosion/damage profile and the One-Two grenade-launcher attachment. Their original behavior is affected. AR-11 Arbitrator, Scorcher AR and other pack weapons retain their existing settings.
 
-Keep the game focused during startup/loading. Switching from Chrome into the game during loading reproduced startup crashes in user testing; the cause is unresolved.
-
-## Validation
-
-The user accepted the finished weapon design. Offline checks verify the packaged profiles, radius/ammo edits, resource composition and preservation of native thread safety, refusal, rollback, protection restoration and retained allocation lifetime. The combined pack has no duplicate resource identities or conflicting packaged files in the checked inputs. Fresh combined-pack startup and gameplay have not been independently audited.
+Keep the game focused during startup/loading. Switching from Chrome into the game during loading reproduced startup crashes during testing; the cause is unresolved.
