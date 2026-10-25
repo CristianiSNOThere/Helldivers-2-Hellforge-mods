@@ -63,8 +63,8 @@ typedef struct HfSickleComponentAttempt
     uintptr_t row;
     uint32_t offset;
     uint8_t size;
-    uint8_t before[8];
-    uint8_t after[8];
+    uint8_t before[HF_SICKLE_MAX_COMPONENT_EDIT];
+    uint8_t after[HF_SICKLE_MAX_COMPONENT_EDIT];
     uint8_t source[1232];
 } HfSickleComponentAttempt;
 
@@ -546,8 +546,10 @@ static HfSickleResult sickle_apply_profile(const HfSickleOps* ops, uintptr_t exe
             !sickle_read(ops, p->row, component_bytes, spec->stride) ||
             memcmp(component_bytes, p->source, spec->stride) != 0)
         {
-            (void)snprintf(reason, capacity, "Data changed before edit. No edit applied.");
-            return HF_SICKLE_RETRY_RACE;
+            (void)snprintf(reason, capacity, "Sickle data changed during component commit; restoring owned edits");
+            failed = 1;
+            retry_after_rollback = 1;
+            break;
         }
         attempt = &attempts[attempt_count++];
         memset(attempt, 0, sizeof(*attempt));
@@ -628,7 +630,7 @@ static HfSickleResult sickle_apply_profile(const HfSickleOps* ops, uintptr_t exe
     if (!failed)
     {
         (void)snprintf(reason, capacity,
-                       "LAS-16 70/10, half heat, 700 RPM; Double-Edge 65/10 cold-warm, 83/14 hot-maximum, -25%% direct heat self-damage; both 2000 m/s, zero spread, no fall-off; AP3 minimum and AP4 maximum retained");
+                       "LAS-16 70/10, half heat, 700 RPM; Double-Edge 65/10 cold-warm, 83/14 hot-maximum, -25%% direct heat self-damage; both instant wind-up, 2000 m/s, zero spread, no fall-off; AP3 minimum and AP4 maximum retained");
         return HF_SICKLE_APPLIED;
     }
 

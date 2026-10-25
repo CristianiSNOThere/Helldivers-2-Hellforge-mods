@@ -64,6 +64,9 @@
 
 #include "registry_bridge.inc"
 #include "sickle_port.inc"
+#if HF_PORT_SICKLE_LASER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
+#include "heatsink_runtime.inc"
+#endif
 #if (!defined(HF_PORT_TEST) && \
      (HF_PORT_ADJUDICATOR_HEAVY || HF_PORT_GL52_DE_ESCALATOR || HF_PORT_TENDERIZER_ARMOR_SOFTENER)) || \
     defined(HF_PORT_TEST_PRIVATE_PROFILES)
@@ -1917,6 +1920,10 @@ HF_MOD_EXPORT int hellforge_mod_init(const HfApi* api, HfMod* mod)
             HF_REGISTRY_DAMAGE_WITNESS_ID = HF_PUNISHER_CONTENT.normal_damage;
         HF_REGISTRY_PROJECTILE_WITNESS_ID = HF_PUNISHER_CONTENT.normal_projectile;
     }
+#endif
+
+#if HF_PORT_SICKLE_LASER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
+    sickle_heatsinks_begin(api, mod);
 #endif
 
     if (api->on(mod, HF_EVENT_NETWORK_READY, ApplyWhenReady, (void*)api) != 0 ||

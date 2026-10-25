@@ -98,7 +98,16 @@ Projectile speed is set to 1,300 metres per second. The drag setting is about 1.
 
 LAS-16 Sickle deals 70 normal damage and 10 against durable parts. Heat generated per shot is reduced by 50%, from 1.15 to about 0.58, allowing longer firing before overheating. LAS-17 Double-Edge Sickle deals 65 normal damage and 10 against durable parts when cold or warm, rising to 83 normal and 14 against durable parts when hot or at maximum heat.
 
-Both rifles have at least medium armor penetration, level 3; Double-Edge reaches level 4 at maximum heat. Both have a base fire rate of 700 rounds per minute, zero spread and projectile speed of 2,000 metres per second at every heat level, with no damage loss over distance. Double-Edge's direct heat self-damage is reduced by 25%. Its bullet heat buildup, cooling and maximum-heat ignition stay the same, and general fire damage is unchanged.
+Both rifles fire immediately when the trigger is pressed, with no charge-up delay. Both have at least medium armor penetration, level 3; Double-Edge reaches level 4 at maximum heat. Both have a base fire rate of 700 rounds per minute, zero spread and projectile speed of 2,000 metres per second at every heat level, with no damage loss over distance.
+
+Both rifles gain a magazine category in weapon customization with two heatsink choices:
+
+- **Sickle Standard Heatsink:** 100 heat capacity and 8 heat units per second of cooling.
+- **Sickle Rapid Cooling Heatsink:** keeps 100 heat capacity and increases cooling to 12 heat units per second, 50% faster than Standard.
+- **Double-Edge Standard Heatsink:** 200 heat capacity, 8 heat units per second of cooling and heat-stage thresholds of 50, 100 and 190. Direct heat self-damage is reduced by 25%, to 15, 30 and 75 across its three stages.
+- **Double-Edge Rapid Heat Heatsink:** reduces capacity to 150 and stage thresholds to 37.5, 75 and 142.5, reaching each stage 25% sooner. Cooling stays at 8 heat units per second. While equipped, direct heat self-damage is 50% of the original weapon's values: 10, 20 and 50 across its three stages.
+
+Choose the desired heatsink in weapon customization before entering a mission. Reselect it after starting the game. Both choices keep the existing magazine model. Double-Edge's maximum-heat ignition and general fire damage are unchanged.
 
 ## Tenderizer Armor Softener
 
