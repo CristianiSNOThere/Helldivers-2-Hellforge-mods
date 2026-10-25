@@ -1,0 +1,9 @@
+{
+  "format": 1,
+  "patches": [
+    {
+      "archives": ["9ba626afa44a3aa3"],
+      "resources": [{"type": "package", "include": ["0x9BA626AFA44A3AA3"]}]
+    }
+  ]
+}

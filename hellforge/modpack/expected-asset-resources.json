@@ -1,0 +1,321 @@
+{
+  "schema": 1,
+  "archives": {
+    "18235e0c9ec0e636": {
+      "A486D4045106165C:4D1C334D294DFA97": {
+        "cpu": {
+          "bytes": 11323840,
+          "sha256": "8ED0353BBA573BA4528E964EF50C6A19370D354D48D4E1507D00077F23C621F1"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      }
+    },
+    "49f1972458f7ccec": {
+      "CD4238C6A0C69E32:04A884C938E65FB9": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "4F88F2365A085B48612705304BDCBAD83371DCD6D6CA42BBB14209CE07E719D1"
+        }
+      },
+      "CD4238C6A0C69E32:33AE4B701DF9F6DD": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3836FE15E8E044E24EAE8063D8246AE9780D956EB0286EEA9D3B5A931666B755"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 699048,
+          "sha256": "D448CA4A4B2F3C58EF982DAD49E60907301D6437DF4F4A09FFD7F6C356557B21"
+        }
+      },
+      "CD4238C6A0C69E32:8D2900D53105DA75": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "D9392C0669B68B64E5E6C9F5A5CF5C976239BC0E9E3CA473FE929549013A6BC1"
+        },
+        "stream": {
+          "bytes": 349552,
+          "sha256": "AB3FBCCDB1399C0BDF2F99CAAEB5DF0E519A0C6208C3C390E02B71EF78D5F36C"
+        },
+        "gpu": {
+          "bytes": 1392,
+          "sha256": "5A163D5D7A4202DD825EA07338A49EC163977221814055222C6CCAFC03DCDB7F"
+        }
+      },
+      "CD4238C6A0C69E32:988586829CA7CFC0": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3836FE15E8E044E24EAE8063D8246AE9780D956EB0286EEA9D3B5A931666B755"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 699048,
+          "sha256": "2B387A80A240B183B6BA2ED7BA495D63283D5475652E343684A0758A7FA8FC50"
+        }
+      },
+      "CD4238C6A0C69E32:9ADC6AAD343F8137": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3C58D6286C952F6E428A51FE967222B7407C95B145C0CE50951F9A812CE49F8E"
+        },
+        "stream": {
+          "bytes": 349552,
+          "sha256": "B90B53D08E84865CCEB48179E0E46DAE10A74F783BF7F6CDE03FE2B2F114213C"
+        },
+        "gpu": {
+          "bytes": 1392,
+          "sha256": "BF4C0C7AE8EC3967B4B53D5FEDA79BF6A83A921A535EFE07F433EB154659101E"
+        }
+      },
+      "CD4238C6A0C69E32:F96E5890EFECAB78": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "8CC3FBA6D9D9BF3274686E6E0F1BA7AA2A1C1C70565C3254C192EE1E37C54ED2"
+        }
+      },
+      "E0A48D0BE9A7453F:02CD7321CD8445F5": {
+        "cpu": {
+          "bytes": 15776,
+          "sha256": "643730C515148BE727E3E47A4A28B1755325224D1B76E04D6664DB87B310356E"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 156362,
+          "sha256": "F2DD3B4EB32D0337525EDE383815EF6C141A31B4702F85E5DAABEC3D680A07C3"
+        }
+      },
+      "E0A48D0BE9A7453F:411C4FD07740A7DD": {
+        "cpu": {
+          "bytes": 3440,
+          "sha256": "5C7E746329B6305748FBDA839375FE053C633E8E1C3FB93F8E2A28148322267B"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 54640,
+          "sha256": "D341DC1D4EFD2879AA4D6AC2F28B01031B95F4091826B88E0517FB30049AEC3A"
+        }
+      },
+      "EAC0B497876ADEDF:4C27D54D51C298AB": {
+        "cpu": {
+          "bytes": 1184,
+          "sha256": "7BD0AEF3AE65CBFEB7DF31B3C1C189200A0F89C8C76108CD03043E7169A3C754"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      },
+      "EAC0B497876ADEDF:7CD9495D4A4B7477": {
+        "cpu": {
+          "bytes": 1600,
+          "sha256": "5D1BED593B7605D443D88D392722F2F18E434687557A62788862E5A2240EE032"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      }
+    },
+    "9ba626afa44a3aa3": {
+      "AD9C6D9ED1E5E77A:9BA626AFA44A3AA3": {
+        "cpu": {
+          "bytes": 66096,
+          "sha256": "8AA84DAE5E4E84B7B543078FBF4F21A14A8705A9AABBF67384477CD0C0584555"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      }
+    },
+    "e16e0aa7740716a2": {
+      "CD4238C6A0C69E32:04A884C938E65FB9": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "4F88F2365A085B48612705304BDCBAD83371DCD6D6CA42BBB14209CE07E719D1"
+        }
+      },
+      "CD4238C6A0C69E32:33AE4B701DF9F6DD": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3836FE15E8E044E24EAE8063D8246AE9780D956EB0286EEA9D3B5A931666B755"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 699048,
+          "sha256": "D448CA4A4B2F3C58EF982DAD49E60907301D6437DF4F4A09FFD7F6C356557B21"
+        }
+      },
+      "CD4238C6A0C69E32:8D2900D53105DA75": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "D9392C0669B68B64E5E6C9F5A5CF5C976239BC0E9E3CA473FE929549013A6BC1"
+        },
+        "stream": {
+          "bytes": 349552,
+          "sha256": "AB3FBCCDB1399C0BDF2F99CAAEB5DF0E519A0C6208C3C390E02B71EF78D5F36C"
+        },
+        "gpu": {
+          "bytes": 1392,
+          "sha256": "5A163D5D7A4202DD825EA07338A49EC163977221814055222C6CCAFC03DCDB7F"
+        }
+      },
+      "CD4238C6A0C69E32:988586829CA7CFC0": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3836FE15E8E044E24EAE8063D8246AE9780D956EB0286EEA9D3B5A931666B755"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 699048,
+          "sha256": "2B387A80A240B183B6BA2ED7BA495D63283D5475652E343684A0758A7FA8FC50"
+        }
+      },
+      "CD4238C6A0C69E32:9ADC6AAD343F8137": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3C58D6286C952F6E428A51FE967222B7407C95B145C0CE50951F9A812CE49F8E"
+        },
+        "stream": {
+          "bytes": 349552,
+          "sha256": "B90B53D08E84865CCEB48179E0E46DAE10A74F783BF7F6CDE03FE2B2F114213C"
+        },
+        "gpu": {
+          "bytes": 1392,
+          "sha256": "BF4C0C7AE8EC3967B4B53D5FEDA79BF6A83A921A535EFE07F433EB154659101E"
+        }
+      },
+      "CD4238C6A0C69E32:F96E5890EFECAB78": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "8CC3FBA6D9D9BF3274686E6E0F1BA7AA2A1C1C70565C3254C192EE1E37C54ED2"
+        }
+      },
+      "E0A48D0BE9A7453F:02CD7321CD8445F5": {
+        "cpu": {
+          "bytes": 15776,
+          "sha256": "643730C515148BE727E3E47A4A28B1755325224D1B76E04D6664DB87B310356E"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 156362,
+          "sha256": "F2DD3B4EB32D0337525EDE383815EF6C141A31B4702F85E5DAABEC3D680A07C3"
+        }
+      },
+      "E0A48D0BE9A7453F:411C4FD07740A7DD": {
+        "cpu": {
+          "bytes": 3440,
+          "sha256": "5C7E746329B6305748FBDA839375FE053C633E8E1C3FB93F8E2A28148322267B"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 54640,
+          "sha256": "D341DC1D4EFD2879AA4D6AC2F28B01031B95F4091826B88E0517FB30049AEC3A"
+        }
+      },
+      "EAC0B497876ADEDF:4C27D54D51C298AB": {
+        "cpu": {
+          "bytes": 1184,
+          "sha256": "7BD0AEF3AE65CBFEB7DF31B3C1C189200A0F89C8C76108CD03043E7169A3C754"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      },
+      "EAC0B497876ADEDF:7CD9495D4A4B7477": {
+        "cpu": {
+          "bytes": 1600,
+          "sha256": "5D1BED593B7605D443D88D392722F2F18E434687557A62788862E5A2240EE032"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      }
+    }
+  }
+}

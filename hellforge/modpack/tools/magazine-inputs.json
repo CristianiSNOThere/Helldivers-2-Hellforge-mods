@@ -1,0 +1,11 @@
+{
+  "format": 1,
+  "patches": [
+    {
+      "archives": ["49f1972458f7ccec"],
+      "resources": [
+        {"type": "unit", "include": ["0x02CD7321CD8445F5", "0x05D8D8C073B9D502", "0x411C4FD07740A7DD", "0x48D2DDC8E9A80B1E"]}
+      ]
+    }
+  ]
+}

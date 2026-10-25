@@ -1,0 +1,30 @@
+{
+  "format": 1,
+  "patches": [
+    {
+      "archives": ["49f1972458f7ccec", "e16e0aa7740716a2"],
+      "resources": [
+        {
+          "type": "material",
+          "copy": "0xB459C67CCD7737A4",
+          "name": "mods/cristiani/punisher_plasma/sta11_punisher_detail_material",
+          "expect": {
+            "0xD4": "0x6D2EAEF1171D0E89",
+            "0xF4": "0x8B6C70CB21B5A9D7",
+            "0x114": "0x0D3B23087792E175"
+          },
+          "replace": [
+            {"from": "0x6D2EAEF1171D0E89", "to": "0x9ADC6AAD343F8137", "at": ["0xD4"]},
+            {"from": "0x8B6C70CB21B5A9D7", "to": "0x33AE4B701DF9F6DD", "at": ["0xF4"]},
+            {"from": "0x0D3B23087792E175", "to": "mods/cristiani/punisher_plasma/sta11_punisher_white_lut", "at": ["0x114"]}
+          ]
+        },
+        {
+          "type": "texture",
+          "copy": "0x0D3B23087792E175",
+          "name": "mods/cristiani/punisher_plasma/sta11_punisher_white_lut"
+        }
+      ]
+    }
+  ]
+}

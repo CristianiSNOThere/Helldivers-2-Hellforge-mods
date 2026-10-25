@@ -1,0 +1,946 @@
+{
+  "schema": 1,
+  "baseline": "2.4.1",
+  "options": {
+    "40-k-meltagun": {
+      "name": "40-K Meltagun",
+      "macro": "HF_PORT_40_K_MELTAGUN"
+    },
+    "a-gm-17-gas-mortar-sentry": {
+      "name": "A/GM-17 Gas Mortar Sentry",
+      "macro": "HF_PORT_A_GM_17_GAS_MORTAR_SENTRY"
+    },
+    "ac-8-autocannon": {
+      "name": "AC-8 Autocannon Backpackless Rework",
+      "macro": "HF_PORT_AC_8_AUTOCANNON"
+    },
+    "apw-1-anti-materiel-rifle": {
+      "name": "APW-1 Anti-Materiel Rifle",
+      "macro": "HF_PORT_APW_1_ANTI_MATERIEL_RIFLE"
+    },
+    "ar-11-arbitrator": {
+      "name": "AR-11 Arbitrator",
+      "macro": "HF_PORT_AR_11_ARBITRATOR"
+    },
+    "ar-32-pacifier": {
+      "name": "AR-32 Pacifier Tuning",
+      "macro": "HF_PORT_AR_32_PACIFIER"
+    },
+    "arc-12-blitzer": {
+      "name": "ARC-12 Blitzer",
+      "macro": "HF_PORT_ARC_12_BLITZER"
+    },
+    "arc-3-rapid-supercharge": {
+      "name": "ARC-3 Rapid/Supercharge",
+      "macro": "HF_PORT_ARC_3_RAPID_SUPERCHARGE"
+    },
+    "cqc-20-breaching-hammer": {
+      "name": "CQC-20 Breaching Hammer",
+      "macro": "HF_PORT_CQC_20_BREACHING_HAMMER"
+    },
+    "gas-overhaul": {
+      "name": "Gas Overhaul",
+      "macro": "HF_PORT_GAS_OVERHAUL"
+    },
+    "one-true-flag": {
+      "name": "One True Flag",
+      "macro": "HF_PORT_ONE_TRUE_FLAG"
+    },
+    "p-34-breacher": {
+      "name": "P-34 Breacher",
+      "macro": "HF_PORT_P_34_BREACHER"
+    },
+    "plas-1-scorcher-ar": {
+      "name": "PLAS-1 Scorcher AR",
+      "macro": "HF_PORT_PLAS_1_SCORCHER_AR"
+    },
+    "plas-39-accelerator-rifle": {
+      "name": "PLAS-39 Accelerator Rifle",
+      "macro": "HF_PORT_PLAS_39_ACCELERATOR_RIFLE"
+    },
+    "plas-45-epoch": {
+      "name": "PLAS-45 Epoch Highest-Charge Rework",
+      "macro": "HF_PORT_PLAS_45_EPOCH"
+    },
+    "r-40-k-hot-shot": {
+      "name": "R/40-K Hot-Shot",
+      "macro": "HF_PORT_R_40_K_HOT_SHOT"
+    },
+    "rs-422-railgun": {
+      "name": "RS-422 Railgun",
+      "macro": "HF_PORT_RS_422_RAILGUN"
+    },
+    "s-11-speargun": {
+      "name": "S-11 Speargun",
+      "macro": "HF_PORT_S_11_SPEARGUN"
+    },
+    "sai-focus-precision": {
+      "name": "SAI Focus Precision",
+      "macro": "HF_PORT_SAI_FOCUS_PRECISION"
+    },
+    "sickle-laser-ar": {
+      "name": "Sickle Laser AR",
+      "macro": "HF_PORT_SICKLE_LASER_AR"
+    },
+    "tenderizer-armor-softener": {
+      "name": "Tenderizer Armor Softener",
+      "macro": "HF_PORT_TENDERIZER_ARMOR_SOFTENER"
+    },
+    "vg-70-variable": {
+      "name": "VG-70 Variable Portable Maxigun Rework",
+      "macro": "HF_PORT_VG_70_VARIABLE"
+    },
+    "adjudicator-heavy": {
+      "name": "BR-14 Adjudicator Heavy Battle Rifle",
+      "macro": "HF_PORT_ADJUDICATOR_HEAVY"
+    },
+    "punisher-plasma": {
+      "name": "SG-8P Punisher Plasma",
+      "macro": "HF_PORT_PUNISHER_PLASMA"
+    },
+    "gl52-de-escalator": {
+      "name": "GL-52 De-Escalator",
+      "macro": "HF_PORT_GL52_DE_ESCALATOR"
+    }
+  },
+  "flag_normal": [
+    0,
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    750,
+    1000,
+    1500,
+    2000,
+    3000,
+    5000,
+    7500,
+    9999
+  ],
+  "edits": [
+    {
+      "option": "40-k-meltagun",
+      "line": "    { PORT_EDIT_LIVE, \"40-k-meltagun\", UINT64_C(0x6CFCC7F8801A0266), HF_FIELD(WeaponData, ergonomics), {0}, HF_F32(40.0), {0}, 0u, 0u, \"40-K Meltagun / weapon.ergonomics\" },"
+    },
+    {
+      "option": "40-k-meltagun",
+      "line": "    { PORT_EDIT_LIVE, \"40-k-meltagun\", UINT64_C(0x00000000000001FD), HF_FIELD(DamageInfo, status_2_type), {0}, HF_U32(0), {0}, 0u, HF_LIVE_SHARED, \"40-K Meltagun / damage.primary.status_2_type\" },"
+    },
+    {
+      "option": "40-k-meltagun",
+      "line": "    { PORT_EDIT_LIVE, \"40-k-meltagun\", UINT64_C(0x00000000000001FD), HF_FIELD(DamageInfo, status_2_strength), {0}, HF_F32(0.0), {0}, 0u, HF_LIVE_SHARED, \"40-K Meltagun / damage.primary.status_2_strength\" },"
+    },
+    {
+      "option": "40-k-meltagun",
+      "line": "    { PORT_EDIT_LIVE, \"40-k-meltagun\", UINT64_C(0x0000000000000012), HF_FIELD(BeamSettings, length), {0}, HF_F32(20.0), {0}, 0u, HF_LIVE_SHARED, \"40-K Meltagun / beam.primary.length\" },"
+    },
+    {
+      "option": "a-gm-17-gas-mortar-sentry",
+      "line": "    { PORT_EDIT_LIVE, \"a-gm-17-gas-mortar-sentry\", UINT64_C(0x299C0D3DFD2F0994), HF_FIELD(Health, health), {0}, HF_I32(600), {0}, 0u, 0u, \"A/GM-17 Gas Mortar Sentry / entity.health\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponRounds, spare_rounds), {0}, HF_U32(60), HF_U32(0), 1u, 0u, \"AC-8 Autocannon / rounds.spare_rounds\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponRounds, rounds_from_supply), {0}, HF_U32(60), HF_U32(0), 1u, 0u, \"AC-8 Autocannon / rounds.rounds_from_supply\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponRounds, starting_rounds), {0}, HF_U32(60), HF_U32(0), 1u, 0u, \"AC-8 Autocannon / rounds.starting_rounds\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponData, recoil_drift_horizontal), {0}, HF_F32(150.0), HF_F32(200.0), 1u, 0u, \"AC-8 Autocannon / weapon.recoil_drift_horizontal\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponData, recoil_drift_vertical), {0}, HF_F32(337.5), HF_F32(450.0), 1u, 0u, \"AC-8 Autocannon / weapon.recoil_drift_vertical\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponData, recoil_climb_horizontal), {0}, HF_F32(1.5), HF_F32(2.0), 1u, 0u, \"AC-8 Autocannon / weapon.recoil_climb_horizontal\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponData, recoil_climb_vertical), {0}, HF_F32(75.0), HF_F32(100.0), 1u, 0u, \"AC-8 Autocannon / weapon.recoil_climb_vertical\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponData, ergonomics), {0}, HF_F32(30.0), HF_F32(17.0), 1u, 0u, \"AC-8 Autocannon / weapon.ergonomics\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0xA8CFFB316F0B5C5F), HF_FIELD(WeaponReload, duration), {0}, HF_F32(2.5), HF_F32(3.0), 1u, 0u, \"AC-8 Autocannon / reload.duration\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x5F41C4DCABE95421), HF_FIELD(HellpodRack, spawn_count), {0}, HF_U32(1), HF_U32(2), 1u, 0u, \"AC-8 Autocannon / payload.spawn_count\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x00000000000000D5), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(375), HF_I32(325), 1u, HF_LIVE_SHARED, \"AC-8 Autocannon / damage.primary.standard_damage\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x00000000000000D5), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(340), HF_I32(260), 1u, HF_LIVE_SHARED, \"AC-8 Autocannon / damage.primary.durable_damage\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x00000000000000D5), HF_FIELD_AT(DamageInfo, armor_penetration, 0), {0}, HF_U32(5), HF_U32(4), 1u, HF_LIVE_SHARED, \"AC-8 Autocannon / damage.primary.ap_direct\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x00000000000000D5), HF_FIELD_AT(DamageInfo, armor_penetration, 1), {0}, HF_U32(5), HF_U32(4), 1u, HF_LIVE_SHARED, \"AC-8 Autocannon / damage.primary.ap_slight\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x00000000000000D5), HF_FIELD_AT(DamageInfo, armor_penetration, 2), {0}, HF_U32(5), HF_U32(4), 1u, HF_LIVE_SHARED, \"AC-8 Autocannon / damage.primary.ap_large\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x0000000000000172), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(180), HF_I32(150), 1u, HF_LIVE_SHARED, \"AC-8 Autocannon (impact) / explosion.damage.standard_damage\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x000000000000015A), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(210), HF_I32(190), 1u, HF_LIVE_SHARED, \"AC-8 Autocannon (function impact) / explosion.damage.standard_damage\" },"
+    },
+    {
+      "option": "ac-8-autocannon",
+      "line": "    { PORT_EDIT_LIVE, \"ac-8-autocannon\", UINT64_C(0x000000000000017C), HF_FIELD(ExplosionSettings, outer_radius), {0}, HF_F32(8.0), HF_F32(7.0), 1u, HF_LIVE_SHARED, \"AC-8 Autocannon (function impact) / explosion.outer_radius\" },"
+    },
+    {
+      "option": "apw-1-anti-materiel-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"apw-1-anti-materiel-rifle\", UINT64_C(0x89C5493E08CA4207), HF_FIELD(WeaponData, ergonomics), {0}, HF_F32(40.0), {0}, 0u, 0u, \"APW-1 Anti-Materiel Rifle / weapon.ergonomics\" },"
+    },
+    {
+      "option": "apw-1-anti-materiel-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"apw-1-anti-materiel-rifle\", UINT64_C(0x89C5493E08CA4207), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(10), {0}, 0u, 0u, \"APW-1 Anti-Materiel Rifle / weapon.capacity\" },"
+    },
+    {
+      "option": "apw-1-anti-materiel-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"apw-1-anti-materiel-rifle\", UINT64_C(0x89C5493E08CA4207), HF_FIELD(WeaponMagazine, max_magazines), {0}, HF_U32(10), {0}, 0u, 0u, \"APW-1 Anti-Materiel Rifle / magazine.spare_magazines\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0x0000000000000085), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(80), {0}, 0u, HF_LIVE_SHARED, \"AR-11 Arbitrator / damage.standard_damage\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0xA8A91EB54892B6B2), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(65), {0}, 0u, 0u, \"AR-11 Arbitrator / weapon.capacity\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0xB9C209B4F99B5335), HF_FIELD(WeaponRounds, feed_capacity_1), {0}, HF_F32(4.0), {0}, 0u, 0u, \"AR-11 Arbitrator / underbarrel / rounds.feed_capacity_1\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0xB9C209B4F99B5335), HF_FIELD(WeaponRounds, spare_rounds), {0}, HF_U32(30), {0}, 0u, 0u, \"AR-11 Arbitrator / underbarrel / rounds.spare_rounds\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0xB9C209B4F99B5335), HF_FIELD(WeaponRounds, starting_rounds), {0}, HF_U32(30), {0}, 0u, 0u, \"AR-11 Arbitrator / underbarrel / rounds.starting_rounds\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0xB9C209B4F99B5335), HF_FIELD(WeaponRounds, rounds_from_supply), {0}, HF_U32(20), {0}, 0u, 0u, \"AR-11 Arbitrator / underbarrel / rounds.rounds_from_supply\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0x00000000000000A1), HF_FIELD(DamageInfo, stagger), {0}, HF_U32(25), {0}, 0u, HF_LIVE_SHARED, \"AR-11 Arbitrator / underbarrel / damage.stagger\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0x00000000000000A1), HF_FIELD(DamageInfo, push_force), {0}, HF_U32(20), {0}, 0u, HF_LIVE_SHARED, \"AR-11 Arbitrator / underbarrel / damage.push_force\" },"
+    },
+    {
+      "option": "ar-11-arbitrator",
+      "line": "    { PORT_EDIT_LIVE, \"ar-11-arbitrator\", UINT64_C(0xA8A91EB54892B6B2), HF_FIELD(WeaponData, ergonomics), {0}, HF_F32(41.0), {0}, 0u, 0u, \"AR-11 Arbitrator / weapon.ergonomics\" },"
+    },
+    {
+      "option": "ar-32-pacifier",
+      "line": "    { PORT_EDIT_LIVE, \"ar-32-pacifier\", UINT64_C(0x0000000000000074), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(75), HF_I32(55), 1u, HF_LIVE_SHARED, \"AR-32 Pacifier / damage.standard_damage\" },"
+    },
+    {
+      "option": "ar-32-pacifier",
+      "line": "    { PORT_EDIT_LIVE, \"ar-32-pacifier\", UINT64_C(0x0000000000000074), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(15), HF_I32(10), 1u, HF_LIVE_SHARED, \"AR-32 Pacifier / damage.durable_damage\" },"
+    },
+    {
+      "option": "ar-32-pacifier",
+      "line": "    { PORT_EDIT_LIVE, \"ar-32-pacifier\", UINT64_C(0x0000000000000074), HF_FIELD(DamageInfo, status_1_strength), {0}, HF_F32(3.0), HF_F32(2.0), 1u, HF_LIVE_SHARED, \"AR-32 Pacifier / damage.status_1_strength\" },"
+    },
+    {
+      "option": "ar-32-pacifier",
+      "line": "    { PORT_EDIT_STAT, \"ar-32-pacifier\", 0u, {0}, { \"EntityDelta\", \"5:136\", UINT64_C(0x16AB263BC03B4F96), 153, 170592u, HF_TYPE_U32 }, HF_U32(65), HF_U32(40), 1u, HF_LIVE_SHARED, \"AR-32 Pacifier / magazine.capacity\" },"
+    },
+    {
+      "option": "ar-32-pacifier",
+      "line": "    { PORT_EDIT_LIVE, \"ar-32-pacifier\", UINT64_C(0xBC29613666DF696B), HF_FIELD(WeaponData, sway), {0}, HF_F32(0.6), HF_F32(1.0), 1u, 0u, \"AR-32 Pacifier / weapon.sway\" },"
+    },
+    {
+      "option": "arc-12-blitzer",
+      "line": "    { PORT_EDIT_LIVE, \"arc-12-blitzer\", UINT64_C(0x00000000000000C7), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(100), {0}, 0u, HF_LIVE_SHARED, \"ARC-12 Blitzer / damage.standard_damage\" },"
+    },
+    {
+      "option": "arc-12-blitzer",
+      "line": "    { PORT_EDIT_LIVE, \"arc-12-blitzer\", UINT64_C(0x00000000000000C7), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(45), {0}, 0u, HF_LIVE_SHARED, \"ARC-12 Blitzer / damage.durable_damage\" },"
+    },
+    {
+      "option": "arc-12-blitzer",
+      "line": "    { PORT_EDIT_LIVE, \"arc-12-blitzer\", UINT64_C(0x0000000000000003), HF_FIELD(ArcSettings, range), {0}, HF_F32(30.0), {0}, 0u, HF_LIVE_SHARED, \"ARC-12 Blitzer / arc.range\" },"
+    },
+    {
+      "option": "arc-12-blitzer",
+      "line": "    { PORT_EDIT_LIVE, \"arc-12-blitzer\", UINT64_C(0x076DD5D4F4360204), HF_FIELD(ArcWeapon, fire_rate), {0}, HF_F32(80.0), {0}, 0u, 0u, \"ARC-12 Blitzer / weapon.fire_rate\" },"
+    },
+    {
+      "option": "cqc-20-breaching-hammer",
+      "line": "    { PORT_EDIT_LIVE, \"cqc-20-breaching-hammer\", UINT64_C(0x0000000000000232), HF_FIELD_AT(DamageInfo, armor_penetration, 0), {0}, HF_U32(7), {0}, 0u, HF_LIVE_SHARED, \"CQC-20 Breaching Hammer / explosion.ability.damage.ap_direct\" },"
+    },
+    {
+      "option": "cqc-20-breaching-hammer",
+      "line": "    { PORT_EDIT_LIVE, \"cqc-20-breaching-hammer\", UINT64_C(0x0000000000000232), HF_FIELD_AT(DamageInfo, armor_penetration, 1), {0}, HF_U32(7), {0}, 0u, HF_LIVE_SHARED, \"CQC-20 Breaching Hammer / explosion.ability.damage.ap_slight\" },"
+    },
+    {
+      "option": "cqc-20-breaching-hammer",
+      "line": "    { PORT_EDIT_LIVE, \"cqc-20-breaching-hammer\", UINT64_C(0x0000000000000232), HF_FIELD_AT(DamageInfo, armor_penetration, 2), {0}, HF_U32(7), {0}, 0u, HF_LIVE_SHARED, \"CQC-20 Breaching Hammer / explosion.ability.damage.ap_large\" },"
+    },
+    {
+      "option": "cqc-20-breaching-hammer",
+      "line": "    { PORT_EDIT_LIVE, \"cqc-20-breaching-hammer\", UINT64_C(0x5F3EC9BDA2BD8553), HF_FIELD(WeaponMagazine, starting_magazines), {0}, HF_U32(21), {0}, 0u, 0u, \"CQC-20 Breaching Hammer / magazine.starting_magazines\" },"
+    },
+    {
+      "option": "cqc-20-breaching-hammer",
+      "line": "    { PORT_EDIT_LIVE, \"cqc-20-breaching-hammer\", UINT64_C(0x5F3EC9BDA2BD8553), HF_FIELD(WeaponMagazine, magazines_from_supply), {0}, HF_U32(21), {0}, 0u, 0u, \"CQC-20 Breaching Hammer / magazine.magazines_from_supply\" },"
+    },
+    {
+      "option": "cqc-20-breaching-hammer",
+      "line": "    { PORT_EDIT_LIVE, \"cqc-20-breaching-hammer\", UINT64_C(0x5F3EC9BDA2BD8553), HF_FIELD(WeaponMagazine, max_magazines), {0}, HF_U32(21), {0}, 0u, 0u, \"CQC-20 Breaching Hammer / magazine.spare_magazines\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x000000000000001C), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(2), HF_I32(1), 1u, HF_LIVE_SHARED, \"TX-41 Sterilizer / damage.primary.standard_damage\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x000000000000001C), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(2), HF_I32(1), 1u, HF_LIVE_SHARED, \"TX-41 Sterilizer / damage.primary.durable_damage\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x000000000000001C), HF_FIELD(DamageInfo, status_1_strength), {0}, HF_F32(0.75), HF_F32(0.5), 1u, HF_LIVE_SHARED, \"TX-41 Sterilizer / damage.primary.status_1_strength\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x000000000000001C), HF_FIELD(DamageInfo, status_2_strength), {0}, HF_F32(0.75), HF_F32(0.5), 1u, HF_LIVE_SHARED, \"TX-41 Sterilizer / damage.primary.status_2_strength\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x0000000000000214), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(60), HF_I32(25), 1u, HF_LIVE_SHARED, \"Gas (gas) / damage.standard_damage\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x0000000000000214), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(60), HF_I32(25), 1u, HF_LIVE_SHARED, \"Gas (gas) / damage.durable_damage\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x0000000000000037), HF_FIELD(StatusEffectSettings, duration), {0}, HF_F32(15.0), HF_F32(1.0), 1u, HF_LIVE_SHARED, \"Acid Storm / status.duration\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x88F61AFFF48AC8A4), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(175), HF_U32(125), 1u, 0u, \"TX-41 Sterilizer / weapon.capacity\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_LIVE, \"gas-overhaul\", UINT64_C(0x00000000000000D0), HF_FIELD(PassiveModifier, value), {0}, HF_F32(0.0), HF_F32(0.2), 1u, HF_LIVE_SHARED, \"Advanced Filtration / perk.gas_resistance\" },"
+    },
+    {
+      "option": "gas-overhaul",
+      "line": "    { PORT_EDIT_GAS_PLAYER_HEALTH, \"gas-overhaul\", 0u, {0}, {0}, HF_F32(0.55), HF_F32(1.3), 1u, HF_LIVE_SHARED, \"Helldiver / health.gas_multiplier\" },"
+    },
+    {
+      "option": "one-true-flag",
+      "line": "    { PORT_EDIT_LIVE, \"one-true-flag\", UINT64_C(0x000000000000022D), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(HF_PORT_FLAG_NORMAL_DAMAGE), {0}, 0u, HF_LIVE_SHARED, \"CQC-1 One True Flag / damage.primary.standard_damage\" },"
+    },
+    {
+      "option": "one-true-flag",
+      "line": "    { PORT_EDIT_LIVE, \"one-true-flag\", UINT64_C(0x000000000000022D), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(HF_PORT_FLAG_DURABLE_DAMAGE), {0}, 0u, HF_LIVE_SHARED, \"CQC-1 One True Flag / damage.primary.durable_damage\" },"
+    },
+    {
+      "option": "p-34-breacher",
+      "line": "    { PORT_EDIT_LIVE, \"p-34-breacher\", UINT64_C(0xE91F569C2AD8AF01), HF_FIELD(WeaponMagazine, magazines_from_supply), {0}, HF_U32(2), {0}, 0u, 0u, \"P-34 Breacher / magazine.magazines_from_supply\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(50), {0}, 0u, 0u, \"PLAS-1 Scorcher / weapon.capacity\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD_AT(ProjectileWeapon, fire_rate, 1), {0}, HF_F32(540.0), {0}, 0u, 0u, \"PLAS-1 Scorcher / weapon.fire_rate\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x0000000000000038), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(75), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / damage.standard_damage\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x0000000000000038), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(38), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / damage.durable_damage\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x0000000000000132), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(75), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / explosion.primary.impact.damage.standard_damage\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x0000000000000132), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(75), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / explosion.primary.impact.damage.durable_damage\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x000000000000009B), HF_FIELD(ExplosionSettings, inner_radius), {0}, HF_F32(1.25), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / explosion.primary.impact.inner_radius\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x000000000000009B), HF_FIELD(ExplosionSettings, outer_radius), {0}, HF_F32(2.5), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / explosion.primary.impact.outer_radius\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD(WeaponMagazine, starting_magazines), {0}, HF_U32(4), {0}, 0u, 0u, \"PLAS-1 Scorcher / magazine.starting_magazines\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD(WeaponMagazine, max_magazines), {0}, HF_U32(6), {0}, 0u, 0u, \"PLAS-1 Scorcher / magazine.spare_magazines\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD(WeaponData, recoil_drift_horizontal), {0}, HF_F32(15.0), {0}, 0u, 0u, \"PLAS-1 Scorcher / weapon.recoil_drift_horizontal\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD(WeaponData, recoil_drift_vertical), {0}, HF_F32(15.0), {0}, 0u, 0u, \"PLAS-1 Scorcher / weapon.recoil_drift_vertical\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD(WeaponData, recoil_climb_horizontal), {0}, HF_F32(1.5), {0}, 0u, 0u, \"PLAS-1 Scorcher / weapon.recoil_climb_horizontal\" },"
+    },
+    {
+      "option": "plas-1-scorcher-ar",
+      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD(WeaponData, recoil_climb_vertical), {0}, HF_F32(15.0), {0}, 0u, 0u, \"PLAS-1 Scorcher / weapon.recoil_climb_vertical\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x30061F91AF477F5E), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(21), HF_U32(9), 1u, 0u, \"PLAS-39 Accelerator Rifle / weapon.capacity\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x30061F91AF477F5E), HF_FIELD(WeaponData, recoil_drift_horizontal), {0}, HF_F32(2.0), HF_F32(3.0), 1u, 0u, \"PLAS-39 Accelerator Rifle / weapon.recoil_drift_horizontal\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x30061F91AF477F5E), HF_FIELD(WeaponData, recoil_climb_horizontal), {0}, HF_F32(2.0), HF_F32(3.0), 1u, 0u, \"PLAS-39 Accelerator Rifle / weapon.recoil_climb_horizontal\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x30061F91AF477F5E), HF_FIELD(WeaponData, recoil_drift_vertical), {0}, HF_F32(2.0), HF_F32(3.0), 1u, 0u, \"PLAS-39 Accelerator Rifle / weapon.recoil_drift_vertical\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x30061F91AF477F5E), HF_FIELD(WeaponData, recoil_climb_vertical), {0}, HF_F32(2.0), HF_F32(3.0), 1u, 0u, \"PLAS-39 Accelerator Rifle / weapon.recoil_climb_vertical\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x30061F91AF477F5E), HF_FIELD(WeaponData, horizontal_spread), {0}, HF_F32(0.3), HF_F32(0.5), 1u, 0u, \"PLAS-39 Accelerator Rifle / weapon.horizontal_spread\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x30061F91AF477F5E), HF_FIELD(WeaponData, vertical_spread), {0}, HF_F32(0.3), HF_F32(0.5), 1u, 0u, \"PLAS-39 Accelerator Rifle / weapon.vertical_spread\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x30061F91AF477F5E), HF_FIELD(WeaponData, sway), {0}, HF_F32(0.4), HF_F32(1.0), 1u, 0u, \"PLAS-39 Accelerator Rifle / weapon.sway\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x0000000000000134), HF_FIELD(DamageInfo, stagger), {0}, HF_U32(25), HF_U32(20), 1u, HF_LIVE_SHARED, \"PLAS-39 Accelerator Rifle / damage.stagger\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x0000000000000134), HF_FIELD_AT(DamageInfo, armor_penetration, 0), {0}, HF_U32(4), HF_U32(3), 1u, HF_LIVE_SHARED, \"PLAS-39 Accelerator Rifle / damage.ap_direct\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x0000000000000134), HF_FIELD_AT(DamageInfo, armor_penetration, 1), {0}, HF_U32(4), HF_U32(3), 1u, HF_LIVE_SHARED, \"PLAS-39 Accelerator Rifle / damage.ap_slight\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x0000000000000134), HF_FIELD_AT(DamageInfo, armor_penetration, 2), {0}, HF_U32(4), HF_U32(3), 1u, HF_LIVE_SHARED, \"PLAS-39 Accelerator Rifle / damage.ap_large\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x000000000000019D), HF_FIELD(ExplosionSettings, outer_radius), {0}, HF_F32(2.5), HF_F32(2.0), 1u, HF_LIVE_SHARED, \"PLAS-39 Accelerator Rifle / explosion.primary.impact.outer_radius\" },"
+    },
+    {
+      "option": "plas-39-accelerator-rifle",
+      "line": "    { PORT_EDIT_LIVE, \"plas-39-accelerator-rifle\", UINT64_C(0x000000000000019D), HF_FIELD(ExplosionSettings, shockwave_radius), {0}, HF_F32(2.5), HF_F32(2.0), 1u, HF_LIVE_SHARED, \"PLAS-39 Accelerator Rifle / explosion.primary.impact.shockwave_radius\" },"
+    },
+    {
+      "option": "plas-45-epoch",
+      "line": "    { PORT_EDIT_LIVE, \"plas-45-epoch\", UINT64_C(0x000000000000003B), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(520), HF_I32(400), 1u, HF_LIVE_SHARED, \"PLAS-45 Epoch / damage.full_charge.standard_damage\" },"
+    },
+    {
+      "option": "plas-45-epoch",
+      "line": "    { PORT_EDIT_LIVE, \"plas-45-epoch\", UINT64_C(0x000000000000003B), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(260), HF_I32(200), 1u, HF_LIVE_SHARED, \"PLAS-45 Epoch / damage.full_charge.durable_damage\" },"
+    },
+    {
+      "option": "plas-45-epoch",
+      "line": "    { PORT_EDIT_LIVE, \"plas-45-epoch\", UINT64_C(0xE8D5F49AD7780E54), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(4), HF_U32(3), 1u, 0u, \"PLAS-45 Epoch / weapon.capacity\" },"
+    },
+    {
+      "option": "plas-45-epoch",
+      "line": "    { PORT_EDIT_LIVE, \"plas-45-epoch\", UINT64_C(0xE8D5F49AD7780E54), HF_FIELD(WeaponMagazine, max_magazines), {0}, HF_U32(5), HF_U32(4), 1u, 0u, \"PLAS-45 Epoch / magazine.spare_magazines\" },"
+    },
+    {
+      "option": "plas-45-epoch",
+      "line": "    { PORT_EDIT_LIVE, \"plas-45-epoch\", UINT64_C(0x0000000000000197), HF_FIELD(ExplosionSettings, inner_radius), {0}, HF_F32(5.0), HF_F32(3.0), 1u, HF_LIVE_SHARED, \"PLAS-45 Epoch / explosion.full_charge_impact.inner_radius\" },"
+    },
+    {
+      "option": "plas-45-epoch",
+      "line": "    { PORT_EDIT_LIVE, \"plas-45-epoch\", UINT64_C(0x0000000000000197), HF_FIELD(ExplosionSettings, outer_radius), {0}, HF_F32(6.0), HF_F32(4.0), 1u, HF_LIVE_SHARED, \"PLAS-45 Epoch / explosion.full_charge_impact.outer_radius\" },"
+    },
+    {
+      "option": "plas-45-epoch",
+      "line": "    { PORT_EDIT_LIVE, \"plas-45-epoch\", UINT64_C(0x0000000000000197), HF_FIELD(ExplosionSettings, shockwave_radius), {0}, HF_F32(7.0), HF_F32(5.0), 1u, HF_LIVE_SHARED, \"PLAS-45 Epoch / explosion.full_charge_impact.shockwave_radius\" },"
+    },
+    {
+      "option": "r-40-k-hot-shot",
+      "line": "    { PORT_EDIT_LIVE, \"r-40-k-hot-shot\", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponData, ergonomics), {0}, HF_F32(45.0), HF_F32(30.0), 1u, 0u, \"R/40-K Hot-Shot Marksman Rifle / weapon.ergonomics\" },"
+    },
+    {
+      "option": "r-40-k-hot-shot",
+      "line": "    { PORT_EDIT_LIVE, \"r-40-k-hot-shot\", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(20), HF_U32(12), 1u, 0u, \"R/40-K Hot-Shot Marksman Rifle / weapon.capacity\" },"
+    },
+    {
+      "option": "r-40-k-hot-shot",
+      "line": "    { PORT_EDIT_LIVE, \"r-40-k-hot-shot\", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponMagazine, starting_magazines), {0}, HF_U32(5), HF_U32(5), 1u, 0u, \"R/40-K Hot-Shot Marksman Rifle / magazine.starting_magazines\" },"
+    },
+    {
+      "option": "r-40-k-hot-shot",
+      "line": "    { PORT_EDIT_LIVE, \"r-40-k-hot-shot\", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponMagazine, magazines_from_supply), {0}, HF_U32(5), HF_U32(7), 1u, 0u, \"R/40-K Hot-Shot Marksman Rifle / magazine.magazines_from_supply\" },"
+    },
+    {
+      "option": "r-40-k-hot-shot",
+      "line": "    { PORT_EDIT_LIVE, \"r-40-k-hot-shot\", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponMagazine, max_magazines), {0}, HF_U32(5), HF_U32(7), 1u, 0u, \"R/40-K Hot-Shot Marksman Rifle / magazine.spare_magazines\" },"
+    },
+    {
+      "option": "rs-422-railgun",
+      "line": "    { PORT_EDIT_LIVE, \"rs-422-railgun\", UINT64_C(0x0000000000000040), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(240), {0}, 0u, HF_LIVE_SHARED, \"RS-422 Railgun / damage.primary.durable_damage\" },"
+    },
+    {
+      "option": "s-11-speargun",
+      "line": "    { PORT_EDIT_LIVE, \"s-11-speargun\", UINT64_C(0x3828E2051AA9E897), HF_FIELD(WeaponData, ergonomics), {0}, HF_F32(40.0), {0}, 0u, 0u, \"S-11 Speargun / weapon.ergonomics\" },"
+    },
+    {
+      "option": "s-11-speargun",
+      "line": "    { PORT_EDIT_LIVE, \"s-11-speargun\", UINT64_C(0x3828E2051AA9E897), HF_FIELD(WeaponMagazine, starting_magazines), {0}, HF_U32(16), {0}, 0u, 0u, \"S-11 Speargun / magazine.starting_magazines\" },"
+    },
+    {
+      "option": "s-11-speargun",
+      "line": "    { PORT_EDIT_LIVE, \"s-11-speargun\", UINT64_C(0x3828E2051AA9E897), HF_FIELD(WeaponMagazine, magazines_from_supply), {0}, HF_U32(10), {0}, 0u, 0u, \"S-11 Speargun / magazine.magazines_from_supply\" },"
+    },
+    {
+      "option": "s-11-speargun",
+      "line": "    { PORT_EDIT_LIVE, \"s-11-speargun\", UINT64_C(0x3828E2051AA9E897), HF_FIELD(WeaponMagazine, max_magazines), {0}, HF_U32(20), {0}, 0u, 0u, \"S-11 Speargun / magazine.spare_magazines\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0x0000000000000031), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(90), HF_I32(80), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / damage.standard_damage\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0x0000000000000031), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(21), HF_I32(4), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / damage.durable_damage\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0xC85F576D5E086147), HF_FIELD(WeaponData, horizontal_spread), {0}, HF_F32(70.0), HF_F32(140.0), 1u, 0u, \"LAS-12 Sai / weapon.horizontal_spread\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0xC85F576D5E086147), HF_FIELD(WeaponData, vertical_spread), {0}, HF_F32(70.0), HF_F32(140.0), 1u, 0u, \"LAS-12 Sai / weapon.vertical_spread\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0xC85F576D5E086147), HF_FIELD(WeaponData, recoil_multiplier_horizontal), {0}, HF_F32(0.666667), HF_F32(1.0), 1u, 0u, \"LAS-12 Sai / weapon.recoil_multiplier_horizontal\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0xC85F576D5E086147), HF_FIELD(WeaponData, recoil_multiplier_vertical), {0}, HF_F32(0.666667), HF_F32(1.0), 1u, 0u, \"LAS-12 Sai / weapon.recoil_multiplier_vertical\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0xC85F576D5E086147), HF_FIELD_AT(ProjectileWeapon, fire_rate, 1), {0}, HF_F32(900.0), HF_F32(800.0), 1u, 0u, \"LAS-12 Sai / weapon.fire_rate\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0x00000000000000EC), HF_FIELD(ProjectileSettings, velocity), {0}, HF_F32(1300.0), HF_F32(100.0), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / projectile.velocity\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0x00000000000000EC), HF_FIELD(ProjectileSettings, drag), {0}, HF_F32(1.244), HF_F32(0.0), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / projectile.drag\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_LIVE, \"sai-focus-precision\", UINT64_C(0xC85F576D5E086147), HF_FIELD(WeaponHeat, heat_per_shot), {0}, HF_F32(1.333333), HF_F32(2.0), 1u, 0u, \"LAS-12 Sai / heat.heat_per_shot\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_STAT, \"sai-focus-precision\", 0u, {0}, { \"EntityDelta\", \"236:960\", UINT64_C(0xA188CBB5913FBD63), 278, 181601u, HF_TYPE_F32 }, HF_F32(900.0), HF_F32(600.0), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / attachment.muzzle.laser_blaster_focus.fire_rate\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_STAT, \"sai-focus-precision\", 0u, {0}, { \"EntityDelta\", \"236:960\", UINT64_C(0xA188CBB5913FBD63), 278, 181609u, HF_TYPE_F32 }, HF_F32(37.5), HF_F32(75.0), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / attachment.muzzle.laser_blaster_focus.horizontal_spread\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_STAT, \"sai-focus-precision\", 0u, {0}, { \"EntityDelta\", \"236:960\", UINT64_C(0xA188CBB5913FBD63), 278, 181613u, HF_TYPE_F32 }, HF_F32(37.5), HF_F32(75.0), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / attachment.muzzle.laser_blaster_focus.vertical_spread\" },"
+    },
+    {
+      "option": "sai-focus-precision",
+      "line": "    { PORT_EDIT_STAT, \"sai-focus-precision\", 0u, {0}, { \"EntityDelta\", \"266:116\", UINT64_C(0x08755D8F453EA7BA), 195, 175452u, HF_TYPE_F32 }, HF_F32(1.0), HF_F32(1.5), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / attachment.magazine.laser_heatsink_blaster_improved_heatcapacity.heat.heat_per_shot\" },"
+    }
+  ],
+  "asset_archives": {
+    "18235e0c9ec0e636": {
+      "A486D4045106165C:4D1C334D294DFA97": {
+        "cpu": {
+          "bytes": 11323840,
+          "sha256": "8ED0353BBA573BA4528E964EF50C6A19370D354D48D4E1507D00077F23C621F1"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      }
+    },
+    "49f1972458f7ccec": {
+      "CD4238C6A0C69E32:04A884C938E65FB9": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "4F88F2365A085B48612705304BDCBAD83371DCD6D6CA42BBB14209CE07E719D1"
+        }
+      },
+      "CD4238C6A0C69E32:33AE4B701DF9F6DD": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3836FE15E8E044E24EAE8063D8246AE9780D956EB0286EEA9D3B5A931666B755"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 699048,
+          "sha256": "D448CA4A4B2F3C58EF982DAD49E60907301D6437DF4F4A09FFD7F6C356557B21"
+        }
+      },
+      "CD4238C6A0C69E32:8D2900D53105DA75": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "D9392C0669B68B64E5E6C9F5A5CF5C976239BC0E9E3CA473FE929549013A6BC1"
+        },
+        "stream": {
+          "bytes": 349552,
+          "sha256": "AB3FBCCDB1399C0BDF2F99CAAEB5DF0E519A0C6208C3C390E02B71EF78D5F36C"
+        },
+        "gpu": {
+          "bytes": 1392,
+          "sha256": "5A163D5D7A4202DD825EA07338A49EC163977221814055222C6CCAFC03DCDB7F"
+        }
+      },
+      "CD4238C6A0C69E32:988586829CA7CFC0": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3836FE15E8E044E24EAE8063D8246AE9780D956EB0286EEA9D3B5A931666B755"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 699048,
+          "sha256": "2B387A80A240B183B6BA2ED7BA495D63283D5475652E343684A0758A7FA8FC50"
+        }
+      },
+      "CD4238C6A0C69E32:9ADC6AAD343F8137": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3C58D6286C952F6E428A51FE967222B7407C95B145C0CE50951F9A812CE49F8E"
+        },
+        "stream": {
+          "bytes": 349552,
+          "sha256": "B90B53D08E84865CCEB48179E0E46DAE10A74F783BF7F6CDE03FE2B2F114213C"
+        },
+        "gpu": {
+          "bytes": 1392,
+          "sha256": "BF4C0C7AE8EC3967B4B53D5FEDA79BF6A83A921A535EFE07F433EB154659101E"
+        }
+      },
+      "CD4238C6A0C69E32:F96E5890EFECAB78": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "8CC3FBA6D9D9BF3274686E6E0F1BA7AA2A1C1C70565C3254C192EE1E37C54ED2"
+        }
+      },
+      "E0A48D0BE9A7453F:02CD7321CD8445F5": {
+        "cpu": {
+          "bytes": 15776,
+          "sha256": "643730C515148BE727E3E47A4A28B1755325224D1B76E04D6664DB87B310356E"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 156362,
+          "sha256": "F2DD3B4EB32D0337525EDE383815EF6C141A31B4702F85E5DAABEC3D680A07C3"
+        }
+      },
+      "E0A48D0BE9A7453F:411C4FD07740A7DD": {
+        "cpu": {
+          "bytes": 3440,
+          "sha256": "5C7E746329B6305748FBDA839375FE053C633E8E1C3FB93F8E2A28148322267B"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 54640,
+          "sha256": "D341DC1D4EFD2879AA4D6AC2F28B01031B95F4091826B88E0517FB30049AEC3A"
+        }
+      },
+      "EAC0B497876ADEDF:4C27D54D51C298AB": {
+        "cpu": {
+          "bytes": 1184,
+          "sha256": "7BD0AEF3AE65CBFEB7DF31B3C1C189200A0F89C8C76108CD03043E7169A3C754"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      },
+      "EAC0B497876ADEDF:7CD9495D4A4B7477": {
+        "cpu": {
+          "bytes": 1600,
+          "sha256": "5D1BED593B7605D443D88D392722F2F18E434687557A62788862E5A2240EE032"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      }
+    },
+    "9ba626afa44a3aa3": {
+      "AD9C6D9ED1E5E77A:9BA626AFA44A3AA3": {
+        "cpu": {
+          "bytes": 66096,
+          "sha256": "8AA84DAE5E4E84B7B543078FBF4F21A14A8705A9AABBF67384477CD0C0584555"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      }
+    },
+    "e16e0aa7740716a2": {
+      "CD4238C6A0C69E32:04A884C938E65FB9": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "4F88F2365A085B48612705304BDCBAD83371DCD6D6CA42BBB14209CE07E719D1"
+        }
+      },
+      "CD4238C6A0C69E32:33AE4B701DF9F6DD": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3836FE15E8E044E24EAE8063D8246AE9780D956EB0286EEA9D3B5A931666B755"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 699048,
+          "sha256": "D448CA4A4B2F3C58EF982DAD49E60907301D6437DF4F4A09FFD7F6C356557B21"
+        }
+      },
+      "CD4238C6A0C69E32:8D2900D53105DA75": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "D9392C0669B68B64E5E6C9F5A5CF5C976239BC0E9E3CA473FE929549013A6BC1"
+        },
+        "stream": {
+          "bytes": 349552,
+          "sha256": "AB3FBCCDB1399C0BDF2F99CAAEB5DF0E519A0C6208C3C390E02B71EF78D5F36C"
+        },
+        "gpu": {
+          "bytes": 1392,
+          "sha256": "5A163D5D7A4202DD825EA07338A49EC163977221814055222C6CCAFC03DCDB7F"
+        }
+      },
+      "CD4238C6A0C69E32:988586829CA7CFC0": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3836FE15E8E044E24EAE8063D8246AE9780D956EB0286EEA9D3B5A931666B755"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 699048,
+          "sha256": "2B387A80A240B183B6BA2ED7BA495D63283D5475652E343684A0758A7FA8FC50"
+        }
+      },
+      "CD4238C6A0C69E32:9ADC6AAD343F8137": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "3C58D6286C952F6E428A51FE967222B7407C95B145C0CE50951F9A812CE49F8E"
+        },
+        "stream": {
+          "bytes": 349552,
+          "sha256": "B90B53D08E84865CCEB48179E0E46DAE10A74F783BF7F6CDE03FE2B2F114213C"
+        },
+        "gpu": {
+          "bytes": 1392,
+          "sha256": "BF4C0C7AE8EC3967B4B53D5FEDA79BF6A83A921A535EFE07F433EB154659101E"
+        }
+      },
+      "CD4238C6A0C69E32:F96E5890EFECAB78": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "8CC3FBA6D9D9BF3274686E6E0F1BA7AA2A1C1C70565C3254C192EE1E37C54ED2"
+        }
+      },
+      "E0A48D0BE9A7453F:02CD7321CD8445F5": {
+        "cpu": {
+          "bytes": 15776,
+          "sha256": "643730C515148BE727E3E47A4A28B1755325224D1B76E04D6664DB87B310356E"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 156362,
+          "sha256": "F2DD3B4EB32D0337525EDE383815EF6C141A31B4702F85E5DAABEC3D680A07C3"
+        }
+      },
+      "E0A48D0BE9A7453F:411C4FD07740A7DD": {
+        "cpu": {
+          "bytes": 3440,
+          "sha256": "5C7E746329B6305748FBDA839375FE053C633E8E1C3FB93F8E2A28148322267B"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 54640,
+          "sha256": "D341DC1D4EFD2879AA4D6AC2F28B01031B95F4091826B88E0517FB30049AEC3A"
+        }
+      },
+      "EAC0B497876ADEDF:4C27D54D51C298AB": {
+        "cpu": {
+          "bytes": 1184,
+          "sha256": "7BD0AEF3AE65CBFEB7DF31B3C1C189200A0F89C8C76108CD03043E7169A3C754"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      },
+      "EAC0B497876ADEDF:7CD9495D4A4B7477": {
+        "cpu": {
+          "bytes": 1600,
+          "sha256": "5D1BED593B7605D443D88D392722F2F18E434687557A62788862E5A2240EE032"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      }
+    }
+  },
+  "asset_owners": {
+    "18235e0c9ec0e636": [
+      "ac-8-autocannon",
+      "plas-45-epoch"
+    ],
+    "49f1972458f7ccec": [
+      "punisher-plasma"
+    ],
+    "9ba626afa44a3aa3": [
+      "punisher-plasma"
+    ],
+    "e16e0aa7740716a2": [
+      "punisher-plasma"
+    ]
+  }
+}

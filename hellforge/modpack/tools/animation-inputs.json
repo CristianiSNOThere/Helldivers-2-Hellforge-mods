@@ -1,0 +1,9 @@
+{
+  "format": 1,
+  "patches": [
+    {
+      "archives": ["18235e0c9ec0e636"],
+      "resources": [{"type": "state_machine", "include": ["0x4D1C334D294DFA97"]}]
+    }
+  ]
+}

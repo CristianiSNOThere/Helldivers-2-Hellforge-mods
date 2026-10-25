@@ -1,20 +1,19 @@
-# Helldivers 2 Runtime Mods
+# Helldivers 2 HellForge Mods
 
-Standalone Helldivers 2 runtime mods and weapon projects, including **SG-8P Punisher Plasma**.
+HellForge mods for Helldivers 2. Each project has its own download and release; only the latest release of each HellForge project is kept.
 
-The Super Earth Arsenal weapon collection is now maintained as a [selectable modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack): one ZIP with 23 independent mod switches and a single One True Flag damage dropdown. Use that repository for current Arsenal weapon-pack updates.
+## Super Earth Arsenal Modpack
 
-## Projects
+[Download v2.4.1](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases/tag/hellforge-modpack-v2.4.1) · [Installation](hellforge/modpack/INSTALL.md) · [Complete changes](hellforge/modpack/PLAYER-GUIDE.md)
 
-- **Standalone runtime mods:** separate releases for projects outside the Arsenal weapon pack.
-- **Punisher Plasma:** a standalone weapon project. A public download is currently unavailable; it is not included in the Arsenal modpack.
+25 independent weapon and equipment options and 29 One True Flag damage presets. Includes a backpackless AC-8, Rapid/Supercharge ARC-3, 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul, and Sickle/Double-Edge changes.
 
-## Earlier Arsenal weapon releases
+The source download prepares its selected assets from your own supported HellForge installation. Requires HellForge SDK 11, game build 25480438, Python 3.10 or later and PowerShell 7. Follow the installation instructions before enabling it.
 
-The previous 22 individual weapon and equipment releases remain available with their existing files and descriptions:
+## Enemy Rebalance
 
-- [Individual weapon release index](LEGACY-ARSENAL-MODS.md)
-- [Package details](mods/Weapon-Mods-README.md)
-- [Release archive](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases)
+A separate HellForge project. Adjustments are in progress; its release will be published separately when ready.
 
-For the current selectable package, [download Super Earth Arsenal Mod Pack v2.1.3](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack/releases/tag/v2.1.3). Use the modpack or the corresponding individual weapon packages when choosing those changes.
+## Earlier Arsenal releases
+
+The earlier individual Arsenal downloads remain in the [legacy release index](LEGACY-ARSENAL-MODS.md). The [Arsenal selectable modpack repository](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack) remains available for that package.

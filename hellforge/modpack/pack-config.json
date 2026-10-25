@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "baseline": "2.4.1",
+  "options": {
+    "40-k-meltagun": true,
+    "a-gm-17-gas-mortar-sentry": true,
+    "ac-8-autocannon": true,
+    "apw-1-anti-materiel-rifle": true,
+    "ar-11-arbitrator": true,
+    "ar-32-pacifier": true,
+    "arc-12-blitzer": true,
+    "arc-3-rapid-supercharge": true,
+    "cqc-20-breaching-hammer": true,
+    "gas-overhaul": true,
+    "one-true-flag": true,
+    "p-34-breacher": true,
+    "plas-1-scorcher-ar": true,
+    "plas-39-accelerator-rifle": true,
+    "plas-45-epoch": true,
+    "r-40-k-hot-shot": true,
+    "rs-422-railgun": true,
+    "s-11-speargun": true,
+    "sai-focus-precision": true,
+    "sickle-laser-ar": true,
+    "tenderizer-armor-softener": true,
+    "vg-70-variable": true,
+    "adjudicator-heavy": true,
+    "punisher-plasma": true,
+    "gl52-de-escalator": true
+  },
+  "flag": {
+    "normal": 300,
+    "durable": 150
+  }
+}
