@@ -4,7 +4,7 @@ HellForge mods for Helldivers 2. Each project has its own download and release; 
 
 ## Super Earth Arsenal Modpack
 
-[Download v2.4.1](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases/tag/hellforge-modpack-v2.4.1) · [Installation](hellforge/modpack/INSTALL.md) · [Complete changes](hellforge/modpack/PLAYER-GUIDE.md)
+[Download v2.4.1](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Pack/releases/tag/hellforge-modpack-v2.4.1-r1) | [Installation](hellforge/modpack/INSTALL.md) | [Complete changes](hellforge/modpack/PLAYER-GUIDE.md)
 
 25 independent weapon and equipment options and 29 One True Flag damage presets. Includes a backpackless AC-8, Rapid/Supercharge ARC-3, 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul, and Sickle/Double-Edge changes.
 
