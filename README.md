@@ -1,4 +1,4 @@
-# Helldivers 2 HellForge Mods
+# Helldivers 2 Hellforge mods
 
 HellForge mods for Helldivers 2. Each project has its own download and release; only the latest release of each HellForge project is kept.
 
@@ -14,6 +14,4 @@ The source download prepares its selected assets from your own supported HellFor
 
 A separate HellForge project. Adjustments are in progress; its release will be published separately when ready.
 
-## Earlier Arsenal releases
-
-The earlier individual Arsenal downloads remain in the [legacy release index](LEGACY-ARSENAL-MODS.md). The [Arsenal selectable modpack repository](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack) remains available for that package.
+The [Arsenal selectable modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack) is available in its separate repository.
