@@ -39,3 +39,5 @@ To remove the pack, close the game and disable or move its folder out of
 HellForge's `mods` directory. The pack does not change the Steam installation.
 
 With Scope of Authority Backport, use version 2.14.15 on HellForge 0.1.28. The pack's options and both Sickle heatsinks remain available with the backport enabled.
+
+Gas Overhaul can be used with the 150-health Health Rework at either 2 or 2.8 health per second regeneration.

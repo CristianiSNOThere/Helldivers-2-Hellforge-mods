@@ -23,8 +23,8 @@ static HfGasPlayerHealthPlan HF_GAS_PLAYER_HEALTH_PLAN;
 
 static int hf_gas_health_known_baseline(const uint8_t* actual, uint8_t* baseline)
 {
-    const HfGasHealthProfileField* profiles[] = {HF_GAS_HEALTH_CASUAL, HF_GAS_HEALTH_NORMAL};
-    const size_t counts[] = {HF_GAS_HEALTH_CASUAL_COUNT, HF_GAS_HEALTH_NORMAL_COUNT};
+    const HfGasHealthProfileField* profiles[] = {HF_GAS_HEALTH_CASUAL, HF_GAS_HEALTH_NORMAL, HF_GAS_HEALTH_NORMAL_2};
+    const size_t counts[] = {HF_GAS_HEALTH_CASUAL_COUNT, HF_GAS_HEALTH_NORMAL_COUNT, HF_GAS_HEALTH_NORMAL_2_COUNT};
     char digest[65];
     size_t profile_index;
 
