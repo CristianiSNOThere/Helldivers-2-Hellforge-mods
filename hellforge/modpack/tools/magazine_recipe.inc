@@ -241,7 +241,7 @@ static int prepare_magazine(const wchar_t *input,const wchar_t *output) {
     write32(built,0xF0000011u);write32(built+4,1);write32(built+8,1);
     write64(built+32,(15776u+255u)&~UINT64_C(255));write64(built+40,(156362u+255u)&~UINT64_C(255));
     write64(built+80,UINT64_C(0xE0A48D0BE9A7453F));write32(built+88,1);write32(built+96,16);write32(built+100,64);
-    write64(built+104,ids[0]);write64(built+112,UINT64_C(0xE0A48D0BE9A7453F));write64(built+120,256);
+    write64(built+104,UINT64_C(0x0B5D0EB081BEB889));write64(built+112,UINT64_C(0xE0A48D0BE9A7453F));write64(built+120,256);
     write32(built+160,15776);write32(built+168,156362);write32(built+172,16);write32(built+176,64);
     memcpy(built+256,cpu,15776);
     result=5;

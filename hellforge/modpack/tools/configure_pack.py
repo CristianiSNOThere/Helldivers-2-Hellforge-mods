@@ -18,8 +18,12 @@ def compose(mod, config_path, out):
     config=json.loads(Path(config_path).read_text(encoding='utf-8'))
     if config.get('schema')!=1 or config.get('baseline')!='2.4.1':raise ValueError('Unknown config schema/baseline')
     options=config.get('options');known=catalog['options']
-    if not isinstance(options,dict) or set(options)!=set(known) or len(known)!=25:
-        raise ValueError('Option keys must match all 25 option IDs')
+    # Older 25-option files preserve all existing choices; the new option is off.
+    if isinstance(options,dict) and set(options)==set(known)-{'plas-15-loyalist'}:
+        options={**options,'plas-15-loyalist':False}
+        config={**config,'options':options}
+    if not isinstance(options,dict) or set(options)!=set(known) or len(known)!=26:
+        raise ValueError('Option keys must match all 26 option IDs (or the prior 25-option selection)')
     if not all(type(value)is bool for value in options.values()):raise ValueError('Options must be JSON booleans')
     flag=config.get('flag')
     if not isinstance(flag,dict) or set(flag)!={'normal','durable'}:raise ValueError('Invalid Flag preset')

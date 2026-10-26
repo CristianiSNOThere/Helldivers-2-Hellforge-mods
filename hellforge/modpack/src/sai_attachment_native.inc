@@ -21,14 +21,15 @@ static int hf_sai_attachment_field(const HfPortEdit* edit)
 
 static inline int hf_sai_sdk_companion_owned(const HfApi* api, HfMod* mod, unsigned which)
 {
-    static const HfStat fields[2] = {
+    static const HfStat fields[3] = {
         {"EntityDelta","5:136",UINT64_C(0x16AB263BC03B4F96),153,170592u,HF_TYPE_U32},
-        {"EntityDelta","266:116",UINT64_C(0x08755D8F453EA7BA),195,175452u,HF_TYPE_F32}
+        {"EntityDelta","266:116",UINT64_C(0x08755D8F453EA7BA),195,175452u,HF_TYPE_F32},
+        {"EntityDelta","5:136",UINT64_C(0xACA180FC6F846411),203,175679u,HF_TYPE_U32}
     };
     HfLiveValue value;
-    double desired = which == 0u ? 65.0 : 1.0;
-    double original = which == 0u ? 40.0 : 1.5;
-    if (which >= 2u || api == NULL || api->get_stat == NULL ||
+    double desired = which == 0u ? 65.0 : which == 1u ? 1.0 : 20.0;
+    double original = which == 0u ? 40.0 : which == 1u ? 1.5 : 8.0;
+    if (which >= 3u || api == NULL || api->get_stat == NULL ||
         !api->get_stat(mod, &fields[which], &value)) return 0;
     return value.mod != NULL && strcmp(value.mod,"superearth.arsenal-native-port") == 0 &&
            value.now.type == fields[which].type && value.base.type == fields[which].type &&

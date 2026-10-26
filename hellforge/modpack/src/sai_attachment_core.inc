@@ -26,9 +26,9 @@ static size_t hf_sai_lens_offset(unsigned field)
 static int hf_sai_attachment_proof(const HfSaiAttachmentOps* ops,
                                    const HfSaiAttachmentState* state)
 {
-    static const uint32_t companion_offsets[2] = {170592u,175452u};
-    static const uint8_t companion_before[2][4] = {{0x28u,0u,0u,0u},{0u,0u,0xC0u,0x3Fu}};
-    static const uint8_t companion_after[2][4] = {{0x41u,0u,0u,0u},{0u,0u,0x80u,0x3Fu}};
+    static const uint32_t companion_offsets[3] = {170592u,175452u,175679u};
+    static const uint8_t companion_before[3][4] = {{0x28u,0u,0u,0u},{0u,0u,0xC0u,0x3Fu},{8u,0u,0u,0u}};
+    static const uint8_t companion_after[3][4] = {{0x41u,0u,0u,0u},{0u,0u,0x80u,0x3Fu},{20u,0u,0u,0u}};
     uint8_t* bytes;
     char digest[65];
     size_t i, j;
@@ -74,7 +74,7 @@ static int hf_sai_attachment_proof(const HfSaiAttachmentOps* ops,
     }
     if (memcmp(bytes + 181581u, HF_SAI_FOCUS_SIGNATURE, sizeof(HF_SAI_FOCUS_SIGNATURE)) != 0)
         goto done;
-    for (i = 0u; i < 2u; ++i)
+    for (i = 0u; i < 3u; ++i)
     {
         uint8_t* field = bytes + companion_offsets[i];
         if (memcmp(field, companion_before[i], 4u) == 0) continue;

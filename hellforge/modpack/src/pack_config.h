@@ -1,6 +1,5 @@
 #ifndef SUPER_EARTH_NATIVE_PACK_CONFIG_H
 #define SUPER_EARTH_NATIVE_PACK_CONFIG_H
-/* Generated from pack-config.json; compiled source participates in HellForge modlist identity. */
 #define HF_PORT_40_K_MELTAGUN 1
 #define HF_PORT_A_GM_17_GAS_MORTAR_SENTRY 1
 #define HF_PORT_AC_8_AUTOCANNON 1
@@ -28,4 +27,5 @@
 #define HF_PORT_GL52_DE_ESCALATOR 1
 #define HF_PORT_FLAG_NORMAL_DAMAGE 300
 #define HF_PORT_FLAG_DURABLE_DAMAGE 150
+#define HF_PORT_PLAS_15_LOYALIST 1
 #endif

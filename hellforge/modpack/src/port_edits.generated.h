@@ -65,8 +65,6 @@ static const HfPortEdit HF_PORT_EDITS[] = {
     { PORT_EDIT_LIVE, "p-34-breacher", UINT64_C(0xE91F569C2AD8AF01), HF_FIELD(WeaponMagazine, magazines_from_supply), {0}, HF_U32(2), {0}, 0u, 0u, "P-34 Breacher / magazine.magazines_from_supply" },
     { PORT_EDIT_LIVE, "plas-1-scorcher-ar", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(50), {0}, 0u, 0u, "PLAS-1 Scorcher / weapon.capacity" },
     { PORT_EDIT_LIVE, "plas-1-scorcher-ar", UINT64_C(0xEEA5E3CEF1E12C14), HF_FIELD_AT(ProjectileWeapon, fire_rate, 1), {0}, HF_F32(540.0), {0}, 0u, 0u, "PLAS-1 Scorcher / weapon.fire_rate" },
-    { PORT_EDIT_LIVE, "plas-1-scorcher-ar", UINT64_C(0x0000000000000038), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(75), {0}, 0u, HF_LIVE_SHARED, "PLAS-1 Scorcher / damage.standard_damage" },
-    { PORT_EDIT_LIVE, "plas-1-scorcher-ar", UINT64_C(0x0000000000000038), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(38), {0}, 0u, HF_LIVE_SHARED, "PLAS-1 Scorcher / damage.durable_damage" },
     { PORT_EDIT_LIVE, "plas-1-scorcher-ar", UINT64_C(0x0000000000000132), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(75), {0}, 0u, HF_LIVE_SHARED, "PLAS-1 Scorcher / explosion.primary.impact.damage.standard_damage" },
     { PORT_EDIT_LIVE, "plas-1-scorcher-ar", UINT64_C(0x0000000000000132), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(75), {0}, 0u, HF_LIVE_SHARED, "PLAS-1 Scorcher / explosion.primary.impact.damage.durable_damage" },
     { PORT_EDIT_LIVE, "plas-1-scorcher-ar", UINT64_C(0x000000000000009B), HF_FIELD(ExplosionSettings, inner_radius), {0}, HF_F32(1.25), {0}, 0u, HF_LIVE_SHARED, "PLAS-1 Scorcher / explosion.primary.impact.inner_radius" },
@@ -103,7 +101,6 @@ static const HfPortEdit HF_PORT_EDITS[] = {
     { PORT_EDIT_LIVE, "r-40-k-hot-shot", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponMagazine, starting_magazines), {0}, HF_U32(5), HF_U32(5), 1u, 0u, "R/40-K Hot-Shot Marksman Rifle / magazine.starting_magazines" },
     { PORT_EDIT_LIVE, "r-40-k-hot-shot", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponMagazine, magazines_from_supply), {0}, HF_U32(5), HF_U32(7), 1u, 0u, "R/40-K Hot-Shot Marksman Rifle / magazine.magazines_from_supply" },
     { PORT_EDIT_LIVE, "r-40-k-hot-shot", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponMagazine, max_magazines), {0}, HF_U32(5), HF_U32(7), 1u, 0u, "R/40-K Hot-Shot Marksman Rifle / magazine.spare_magazines" },
-    { PORT_EDIT_LIVE, "rs-422-railgun", UINT64_C(0x0000000000000040), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(240), {0}, 0u, HF_LIVE_SHARED, "RS-422 Railgun / damage.primary.durable_damage" },
     { PORT_EDIT_LIVE, "s-11-speargun", UINT64_C(0x3828E2051AA9E897), HF_FIELD(WeaponData, ergonomics), {0}, HF_F32(40.0), {0}, 0u, 0u, "S-11 Speargun / weapon.ergonomics" },
     { PORT_EDIT_LIVE, "s-11-speargun", UINT64_C(0x3828E2051AA9E897), HF_FIELD(WeaponMagazine, starting_magazines), {0}, HF_U32(16), {0}, 0u, 0u, "S-11 Speargun / magazine.starting_magazines" },
     { PORT_EDIT_LIVE, "s-11-speargun", UINT64_C(0x3828E2051AA9E897), HF_FIELD(WeaponMagazine, magazines_from_supply), {0}, HF_U32(10), {0}, 0u, 0u, "S-11 Speargun / magazine.magazines_from_supply" },
@@ -122,5 +119,8 @@ static const HfPortEdit HF_PORT_EDITS[] = {
     { PORT_EDIT_STAT, "sai-focus-precision", 0u, {0}, { "EntityDelta", "236:960", UINT64_C(0xA188CBB5913FBD63), 278, 181609u, HF_TYPE_F32 }, HF_F32(37.5), HF_F32(75.0), 1u, HF_LIVE_SHARED, "LAS-12 Sai / attachment.muzzle.laser_blaster_focus.horizontal_spread" },
     { PORT_EDIT_STAT, "sai-focus-precision", 0u, {0}, { "EntityDelta", "236:960", UINT64_C(0xA188CBB5913FBD63), 278, 181613u, HF_TYPE_F32 }, HF_F32(37.5), HF_F32(75.0), 1u, HF_LIVE_SHARED, "LAS-12 Sai / attachment.muzzle.laser_blaster_focus.vertical_spread" },
     { PORT_EDIT_STAT, "sai-focus-precision", 0u, {0}, { "EntityDelta", "266:116", UINT64_C(0x08755D8F453EA7BA), 195, 175452u, HF_TYPE_F32 }, HF_F32(1.0), HF_F32(1.5), 1u, HF_LIVE_SHARED, "LAS-12 Sai / attachment.magazine.laser_heatsink_blaster_improved_heatcapacity.heat.heat_per_shot" },
+    { PORT_EDIT_LIVE, "plas-15-loyalist", UINT64_C(0xAA69A60D74A3EC54), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(20), HF_U32(8), 1u, 0u, "PLAS-15 Loyalist / magazine.capacity" },
+    { PORT_EDIT_LIVE, "plas-15-loyalist", UINT64_C(0xAA69A60D74A3EC54), HF_FIELD(WeaponData, sway), {0}, HF_F32(0.5), HF_F32(1.0), 1u, 0u, "PLAS-15 Loyalist / weapon.sway" },
+    { PORT_EDIT_STAT, "plas-15-loyalist", 0u, {0}, { "EntityDelta", "5:136", UINT64_C(0xACA180FC6F846411), 203, 175679u, HF_TYPE_U32 }, HF_U32(20), HF_U32(8), 1u, HF_LIVE_SHARED, "PLAS-15 Loyalist / default canister capacity" },
 };
 #define HF_PORT_EDIT_COUNT 122u

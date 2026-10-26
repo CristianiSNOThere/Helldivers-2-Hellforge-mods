@@ -1,4 +1,4 @@
-# Super Earth Arsenal native pack
+# Super Earth Arsenal Modpack - complete changes
 
 ## 40-K Meltagun
 
@@ -48,7 +48,7 @@ Gas confusion strength is doubled on susceptible enemies, producing stronger slo
 
 These gas changes cover the Sterilizer, Dog Breath, Re-Educator, Speargun, gas grenades and mines, Gas Mortar Sentry, Eagle Gas Airstrike, Orbital Gas Strike and shared gas hazards. Advanced Filtration armour provides 100% immunity to gas damage and gas status effects, increased from 80%; other armour passives keep their existing bonuses. Natural Acid Storm weather still reduces Helldiver armour, and its shared effect duration is 15 seconds.
 
-Works with Health Rework Normal (150 HP, 2.8 regeneration) or Casual (160 HP, 3 regeneration), preserving the selected preset's health, regeneration and stim settings. Use one health preset at a time.
+Works with the separate Health Rework mod: Normal supports 150 HP with either 2 or 2.8 health regenerated per second; Casual uses 160 HP and 3 per second. Keeps the selected preset's health, regeneration and stim settings. Use one health preset at a time.
 
 ## One True Flag
 
@@ -82,7 +82,7 @@ Sets magazine capacity to 20 rounds. Sets starting spare magazines, maximum spar
 
 ## RS-422 Railgun
 
-Sets damage against durable enemy parts to 240.
+Carries 2 rounds per magazine and 20 spare magazines (40 spare rounds). Each reload fills both rounds. Uses armor penetration 10. Deals 600 normal / 320 durable damage before charge scaling, reaching 1,500 normal / 800 durable damage at 80% charge. Damage stays at that maximum above 80%; the overcharge explosion limit is unchanged.
 
 ## S-11 Speargun
 
@@ -131,8 +131,12 @@ Side-to-side recoil movement decreases from 17 to 16.5, while vertical recoil mo
 
 SG-8P Punisher Plasma gains Normal and Shotgun modes in the left-side Weapon Functions selector, plus a magazine-shaped undergrip with a matching white finish. Normal fires at 60 rounds per minute and deals 350 normal explosion damage and 225 against durable parts, with burning on hits. The blast deals full damage out to 3.5 metres, reaches an outer damage radius of 6.5 metres and has an 8-metre shockwave radius. Normal carries 17 loaded rounds and one spare 17-round magazine, has 50% less aim sway and a flatter projectile path. Its demolition rating is 30 for breaking destructible objects, with stagger strength 25 and knockback strength 30.
 
-Shotgun fires nine explosive plasma pellets per shot at 100 rounds per minute, spending one round in total. Each pellet deals 25 normal damage and 9 against durable parts on impact, plus another 25 and 9 from the explosion. It has medium armor penetration, level 3, at every impact angle. Full-damage, outer damage and shockwave radii are all 0.5 metres, with stagger and knockback strength both set to 25. Shotgun uses a separate supply of 20 loaded rounds and 60 reserve rounds, and reloads twice as fast. Its spread angles are about 5.7 degrees side to side and 5.2 degrees up and down, giving a broad pellet pattern. This option also affects the Loyalist and One-Two's original behavior.
+Shotgun fires nine explosive plasma pellets per shot at 100 rounds per minute, spending one round in total. Each pellet deals 25 normal damage and 9 against durable parts on impact, plus another 25 and 9 from the explosion. It has medium armor penetration, level 3, at every impact angle. Full-damage, outer damage and shockwave radii are all 0.5 metres, with stagger and knockback strength both set to 25. Shotgun uses a separate supply of 20 loaded rounds and 60 reserve rounds, and reloads twice as fast. Its spread angles are about 5.7 degrees side to side and 5.2 degrees up and down, giving a broad pellet pattern. Loyalist keeps its normal and charged plasma shots, and One-Two keeps its original grenade launcher and underbarrel appearance.
 
 ## GL-52 De-Escalator
 
 Makes the GL-52 easier to aim by raising handling from 25 to 35. Increases maximum reserves and ammunition from a resupply from 40 to 70, and starting reserves from 32 to 70, while keeping its six-round cylinder. Reload speed increases by 15%. Electrical hits keep 100 normal damage, while damage against durable body parts rises from 70 to 100 and armor penetration stays at its stock level 4. Replaces its small-target stun with Stun Large, the effect used by stun grenades. Keeps its 200 rounds per minute and 10 m electrical reach.
+
+## PLAS-15 Loyalist
+
+Increases magazine capacity from 8 to 20 rounds and reduces sway from 1.0 to 0.5, giving 50% less weapon wobble. Each reload refills the 20-round magazine. Keeps its normal and charged shots and its existing spare-magazine counts.

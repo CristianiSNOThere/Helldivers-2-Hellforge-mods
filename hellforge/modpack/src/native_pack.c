@@ -68,6 +68,10 @@ static int hf_component_api_read(void* context,uintptr_t at,void* bytes,size_t s
 
 #include "registry_bridge.inc"
 #include "sickle_port.inc"
+#if HF_PORT_PLAS_15_LOYALIST
+#include "loyalist_magazine_guard.generated.h"
+#include "loyalist_sway_guard.generated.h"
+#endif
 #if HF_PORT_SICKLE_LASER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
 #include "heatsink_runtime.inc"
 #endif
@@ -78,6 +82,13 @@ static int hf_component_api_read(void* context,uintptr_t at,void* bytes,size_t s
 #endif
 #if HF_PORT_PUNISHER_PLASMA && HF_PORT_ALLOW_NATIVE_RUNTIME
 #include "punisher_port.inc"
+#endif
+#if HF_PORT_PLAS_1_SCORCHER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
+#include "scorcher_private.inc"
+#endif
+#if HF_PORT_RS_422_RAILGUN && HF_PORT_ALLOW_NATIVE_RUNTIME
+#include "railgun_private.inc"
+#include "railgun_curve.inc"
 #endif
 #if HF_PORT_GAS_OVERHAUL || defined(HF_PORT_TEST_GAS)
 #include "gas_port.inc"
@@ -210,6 +221,11 @@ static int preflight_one(const HfApi* api, HfMod* mod, const HfPortEdit* edit,
         *stats_not_ready = 0;
     if (hf_sai_attachment_field(edit) >= 0)
         return hf_sai_attachment_preflight(api,mod,stats_not_ready,reason,capacity);
+#if HF_PORT_PLAS_15_LOYALIST
+    if (edit->kind==PORT_EDIT_LIVE && !strcmp(edit->option,"plas-15-loyalist") && !(edit->field.offset==104u ? hf_loyalist_sway_source(api,0) : hf_loyalist_magazine_source(api,0))) {
+        (void)snprintf(reason,capacity,"Loyalist magazine source/ownership differs");return 0;
+    }
+#endif
     memset(&current, 0, sizeof(current));
 #if HF_PORT_GAS_OVERHAUL || defined(HF_PORT_TEST_GAS)
     if (edit->kind == PORT_EDIT_GAS_PLAYER_HEALTH)
@@ -1103,6 +1119,10 @@ static int preflight_epoch_extension(const HfApi* api, HfMod* mod, char* reason,
 static int preflight_option(const HfApi* api, HfMod* mod, const char* option,
                             char* reason, size_t capacity)
 {
+#if HF_PORT_PLAS_1_SCORCHER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
+    if (strcmp(option, "plas-1-scorcher-ar") == 0)
+        return hf_sc_preflight(api, mod, &HF_SCORCHER, reason, capacity) > 0;
+#endif
     if (strcmp(option, "ac-8-autocannon") == 0)
         return preflight_ac8_extension(api, reason, capacity);
     if (strcmp(option, "sai-focus-precision") == 0)
@@ -1253,6 +1273,9 @@ static int apply_one(const HfApi* api, HfMod* mod, const HfPortEdit* edit,
 {
     if (reason != NULL && capacity != 0u)
         reason[0] = '\0';
+#if HF_PORT_PLAS_15_LOYALIST
+    if (edit->kind==PORT_EDIT_LIVE && !strcmp(edit->option,"plas-15-loyalist"))return edit->field.offset==104u ? hf_loyalist_sway_apply(api,mod,reason,capacity) : hf_loyalist_magazine_apply(api,mod,reason,capacity);
+#endif
     if (hf_sai_attachment_field(edit) >= 0)
         return hf_sai_attachment_change(api,mod,(unsigned)hf_sai_attachment_field(edit),0,reason,capacity);
 #if HF_PORT_GAS_OVERHAUL || defined(HF_PORT_TEST_GAS)
@@ -1680,6 +1703,42 @@ static void ApplyReadyFiltered(HfMod* mod, HfEvent event, void* user, const char
             }
         }
 
+#if HF_PORT_PLAS_1_SCORCHER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
+        if (i == end && strcmp(option, "plas-1-scorcher-ar") == 0)
+        {
+            int extension_result = hf_sc_apply(api, mod, &HF_SCORCHER, reason, sizeof(reason));
+            if (extension_result < 1)
+            {
+                size_t rollback;
+                int rollback_failed = extension_result < 0;
+                for (rollback = applied; rollback > 0; --rollback)
+                {
+                    const HfPortEdit* undo = &HF_PORT_EDITS[first + rollback - 1];
+                    char reset_reason[256] = {0};
+                    if (reset_one(api, mod, undo, reset_reason, sizeof(reset_reason)) == 0)
+                    {
+                        if (reset_reason[0] == '\0')
+                            capture_reason(api, mod, reset_reason, sizeof(reset_reason));
+                        api->log(mod, "FATAL: %s could not roll back %s: %s", option, undo->label, reset_reason);
+                        rollback_failed = 1;
+                    }
+                }
+                if (rollback_failed)
+                {
+                    hf_stats_retry_remove(option);
+                    api->log(mod, "FATAL: stopping native pack edits after an incomplete rollback in %s: %s",
+                             option, reason);
+                    return;
+                }
+                hf_stats_retry_remove(option);
+                api->log(mod, "Refused %s after its scalar edits; those edits were rolled back: %s", option, reason);
+                first = end;
+                continue;
+            }
+        }
+
+#endif
+
         if (i == end && strcmp(option, "plas-45-epoch") == 0)
         {
             int extension_result = apply_epoch_extension(api, mod, reason, sizeof(reason));
@@ -1752,6 +1811,10 @@ static void ApplyReadyFiltered(HfMod* mod, HfEvent event, void* user, const char
             if (strcmp(option, "plas-45-epoch") == 0)
                 api->log(mod, "Applied %s (%u native field edits plus its owned burning damage type)",
                          option, (unsigned)(end - first));
+#if HF_PORT_PLAS_1_SCORCHER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
+            else if (strcmp(option, "plas-1-scorcher-ar") == 0)
+                api->log(mod, "Applied Scorcher AR: private impact damage %u at 75/38; Loyalist shared damage56 preserved at100/50", HF_SCORCHER.damage);
+#endif
             else if (strcmp(option, "ac-8-autocannon") == 0)
                 api->log(mod, "Applied %s (%u native field edits plus mobile reload and team-reload changes)",
                          option, (unsigned)(end - first));
@@ -1805,6 +1868,9 @@ static void ApplyReadyFiltered(HfMod* mod, HfEvent event, void* user, const char
     }
 #endif
 
+#if HF_PORT_RS_422_RAILGUN && HF_PORT_ALLOW_NATIVE_RUNTIME
+    hf_rg_curve_request(api,mod);
+#endif
 #if HF_PORT_SICKLE_LASER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
     sickle_begin_native(api, mod);
 #endif
@@ -1877,7 +1943,7 @@ HF_MOD_EXPORT int hellforge_mod_init(const HfApi* api, HfMod* mod)
     if (HF_PORT_EDIT_COUNT == 0u && !HF_PORT_SICKLE_LASER_AR && !HF_PORT_VG_70_VARIABLE &&
         !HF_PORT_ARC_3_RAPID_SUPERCHARGE && !HF_PORT_PLAS_39_ACCELERATOR_RIFLE &&
         !HF_PORT_PUNISHER_PLASMA && !HF_PORT_ADJUDICATOR_HEAVY &&
-        !HF_PORT_GL52_DE_ESCALATOR && !HF_PORT_TENDERIZER_ARMOR_SOFTENER)
+        !HF_PORT_GL52_DE_ESCALATOR && !HF_PORT_TENDERIZER_ARMOR_SOFTENER && !HF_PORT_RS_422_RAILGUN)
     {
         api->log(mod, "Configuration loaded: no native gameplay options are enabled; Flag preset is %u/%u",
                  (unsigned)HF_PORT_FLAG_NORMAL_DAMAGE, (unsigned)HF_PORT_FLAG_DURABLE_DAMAGE);
@@ -1909,9 +1975,26 @@ HF_MOD_EXPORT int hellforge_mod_init(const HfApi* api, HfMod* mod)
         if (HF_REGISTRY_DAMAGE_WITNESS_ID == 0u)
             HF_REGISTRY_DAMAGE_WITNESS_ID = HF_PUNISHER_CONTENT.normal_damage;
         HF_REGISTRY_PROJECTILE_WITNESS_ID = HF_PUNISHER_CONTENT.normal_projectile;
+        hf_punisher_package_begin(api, mod);
     }
 #endif
 
+#if HF_PORT_PLAS_1_SCORCHER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
+    if (!hf_sc_register(api, mod, &HF_SCORCHER))
+        api->log(mod, "Scorcher private impact registration unavailable; only that option will be refused");
+    else if (HF_REGISTRY_DAMAGE_WITNESS_ID == 0u)
+        HF_REGISTRY_DAMAGE_WITNESS_ID = HF_SCORCHER.damage;
+#endif
+
+#if HF_PORT_RS_422_RAILGUN && HF_PORT_ALLOW_NATIVE_RUNTIME
+    if(!hf_rg_register(api,mod,&HF_RAILGUN))
+        api->log(mod,"Railgun private content unavailable; only that option will be refused");
+    else {
+        if(!HF_REGISTRY_DAMAGE_WITNESS_ID)HF_REGISTRY_DAMAGE_WITNESS_ID=HF_RAILGUN.damage;
+        if(!HF_REGISTRY_PROJECTILE_WITNESS_ID)HF_REGISTRY_PROJECTILE_WITNESS_ID=HF_RAILGUN.projectile;
+        hf_rg_curve_begin(api,mod);
+    }
+#endif
 #if HF_PORT_SICKLE_LASER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
     sickle_heatsinks_begin(api, mod);
 #endif

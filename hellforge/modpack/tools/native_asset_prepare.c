@@ -174,16 +174,16 @@ static int prepare_dependencies(const wchar_t *input,const wchar_t *output) {
     unsigned char *grown=(unsigned char *)realloc(bytes,size+extra);
     if (!grown) { fprintf(stderr,"Dependency buffer allocation failed.\n"); goto done; }
     bytes=grown;
-    for (unsigned i=0;i<79;++i) {
+    for (unsigned i=0;i<80;++i) {
         write64(bytes+size+16u*i,punisher_asset_dependencies[i][0]);
         write64(bytes+size+16u*i+8,punisher_asset_dependencies[i][1]);
     }
-    write32(bytes+(size_t)offset+8,4130u);
+    write32(bytes+(size_t)offset+8,4131u);
     write32(bytes+160,length+(uint32_t)extra);
     write64(bytes+32,((uint64_t)length+extra+255u)&~UINT64_C(255));
     size+=extra;
     if (!sha256(bytes+(size_t)offset,length+extra,digest)
-        || strcmp(digest,"8AA84DAE5E4E84B7B543078FBF4F21A14A8705A9AABBF67384477CD0C0584555")) {
+        || strcmp(digest,"AF8A673C45F89E9B0F803254A2C0F8FBC9F0BB30897120A0A046B6EA6C471A2B")) {
         fprintf(stderr,"Rebuilt startup dependencies differ from the accepted source.\n"); goto done;
     }
     result=5;
@@ -191,7 +191,7 @@ static int prepare_dependencies(const wchar_t *input,const wchar_t *output) {
     result=6;
     static const char receipt[]=
         "{\n  \"result\": \"PASS\",\n  \"recipe\": \"arsenal-punisher-dependencies-v1\",\n"
-        "  \"build\": \"25480438\",\n  \"appended_identifiers\": 79,\n  \"appended_lua_resources\": 0\n}\n";
+        "  \"build\": \"25480438\",\n  \"appended_identifiers\": 80,\n  \"appended_lua_resources\": 0\n}\n";
     if (!write_new(output,L"9ba626afa44a3aa3.patch_0",bytes,(DWORD)size)
         || !write_new(output,L"9ba626afa44a3aa3.patch_0.gpu_resources","",0)
         || !write_new(output,L"9ba626afa44a3aa3.patch_0.stream","",0)

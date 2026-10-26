@@ -101,6 +101,10 @@
     "gl52-de-escalator": {
       "name": "GL-52 De-Escalator",
       "macro": "HF_PORT_GL52_DE_ESCALATOR"
+    },
+    "plas-15-loyalist": {
+      "name": "PLAS-15 Loyalist",
+      "macro": "HF_PORT_PLAS_15_LOYALIST"
     }
   },
   "flag_normal": [
@@ -383,14 +387,6 @@
     },
     {
       "option": "plas-1-scorcher-ar",
-      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x0000000000000038), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(75), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / damage.standard_damage\" },"
-    },
-    {
-      "option": "plas-1-scorcher-ar",
-      "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x0000000000000038), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(38), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / damage.durable_damage\" },"
-    },
-    {
-      "option": "plas-1-scorcher-ar",
       "line": "    { PORT_EDIT_LIVE, \"plas-1-scorcher-ar\", UINT64_C(0x0000000000000132), HF_FIELD(DamageInfo, standard_damage), {0}, HF_I32(75), {0}, 0u, HF_LIVE_SHARED, \"PLAS-1 Scorcher / explosion.primary.impact.damage.standard_damage\" },"
     },
     {
@@ -534,10 +530,6 @@
       "line": "    { PORT_EDIT_LIVE, \"r-40-k-hot-shot\", UINT64_C(0x1ABBFF60D26BA391), HF_FIELD(WeaponMagazine, max_magazines), {0}, HF_U32(5), HF_U32(7), 1u, 0u, \"R/40-K Hot-Shot Marksman Rifle / magazine.spare_magazines\" },"
     },
     {
-      "option": "rs-422-railgun",
-      "line": "    { PORT_EDIT_LIVE, \"rs-422-railgun\", UINT64_C(0x0000000000000040), HF_FIELD(DamageInfo, durable_damage), {0}, HF_I32(240), {0}, 0u, HF_LIVE_SHARED, \"RS-422 Railgun / damage.primary.durable_damage\" },"
-    },
-    {
       "option": "s-11-speargun",
       "line": "    { PORT_EDIT_LIVE, \"s-11-speargun\", UINT64_C(0x3828E2051AA9E897), HF_FIELD(WeaponData, ergonomics), {0}, HF_F32(40.0), {0}, 0u, 0u, \"S-11 Speargun / weapon.ergonomics\" },"
     },
@@ -608,6 +600,18 @@
     {
       "option": "sai-focus-precision",
       "line": "    { PORT_EDIT_STAT, \"sai-focus-precision\", 0u, {0}, { \"EntityDelta\", \"266:116\", UINT64_C(0x08755D8F453EA7BA), 195, 175452u, HF_TYPE_F32 }, HF_F32(1.0), HF_F32(1.5), 1u, HF_LIVE_SHARED, \"LAS-12 Sai / attachment.magazine.laser_heatsink_blaster_improved_heatcapacity.heat.heat_per_shot\" },"
+    },
+    {
+      "option": "plas-15-loyalist",
+      "line": "    { PORT_EDIT_LIVE, \"plas-15-loyalist\", UINT64_C(0xAA69A60D74A3EC54), HF_FIELD(WeaponMagazine, capacity), {0}, HF_U32(20), HF_U32(8), 1u, 0u, \"PLAS-15 Loyalist / magazine.capacity\" },"
+    },
+    {
+      "option": "plas-15-loyalist",
+      "line": "    { PORT_EDIT_LIVE, \"plas-15-loyalist\", UINT64_C(0xAA69A60D74A3EC54), HF_FIELD(WeaponData, sway), {0}, HF_F32(0.5), HF_F32(1.0), 1u, 0u, \"PLAS-15 Loyalist / weapon.sway\" },"
+    },
+    {
+      "option": "plas-15-loyalist",
+      "line": "    { PORT_EDIT_STAT, \"plas-15-loyalist\", 0u, {0}, { \"EntityDelta\", \"5:136\", UINT64_C(0xACA180FC6F846411), 203, 175679u, HF_TYPE_U32 }, HF_U32(20), HF_U32(8), 1u, HF_LIVE_SHARED, \"PLAS-15 Loyalist / default canister capacity\" },"
     }
   ],
   "asset_archives": {
@@ -698,34 +702,6 @@
           "sha256": "BF4C0C7AE8EC3967B4B53D5FEDA79BF6A83A921A535EFE07F433EB154659101E"
         }
       },
-      "CD4238C6A0C69E32:F96E5890EFECAB78": {
-        "cpu": {
-          "bytes": 340,
-          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
-        },
-        "stream": {
-          "bytes": 0,
-          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
-        },
-        "gpu": {
-          "bytes": 1928,
-          "sha256": "8CC3FBA6D9D9BF3274686E6E0F1BA7AA2A1C1C70565C3254C192EE1E37C54ED2"
-        }
-      },
-      "E0A48D0BE9A7453F:02CD7321CD8445F5": {
-        "cpu": {
-          "bytes": 15776,
-          "sha256": "643730C515148BE727E3E47A4A28B1755325224D1B76E04D6664DB87B310356E"
-        },
-        "stream": {
-          "bytes": 0,
-          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
-        },
-        "gpu": {
-          "bytes": 156362,
-          "sha256": "F2DD3B4EB32D0337525EDE383815EF6C141A31B4702F85E5DAABEC3D680A07C3"
-        }
-      },
       "E0A48D0BE9A7453F:411C4FD07740A7DD": {
         "cpu": {
           "bytes": 3440,
@@ -754,6 +730,20 @@
           "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
         }
       },
+      "CD4238C6A0C69E32:F96E5890EFECAB78": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "8CC3FBA6D9D9BF3274686E6E0F1BA7AA2A1C1C70565C3254C192EE1E37C54ED2"
+        }
+      },
       "EAC0B497876ADEDF:7CD9495D4A4B7477": {
         "cpu": {
           "bytes": 1600,
@@ -767,13 +757,27 @@
           "bytes": 0,
           "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
         }
+      },
+      "E0A48D0BE9A7453F:0B5D0EB081BEB889": {
+        "cpu": {
+          "bytes": 15776,
+          "sha256": "643730C515148BE727E3E47A4A28B1755325224D1B76E04D6664DB87B310356E"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 156362,
+          "sha256": "F2DD3B4EB32D0337525EDE383815EF6C141A31B4702F85E5DAABEC3D680A07C3"
+        }
       }
     },
     "9ba626afa44a3aa3": {
       "AD9C6D9ED1E5E77A:9BA626AFA44A3AA3": {
         "cpu": {
-          "bytes": 66096,
-          "sha256": "8AA84DAE5E4E84B7B543078FBF4F21A14A8705A9AABBF67384477CD0C0584555"
+          "bytes": 66112,
+          "sha256": "AF8A673C45F89E9B0F803254A2C0F8FBC9F0BB30897120A0A046B6EA6C471A2B"
         },
         "stream": {
           "bytes": 0,
@@ -856,34 +860,6 @@
           "sha256": "BF4C0C7AE8EC3967B4B53D5FEDA79BF6A83A921A535EFE07F433EB154659101E"
         }
       },
-      "CD4238C6A0C69E32:F96E5890EFECAB78": {
-        "cpu": {
-          "bytes": 340,
-          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
-        },
-        "stream": {
-          "bytes": 0,
-          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
-        },
-        "gpu": {
-          "bytes": 1928,
-          "sha256": "8CC3FBA6D9D9BF3274686E6E0F1BA7AA2A1C1C70565C3254C192EE1E37C54ED2"
-        }
-      },
-      "E0A48D0BE9A7453F:02CD7321CD8445F5": {
-        "cpu": {
-          "bytes": 15776,
-          "sha256": "643730C515148BE727E3E47A4A28B1755325224D1B76E04D6664DB87B310356E"
-        },
-        "stream": {
-          "bytes": 0,
-          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
-        },
-        "gpu": {
-          "bytes": 156362,
-          "sha256": "F2DD3B4EB32D0337525EDE383815EF6C141A31B4702F85E5DAABEC3D680A07C3"
-        }
-      },
       "E0A48D0BE9A7453F:411C4FD07740A7DD": {
         "cpu": {
           "bytes": 3440,
@@ -912,6 +888,20 @@
           "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
         }
       },
+      "CD4238C6A0C69E32:F96E5890EFECAB78": {
+        "cpu": {
+          "bytes": 340,
+          "sha256": "45CF3E30991428F7ED499733A7384A550D038D1800E8EDCACDD9AB20F7AD2E37"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 1928,
+          "sha256": "8CC3FBA6D9D9BF3274686E6E0F1BA7AA2A1C1C70565C3254C192EE1E37C54ED2"
+        }
+      },
       "EAC0B497876ADEDF:7CD9495D4A4B7477": {
         "cpu": {
           "bytes": 1600,
@@ -924,6 +914,20 @@
         "gpu": {
           "bytes": 0,
           "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      },
+      "E0A48D0BE9A7453F:0B5D0EB081BEB889": {
+        "cpu": {
+          "bytes": 15776,
+          "sha256": "643730C515148BE727E3E47A4A28B1755325224D1B76E04D6664DB87B310356E"
+        },
+        "stream": {
+          "bytes": 0,
+          "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        "gpu": {
+          "bytes": 156362,
+          "sha256": "F2DD3B4EB32D0337525EDE383815EF6C141A31B4702F85E5DAABEC3D680A07C3"
         }
       }
     }

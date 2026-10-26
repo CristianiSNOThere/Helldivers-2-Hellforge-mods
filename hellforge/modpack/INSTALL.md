@@ -1,13 +1,13 @@
 # Super Earth Arsenal native pack
 
-Super Earth Arsenal modpack for HellForge SDK 11 or newer and game build 25480438.
-Choose from 25 independent options and 29 One True Flag damage presets.
+Super Earth Arsenal modpack for HellForge SDK 13 or newer and game build 25480438.
+Choose from 26 independent options and 29 One True Flag damage presets.
 Python 3.10 or later configures the selection. PowerShell 7 and HellForge's
 pinned compiler prepare the local assets.
 
 1. Close the game. Extract the source pack into a new folder.
 2. Set each option to `true` or `false` in `pack-config.json`. The Flag's
-   `normal` and `durable` values select its damage preset. All 25 options are
+   `normal` and `durable` values select its damage preset. All 26 options are
    listed; names and behavior are in [PLAYER-GUIDE.md](PLAYER-GUIDE.md).
 3. Create a new configured source folder:
 
@@ -41,3 +41,5 @@ HellForge's `mods` directory. The pack does not change the Steam installation.
 With Scope of Authority Backport, use version 2.14.15 on HellForge 0.1.28. The pack's options and both Sickle heatsinks remain available with the backport enabled.
 
 Gas Overhaul can be used with the 150-health Health Rework at either 2 or 2.8 health per second regeneration.
+
+Existing 25-option configuration files keep their saved choices when configured; the new Loyalist option starts disabled. Enable `plas-15-loyalist` to use its 20-round magazine and 0.5 sway.

@@ -2,11 +2,11 @@
   "format": 1,
   "id": "superearth.arsenal-native-port",
   "name": "Super Earth Arsenal Modpack",
-  "version": "2.4.4",
-  "description": "25 selectable weapon and equipment mods, including Rapid/Supercharge ARC-3, a 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul and 29 One True Flag damage presets.",
+  "version": "2.4.5",
+  "description": "26 selectable weapon and equipment mods, including Rapid/Supercharge ARC-3, a 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul and 29 One True Flag damage presets.",
   "gameplay": true,
   "code": {
     "dll": "super_earth_arsenal.dll",
-    "sdk": 11
+    "sdk": 13
   }
 }

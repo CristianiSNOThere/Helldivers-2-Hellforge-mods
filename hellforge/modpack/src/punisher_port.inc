@@ -4,6 +4,7 @@
 
 #define HF_PUNISHER_PARENT_RESOURCE UINT64_C(0x05D8D8C073B9D502)
 #define HF_PUNISHER_CHILD_RESOURCE UINT64_C(0x02CD7321CD8445F5)
+#define HF_PUNISHER_PRIVATE_CHILD_NAME "superearth/arsenal_native/punisher_plasma/shotgun_child"
 #define HF_PUNISHER_RELOAD_DONOR_RESOURCE UINT64_C(0xDCD1C835407EF7BA)
 #define HF_PUNISHER_WEAPON_SIZE 1232u
 #define HF_PUNISHER_PROJECTILE_SIZE 616u
@@ -80,6 +81,7 @@ typedef struct HfPunisherLiveEdit
 
 typedef struct HfPunisherContent
 {
+    uint64_t child_entity;
     uint32_t normal_projectile;
     uint32_t pellet_projectile;
     uint32_t normal_damage;
@@ -221,14 +223,29 @@ static int hf_punisher_registry_row(const HfApi* api, const char* table, uint32_
 }
 
 static int hf_punisher_profile_hash_matches(const HfPunisherRecord* row, uint32_t row_id,
-                                           uint32_t normal_projectile, uint32_t pellet_projectile)
+                                           uint32_t normal_projectile, uint32_t pellet_projectile,
+                                           uint64_t child_entity)
 {
     uint8_t normalized[HF_PUNISHER_MAX_ROW_SIZE];
 
     if (row == NULL || row_id >= HF_PUNISHER_ROW_COUNT || row->stride > sizeof(normalized))
         return 0;
     memcpy(normalized, row->after, row->stride);
-    if (row_id == HF_PUNISHER_PARENT_PROJECTILE)
+    if (row_id == HF_PUNISHER_PARENT_CUSTOMIZATION)
+    {
+        uint64_t actual;
+        memcpy(&actual, normalized + 192u, 8u);
+        if (!child_entity || child_entity == HF_PUNISHER_CHILD_RESOURCE || actual != child_entity ||
+            memcmp(normalized + 16u, "\0\0\0\0\0\0\0\0", 8u))
+            return 0;
+        /* Compare against the accepted profile after normalizing only the
+         * removed default delta and its private child resource. */
+        hf_punisher_put_u32(normalized, 16u, 1u);
+        hf_punisher_put_u32(normalized, 20u, UINT32_C(0xA051BF6B));
+        actual = HF_PUNISHER_CHILD_RESOURCE;
+        memcpy(normalized + 192u, &actual, 8u);
+    }
+    else if (row_id == HF_PUNISHER_PARENT_PROJECTILE)
     {
         if (hf_punisher_u32(normalized, 0u) != normal_projectile)
             return 0;
@@ -253,6 +270,7 @@ static int hf_punisher_profile_hash_matches(const HfPunisherRecord* row, uint32_
 static int hf_punisher_build_profile(HfPunisherRecord rows[HF_PUNISHER_ROW_COUNT],
                                      const uint8_t reload_donor[HF_PUNISHER_RELOAD_SIZE],
                                      uint32_t normal_projectile, uint32_t pellet_projectile,
+                                     uint64_t child_entity,
                                      char* reason, size_t capacity)
 {
     static const uint8_t display_names[16] = {
@@ -262,7 +280,9 @@ static int hf_punisher_build_profile(HfPunisherRecord rows[HF_PUNISHER_ROW_COUNT
     float sway;
     uint32_t i;
 
-    if (normal_projectile < HF_PUNISHER_FIRST_PROJECTILE_ID ||
+    if (!child_entity || child_entity == HF_PUNISHER_CHILD_RESOURCE ||
+        child_entity == HF_PUNISHER_PARENT_RESOURCE ||
+        normal_projectile < HF_PUNISHER_FIRST_PROJECTILE_ID ||
         normal_projectile > HF_PUNISHER_LAST_PROJECTILE_ID ||
         pellet_projectile < HF_PUNISHER_FIRST_PROJECTILE_ID ||
         pellet_projectile > HF_PUNISHER_LAST_PROJECTILE_ID ||
@@ -326,11 +346,10 @@ static int hf_punisher_build_profile(HfPunisherRecord rows[HF_PUNISHER_ROW_COUNT
     hf_punisher_put_u32(rows[HF_PUNISHER_PARENT_MAGAZINE].after, 144u, 1u);
     hf_punisher_put_u32(rows[HF_PUNISHER_PARENT_MAGAZINE].after, 148u, 1u);
 
-    /* Existing One-Two customization path selects the stock child attachment. */
-    hf_punisher_put_u32(rows[HF_PUNISHER_PARENT_CUSTOMIZATION].after, 16u, 1u);
-    hf_punisher_put_u32(rows[HF_PUNISHER_PARENT_CUSTOMIZATION].after, 20u, UINT32_C(0xA051BF6B));
-    hf_punisher_put_u32(rows[HF_PUNISHER_PARENT_CUSTOMIZATION].after, 192u, UINT32_C(0xCD8445F5));
-    hf_punisher_put_u32(rows[HF_PUNISHER_PARENT_CUSTOMIZATION].after, 196u, UINT32_C(0x02CD7321));
+    /* The old default attachment overwrites +192 with the stock One-Two.
+     * Its entire delta is already represented by the parent profile (+156,
+     * +4852 and +192), so retain the empty default slot and use our entity. */
+    memcpy(rows[HF_PUNISHER_PARENT_CUSTOMIZATION].after + 192u, &child_entity, 8u);
     hf_punisher_put_u32(rows[HF_PUNISHER_PARENT_CUSTOMIZATION].after, 4852u, 2u);
 
     /* Child: copy the accepted stock handling prefix, then apply pellet spread/cadence. */
@@ -372,7 +391,7 @@ static int hf_punisher_build_profile(HfPunisherRecord rows[HF_PUNISHER_ROW_COUNT
 
     for (i = 0u; i < HF_PUNISHER_ROW_COUNT; ++i)
     {
-        if (!hf_punisher_profile_hash_matches(&rows[i], i, normal_projectile, pellet_projectile))
+        if (!hf_punisher_profile_hash_matches(&rows[i], i, normal_projectile, pellet_projectile, child_entity))
         {
             (void)snprintf(reason, capacity, "%s transform differs from its accepted output pin",
                            HF_PUNISHER_SOURCE[i].label);
@@ -448,6 +467,8 @@ static int hf_punisher_verify_custom_row(const HfApi* api, uintptr_t address, si
     }
     return 1;
 }
+
+#include "punisher_explosions.inc"
 
 static int hf_punisher_preflight_live(const HfApi* api, HfMod* mod,
                                       const HfPunisherLiveEdit* edits, size_t count,
@@ -549,6 +570,7 @@ static int hf_punisher_reset_content(const HfApi* api, HfMod* mod,
         }
         --content->applied_count;
     }
+    if (hf_punisher_explosion_reset(api, reason, capacity) < 0) failed = 1;
     if (content != NULL)
     {
         content->configured = 0u;
@@ -641,7 +663,10 @@ static int hf_punisher_configure_content(const HfApi* api, HfMod* mod,
     {
         int configured = hf_punisher_check_configured_content(api, mod, content, reason, capacity);
         if (configured != 1)
+        {
+            if (configured == 2 && !hf_punisher_explosion_check(api, reason, capacity)) return 0;
             return configured;
+        }
     }
     if (content->available == 0u || api == NULL || api->size < api_need ||
         api->read == NULL || api->get_live == NULL || api->set_live == NULL ||
@@ -744,24 +769,6 @@ static int hf_punisher_configure_content(const HfApi* api, HfMod* mod,
     HF_PUNISHER_ADD_LIVE(content->normal_projectile, ProjectileSettings, gravity, HF_F32(3.0f), HF_F32(1.0f), 0u, 0u);
     HF_PUNISHER_ADD_LIVE(content->pellet_projectile, ProjectileSettings, pellet_count, HF_U32(1u), HF_U32(9u), 0u, 0u);
 
-    /* ExplosionSettings rows are public live targets but shared by other weapons. Preserve
-     * the accepted donor side effect and make the scope explicit with HF_LIVE_SHARED. */
-    HF_PUNISHER_ADD_LIVE(HF_PUNISHER_NORMAL_EXPLOSION_ID, ExplosionSettings, damage,
-                         HF_U32(311u), HF_U32(content->normal_damage), 1u, HF_LIVE_SHARED);
-    HF_PUNISHER_ADD_LIVE(HF_PUNISHER_NORMAL_EXPLOSION_ID, ExplosionSettings, inner_radius,
-                         HF_F32(2.3f), HF_F32(3.5f), 1u, HF_LIVE_SHARED);
-    HF_PUNISHER_ADD_LIVE(HF_PUNISHER_NORMAL_EXPLOSION_ID, ExplosionSettings, outer_radius,
-                         HF_F32(3.0f), HF_F32(6.5f), 1u, HF_LIVE_SHARED);
-    HF_PUNISHER_ADD_LIVE(HF_PUNISHER_NORMAL_EXPLOSION_ID, ExplosionSettings, shockwave_radius,
-                         HF_F32(4.0f), HF_F32(8.0f), 1u, HF_LIVE_SHARED);
-    HF_PUNISHER_ADD_LIVE(HF_PUNISHER_PELLET_EXPLOSION_ID, ExplosionSettings, damage,
-                         HF_U32(305u), HF_U32(content->pellet_damage), 1u, HF_LIVE_SHARED);
-    HF_PUNISHER_ADD_LIVE(HF_PUNISHER_PELLET_EXPLOSION_ID, ExplosionSettings, inner_radius,
-                         HF_F32(0.75f), HF_F32(0.5f), 1u, HF_LIVE_SHARED);
-    HF_PUNISHER_ADD_LIVE(HF_PUNISHER_PELLET_EXPLOSION_ID, ExplosionSettings, outer_radius,
-                         HF_F32(1.5f), HF_F32(0.5f), 1u, HF_LIVE_SHARED);
-    HF_PUNISHER_ADD_LIVE(HF_PUNISHER_PELLET_EXPLOSION_ID, ExplosionSettings, shockwave_radius,
-                         HF_F32(2.0f), HF_F32(0.5f), 1u, HF_LIVE_SHARED);
 
 #undef HF_PUNISHER_ADD_LIVE_AT
 #undef HF_PUNISHER_ADD_LIVE
@@ -769,6 +776,11 @@ static int hf_punisher_configure_content(const HfApi* api, HfMod* mod,
     if (count > sizeof(content->applied) / sizeof(content->applied[0]) ||
         !hf_punisher_preflight_live(api, mod, edits, count, reason, capacity))
         return 0;
+
+    {
+        int explosions = hf_punisher_explosion_bind(api, content, reason, capacity);
+        if (explosions < 1) return explosions;
+    }
 
     content->applied_count = 0u;
     for (i = 0u; i < count; ++i)
@@ -803,10 +815,13 @@ static int hf_punisher_register_content(const HfApi* api, HfMod* mod,
     if (content == NULL)
         return 0;
     memset(content, 0, sizeof(*content));
-    if (api == NULL || api->size < need || api->add_damage == NULL || api->add_projectile == NULL)
+    if (api == NULL || api->size < need ||
+        api->size < offsetof(HfApi, add_entity) + sizeof(api->add_entity) ||
+        api->add_entity == NULL || api->resource_hash == NULL ||
+        api->add_damage == NULL || api->add_projectile == NULL)
     {
         if (api != NULL && api->log != NULL)
-            api->log(mod, "Punisher requires HellForge add_damage and add_projectile APIs");
+            api->log(mod, "Punisher requires HellForge entity, damage and projectile registration APIs");
         return 0;
     }
 
@@ -849,6 +864,21 @@ static int hf_punisher_register_content(const HfApi* api, HfMod* mod,
         content->pellet_projectile == content->normal_projectile)
         goto failed;
 
+    {
+        static const char* const owned[] = {
+            "WeaponDataComponentData", "ProjectileWeaponComponentData",
+            "WeaponRoundsComponentData", "WeaponReloadComponentData", NULL
+        };
+        static const HfEntity child = {
+            .size = sizeof(HfEntity), .base = HF_PUNISHER_CHILD_RESOURCE,
+            .name = HF_PUNISHER_PRIVATE_CHILD_NAME, .own_components = owned,
+            .unit = HF_PUNISHER_PRIVATE_CHILD_NAME
+        };
+        content->child_entity = api->add_entity(mod, &child);
+        if (!content->child_entity || content->child_entity == HF_PUNISHER_CHILD_RESOURCE ||
+            content->child_entity != api->resource_hash(HF_PUNISHER_PRIVATE_CHILD_NAME))
+            goto failed;
+    }
     content->available = 1u;
     return 1;
 
@@ -866,6 +896,11 @@ static int hf_punisher_range_overlaps(uintptr_t left, size_t left_size,
         return 1;
     return left < right + right_size && right < left + left_size;
 }
+
+#include "punisher_child_guard.generated.h"
+#include "punisher_unit_guard.generated.h"
+#include "punisher_unit_ownership.inc"
+#include "punisher_child_ownership.inc"
 
 static int hf_punisher_restore(const HfApi* api, HfPunisherPatch* patches,
                                size_t attempted, char* reason, size_t capacity)
@@ -943,7 +978,8 @@ static int hf_punisher_commit(const HfApi* api, HfPunisherRecord rows[HF_PUNISHE
     {
         uint8_t observed[8];
         HfPunisherPatch* patch = &patches[attempted];
-        if (api->read(patch->address, observed, patch->size) != 0 ||
+        if (!hf_punisher_child_owned(api, content, rows, reason, capacity) ||
+            api->read(patch->address, observed, patch->size) != 0 ||
             memcmp(observed, patch->before, patch->size) != 0)
         {
             (void)snprintf(reason, capacity, "Punisher component or lookup changed before a guarded write");
@@ -972,6 +1008,12 @@ static int hf_punisher_commit(const HfApi* api, HfPunisherRecord rows[HF_PUNISHE
         --attempted;
     }
 
+    if (!hf_punisher_child_owned(api, content, rows, reason, capacity))
+    {
+        if (!hf_punisher_restore(api, patches, patch_count, reason, capacity))
+        { content->poisoned = 1u; return -1; }
+        return 0;
+    }
     for (row = 0u; row < HF_PUNISHER_ROW_COUNT; ++row)
     {
         if (api->read(rows[row].address, current, rows[row].stride) != 0 ||
@@ -1039,7 +1081,8 @@ static int hf_punisher_apply_profile(const HfApi* api, HfMod* mod,
     {
         rows[i].stride = 0u;
         rows[i].address = api->component_record(HF_PUNISHER_SOURCE[i].component,
-                                                HF_PUNISHER_SOURCE[i].resource, &rows[i].stride);
+            i >= HF_PUNISHER_CHILD_WEAPON ? content->child_entity : HF_PUNISHER_SOURCE[i].resource,
+            &rows[i].stride);
         if (rows[i].address < 65536u || rows[i].stride != HF_PUNISHER_SOURCE[i].stride ||
             rows[i].address > UINTPTR_MAX - rows[i].stride ||
             (rows[i].address & 3u) != 0u ||
@@ -1057,7 +1100,7 @@ static int hf_punisher_apply_profile(const HfApi* api, HfMod* mod,
         memcpy(rows[i].after, rows[i].before, rows[i].stride);
         if (!hf_punisher_profile_hash_matches(&rows[i], i,
                                               content->normal_projectile,
-                                              content->pellet_projectile))
+                                              content->pellet_projectile, content->child_entity))
             all_profile = 0;
         {
             uint32_t prior;
@@ -1073,6 +1116,8 @@ static int hf_punisher_apply_profile(const HfApi* api, HfMod* mod,
         }
     }
 
+    if (!hf_punisher_child_owned(api, content, rows, reason, capacity))
+        return 0;
     if (all_profile)
     {
         runner->applied = 1u;
@@ -1108,13 +1153,14 @@ static int hf_punisher_apply_profile(const HfApi* api, HfMod* mod,
     }
 
     if (!hf_punisher_build_profile(rows, donor, content->normal_projectile,
-                                   content->pellet_projectile, reason, capacity))
+                                   content->pellet_projectile, content->child_entity, reason, capacity))
         return 0;
     result = hf_punisher_commit(api, rows, donor, donor_address, content, reason, capacity);
     if (result == 1)
     {
         runner->applied = 1u;
-        (void)snprintf(reason, capacity, "applied the accepted Punisher/One-Two profile to eight owned component rows");
+        (void)snprintf(reason, capacity, "applied Punisher profile with private child %016llx; four stock One-Two rows preserved",
+                       (unsigned long long)content->child_entity);
         return 1;
     }
     if (result < 0)
@@ -1127,12 +1173,18 @@ static HfPunisherRunner HF_PUNISHER_RUNNER;
 static HfPunisherContent HF_PUNISHER_CONTENT;
 
 #if !defined(HF_PORT_TEST_PUNISHER)
-static void hf_punisher_apply_ready(HfMod* mod, HfEvent event, void* user)
+/* Own a session-lifetime package reference before publishing the child. Armory
+ * previews release their references when choices change; source-row ownership
+ * alone does not keep the private model alive through those releases. */
+#define HF_PUNISHER_MODEL_PACKAGE UINT64_C(0x49F1972458F7CCEC)
+static volatile LONG HF_PUNISHER_PENDING;
+static volatile LONG HF_PUNISHER_PACKAGE_FAILED;
+static uint64_t HF_PUNISHER_PACKAGE_WAIT_START;
+static uint32_t HF_PUNISHER_PACKAGE_WAIT_LOGGED;
+static void hf_punisher_apply_loaded(HfMod* mod, const HfApi* api)
 {
-    const HfApi* api = (const HfApi*)user;
     char reason[256];
     int result;
-    (void)event;
     result = hf_punisher_configure_content(api, mod, &HF_PUNISHER_CONTENT, reason, sizeof(reason));
     if (result < 1)
     {
@@ -1161,8 +1213,67 @@ static void hf_punisher_apply_ready(HfMod* mod, HfEvent event, void* user)
         return;
     }
     if (result == 1)
-        api->log(mod, "Applied Punisher Plasma source-pinned component and isolated projectile/damage profiles: %s", reason);
+        api->log(mod, "Applied Punisher Plasma with private explosions 423/424, original Loyalist explosion 355 preserved: %s", reason);
     else if (result == 2)
         api->log(mod, "Punisher Plasma source-pinned profile is already applied: %s", reason);
+}
+static void hf_punisher_package_tick(HfMod* mod, float dt, void* user)
+{
+    const HfApi* api = (const HfApi*)user;
+    (void)dt;
+    if (HF_PUNISHER_PACKAGE_FAILED || !HF_PUNISHER_PENDING) return;
+    int state = api->load_package(mod, HF_PUNISHER_MODEL_PACKAGE);
+    if (!state || (state != HF_PACKAGE_RESIDENT &&
+                   GetTickCount64() - HF_PUNISHER_PACKAGE_WAIT_START > 90000u))
+    {
+        InterlockedExchange(&HF_PUNISHER_PACKAGE_FAILED, 1);
+        InterlockedExchange(&HF_PUNISHER_PENDING, 0);
+        api->log(mod, "Refused Punisher private child: donor model package was refused or not resident within 90 seconds");
+        return;
+    }
+    if (state != HF_PACKAGE_RESIDENT)
+    {
+        if (!HF_PUNISHER_PACKAGE_WAIT_LOGGED++)
+            api->log(mod, "Punisher private child waiting for held donor model package 49f1972458f7ccec");
+        return;
+    }
+    if (!hf_punisher_explosion_pins_ready(api))
+    {
+        if (GetTickCount64() - HF_PUNISHER_PACKAGE_WAIT_START > 90000u)
+        {
+            InterlockedExchange(&HF_PUNISHER_PACKAGE_FAILED, 1);
+            InterlockedExchange(&HF_PUNISHER_PENDING, 0);
+            api->log(mod, "Refused Punisher private explosions: lookup pins not ready or changed after 90 seconds");
+        }
+        return;
+    }
+    if (!InterlockedExchange(&HF_PUNISHER_PENDING, 0)) return;
+    api->log(mod, "Punisher private child model package resident and held for the session");
+    hf_punisher_apply_loaded(mod, api);
+}
+static void hf_punisher_package_begin(const HfApi* api, HfMod* mod)
+{
+    if (api->size < offsetof(HfApi, load_package) + sizeof(api->load_package) ||
+        !api->load_package || !api->on_game_thread ||
+        !api->on_game_thread(mod, hf_punisher_package_tick, (void*)api))
+    {
+        InterlockedExchange(&HF_PUNISHER_PACKAGE_FAILED, 1);
+        api->log(mod, "Refused Punisher private child: package lifetime APIs or game-thread callback unavailable");
+        return;
+    }
+    HF_PUNISHER_PACKAGE_WAIT_START = GetTickCount64();
+    if (!api->load_package(mod, HF_PUNISHER_MODEL_PACKAGE))
+    {
+        InterlockedExchange(&HF_PUNISHER_PACKAGE_FAILED, 1);
+        api->log(mod, "Refused Punisher private child: donor model package hold unavailable");
+    }
+}
+static void hf_punisher_apply_ready(HfMod* mod, HfEvent event, void* user)
+{
+    (void)mod; (void)event; (void)user;
+    if (HF_PUNISHER_PACKAGE_FAILED) return;
+    HF_PUNISHER_PACKAGE_WAIT_START = GetTickCount64();
+    HF_PUNISHER_PACKAGE_WAIT_LOGGED = 0u;
+    InterlockedExchange(&HF_PUNISHER_PENDING, 1);
 }
 #endif

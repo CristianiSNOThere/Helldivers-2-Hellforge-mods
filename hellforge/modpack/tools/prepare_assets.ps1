@@ -23,7 +23,7 @@ $expected = Get-Content -LiteralPath $expectedPath -Raw | ConvertFrom-Json -AsHa
 if ($expected.schema -ne 1 -or $expected.archives -isnot [Collections.IDictionary]) { throw 'Invalid expected asset inventory' }
 $animationKey = 'A486D4045106165C:4D1C334D294DFA97'
 $packageKey = 'AD9C6D9ED1E5E77A:9BA626AFA44A3AA3'
-$magazineKey = 'E0A48D0BE9A7453F:02CD7321CD8445F5'
+$magazineKey = 'E0A48D0BE9A7453F:0B5D0EB081BEB889'
 $privateNames = @('7CD9495D4A4B7477', 'F96E5890EFECAB78')
 $modes = [ordered]@{}
 $patches = @()

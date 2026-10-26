@@ -1,7 +1,7 @@
 /* Authored dependency identifiers from the accepted pack. No resource payloads. */
 #ifndef ARSENAL_PUNISHER_ASSET_DEPENDENCIES_H
 #define ARSENAL_PUNISHER_ASSET_DEPENDENCIES_H
-static const uint64_t punisher_asset_dependencies[79][2] = {
+static const uint64_t punisher_asset_dependencies[80][2] = {
     { UINT64_C(0x18DEAD01056B72E9), UINT64_C(0x02CD7321CD8445F5) },
     { UINT64_C(0x18DEAD01056B72E9), UINT64_C(0x129E5FB1B13C2018) },
     { UINT64_C(0x18DEAD01056B72E9), UINT64_C(0x541EB319127C7484) },
@@ -81,5 +81,6 @@ static const uint64_t punisher_asset_dependencies[79][2] = {
     { UINT64_C(0xE0A48D0BE9A7453F), UINT64_C(0x411C4FD07740A7DD) },
     { UINT64_C(0xEAC0B497876ADEDF), UINT64_C(0x4C27D54D51C298AB) },
     { UINT64_C(0xEAC0B497876ADEDF), UINT64_C(0x7CD9495D4A4B7477) },
+    { UINT64_C(0xE0A48D0BE9A7453F), UINT64_C(0x0B5D0EB081BEB889) },
 };
 #endif

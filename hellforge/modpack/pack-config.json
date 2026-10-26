@@ -26,7 +26,8 @@
     "vg-70-variable": true,
     "adjudicator-heavy": true,
     "punisher-plasma": true,
-    "gl52-de-escalator": true
+    "gl52-de-escalator": true,
+    "plas-15-loyalist": true
   },
   "flag": {
     "normal": 300,
