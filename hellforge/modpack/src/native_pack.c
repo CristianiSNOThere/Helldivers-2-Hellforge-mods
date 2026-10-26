@@ -6,6 +6,10 @@
 #include <string.h>
 
 #include "hellforge_mod.h"
+#include "component_lookup.h"
+static int hf_component_api_read(void* context,uintptr_t at,void* bytes,size_t size) {
+    const HfApi* api=context;return api->read(at,bytes,size);
+}
 #include "ac8_source_guard.generated.h"
 #include "epoch_source_guard.generated.h"
 #include "vg70_profile.h"
@@ -169,6 +173,7 @@ static const HfPortEdit HF_PORT_EDITS[1] = {{0}};
 
 #if HF_PORT_GAS_OVERHAUL || defined(HF_PORT_TEST_GAS)
 #include "gas_health.inc"
+#include "gas_perk.inc"
 #endif
 
 #include "sai_attachment_native.inc"
@@ -221,6 +226,9 @@ static int preflight_one(const HfApi* api, HfMod* mod, const HfPortEdit* edit,
     else
         ready = 0;
 
+#if HF_PORT_GAS_OVERHAUL || defined(HF_PORT_TEST_GAS)
+    if (!ready && hf_gas_perk_field(edit)) return hf_gas_perk_preflight(api,reason,capacity);
+#endif
     if (!ready)
     {
         (void)snprintf(reason, capacity, "the current field or table is unavailable");
@@ -447,8 +455,6 @@ static int ac8_resolve_component_records(const HfApi* api, HfMod* edited_mod, ui
     uintptr_t entities;
     size_t image_size = 0u;
     size_t i;
-    uint8_t header[28];
-    uint8_t owner_map[16];
     uint8_t component_bytes[1232];
     const size_t component_count = sizeof(HF_AC8_COMPONENTS) / sizeof(HF_AC8_COMPONENTS[0]);
 
@@ -494,27 +500,13 @@ static int ac8_resolve_component_records(const HfApi* api, HfMod* edited_mod, ui
     for (i = 0u; i < component_count; ++i)
     {
         const HfAc8ComponentFingerprint* expected = &HF_AC8_COMPONENTS[i];
-        uintptr_t group_address;
-        uintptr_t owner_map_address;
         uintptr_t row_address;
-        if (!ac8_safe_address(entities, expected->group_offset, sizeof(header), &group_address) ||
-            api->read(group_address, header, sizeof(header)) != 0 ||
-            memcmp(header, expected->header, sizeof(header)) != 0)
-        {
-            (void)snprintf(reason, capacity, "the AC-8 %s group header differs from its accepted source",
-                           expected->name);
-            return 0;
-        }
-        if (!ac8_safe_address(entities, expected->map_offset, sizeof(owner_map), &owner_map_address) ||
-            api->read(owner_map_address, owner_map, sizeof(owner_map)) != 0 ||
-            memcmp(owner_map, expected->owner, sizeof(owner_map)) != 0)
-        {
-            (void)snprintf(reason, capacity, "the AC-8 %s owner map differs from its accepted source",
-                           expected->name);
+        if (!hf_component_record(hf_component_api_read,(void*)api,owner,expected->group_offset,
+                expected->header,expected->map_offset,expected->owner,expected->size,&row_address)) {
+            (void)snprintf(reason,capacity,"the AC-8 %s active table or exact owner mapping changed",expected->name);
             return 0;
         }
         if (expected->size > sizeof(component_bytes) ||
-            !ac8_safe_address(entities, expected->row_offset, expected->size, &row_address) ||
             api->read(row_address, component_bytes, expected->size) != 0 ||
             !ac8_component_matches(api, edited_mod, expected, component_bytes))
         {
@@ -1013,7 +1005,7 @@ static int epoch_reload_record(const HfApi* api, uint8_t flag, uintptr_t* addres
     uintptr_t game, owner_field, map_field, entities, row;
     uint64_t owner, map;
     size_t image_size = 0u;
-    uint8_t header[28], identity[16], bytes[HF_EPOCH_RELOAD_SIZE], expected[HF_EPOCH_RELOAD_SIZE];
+    uint8_t bytes[HF_EPOCH_RELOAD_SIZE], expected[HF_EPOCH_RELOAD_SIZE];
     if (api == NULL || api->module_base == NULL || api->read == NULL || flag > 1u ||
         (game = api->module_base("game.dll", &image_size)) == 0u ||
         HF_AC8_ENTITY_MANAGER_RVA > image_size || sizeof(owner) > image_size-HF_AC8_ENTITY_MANAGER_RVA ||
@@ -1026,18 +1018,14 @@ static int epoch_reload_record(const HfApi* api, uint8_t flag, uintptr_t* addres
         (void)snprintf(reason, capacity, "Epoch reload entity pointer topology is unavailable");
         return 0;
     }
-    if (!ac8_safe_address(entities, source->group_offset, sizeof(header), &row) ||
-        api->read(row, header, sizeof(header)) != 0 || memcmp(header, source->header, sizeof(header)) != 0 ||
-        !ac8_safe_address(entities, source->map_offset, sizeof(identity), &row) ||
-        api->read(row, identity, sizeof(identity)) != 0 || memcmp(identity, source->owner, sizeof(identity)) != 0)
-    {
-        (void)snprintf(reason, capacity, "Epoch reload group header or exact owner map changed");
+    if (!hf_component_record(hf_component_api_read,(void*)api,(uintptr_t)owner,source->group_offset,
+            source->header,source->map_offset,source->owner,source->size,&row)) {
+        (void)snprintf(reason,capacity,"Epoch reload active table or exact owner mapping changed");
         return 0;
     }
     memcpy(expected, source->before, sizeof(expected));
     expected[1] = flag;
-    if (!ac8_safe_address(entities, source->row_offset, sizeof(bytes), &row) ||
-        api->read(row, bytes, sizeof(bytes)) != 0 || memcmp(bytes, expected, sizeof(bytes)) != 0)
+    if (api->read(row, bytes, sizeof(bytes)) != 0 || memcmp(bytes, expected, sizeof(bytes)) != 0)
     {
         (void)snprintf(reason, capacity, "Epoch exact reload owner row changed (expected movement flag %u)", flag);
         return 0;
@@ -1268,6 +1256,7 @@ static int apply_one(const HfApi* api, HfMod* mod, const HfPortEdit* edit,
     if (hf_sai_attachment_field(edit) >= 0)
         return hf_sai_attachment_change(api,mod,(unsigned)hf_sai_attachment_field(edit),0,reason,capacity);
 #if HF_PORT_GAS_OVERHAUL || defined(HF_PORT_TEST_GAS)
+    if (hf_gas_perk_field(edit) && HF_GAS_PERK.ready) return hf_gas_perk_change(api,0,reason,capacity);
     if (edit->kind == PORT_EDIT_GAS_PLAYER_HEALTH)
         return hf_gas_player_health_apply(api, reason, capacity);
 #endif
@@ -1286,6 +1275,7 @@ static int reset_one(const HfApi* api, HfMod* mod, const HfPortEdit* edit,
     if (hf_sai_attachment_field(edit) >= 0)
         return hf_sai_attachment_change(api,mod,(unsigned)hf_sai_attachment_field(edit),1,reason,capacity);
 #if HF_PORT_GAS_OVERHAUL || defined(HF_PORT_TEST_GAS)
+    if (hf_gas_perk_field(edit) && HF_GAS_PERK.ready) return hf_gas_perk_change(api,1,reason,capacity);
     if (edit->kind == PORT_EDIT_GAS_PLAYER_HEALTH)
         return hf_gas_player_health_reset(api, reason, capacity);
 #endif

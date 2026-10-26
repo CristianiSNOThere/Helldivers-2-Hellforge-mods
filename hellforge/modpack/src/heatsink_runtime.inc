@@ -7,6 +7,8 @@
 #include "heat_instance.h"
 #include "spawn_selection.h"
 #include "data_transaction.h"
+#include "catalog_extension.h"
+#include "peer_text_guard.h"
 #include "heatsink_guards.generated.h"
 
 typedef uintptr_t (*HsIdFn)(uint32_t);
@@ -25,7 +27,7 @@ typedef struct HsRuntime {
     volatile LONG hooks_ready,active,failed,logged_refusal,pending_cleanup;
     SRWLOCK lock;
     uint64_t epoch,catalog_generation;
-    uintptr_t entity_root,catalog_root,custom_address[2],heat_source[2];
+    uintptr_t entity_root,catalog_root,custom_address[2],heat_source[2],peer_text_base;
     uintptr_t damage_rows[3];
     uint32_t catalog_count,children[4],parents[2];
     int catalog_ready,descriptors_ready,text_ready,slots_live,granted[4];
@@ -140,6 +142,12 @@ static int hs_parent_owned(unsigned family) {
 }
 /* Called while holding the exclusive adapter lock, before native armory reads. */
 static int hs_ownership(void) {
+    uint32_t current=hs_word(HS.catalog_root+0x1ce0,0);
+    if (current!=HS.catalog_count) {
+        if (hs_pointer(HS.game+0x347cef8)!=HS.catalog_root ||
+            !hf_catalog_extension(hs_read,&HS,HS.catalog_root,HS.catalog_count,current)) return 0;
+        HS.catalog_count=current;
+    }
     uint8_t before[4][184],after[4][184];uintptr_t addresses[4];int changed[4]={0};
     if (!HS.catalog_ready || hs_pointer(HS.game+0x347cef8)!=HS.catalog_root ||
         hs_word(HS.catalog_root+0x1ce0,0)!=HS.catalog_count) return 0;
@@ -387,7 +395,17 @@ static int hs_localization(void) {
      * text; installing ahead of its one-time hook would make it refuse theirs. */
     int loader_owned=loader && current>=loader && current<loader+loader_size;
     int engine_owned=exe && current>=exe && current<exe+exe_size;
-    if (!loader_owned && !(engine_owned && GetTickCount64()-HS.start_ms>=30000)) return 0;
+    int peer_owned=0;
+    if (!loader_owned && !engine_owned) {
+        size_t peer_size=0;uintptr_t peer=HS.api->module_base("scope_of_authority.dll",&peer_size);
+        if (peer && peer_size>0x7df0u && current==peer+0x7dd0u) {
+            char hash[65];
+            if (HS.peer_text_base==peer) peer_owned=1;
+            else if (sickle_hash_module_file(&HS.crypto,peer,hash) &&
+                hf_peer_text_source(current,peer,peer_size,hash)) { HS.peer_text_base=peer;peer_owned=1; }
+        }
+    }
+    if (!loader_owned && !peer_owned && !(engine_owned && GetTickCount64()-HS.start_ms>=30000)) return 0;
     HsTextFn previous=(HsTextFn)current;
     for (unsigned i=0;i<4;i++) for (unsigned j=0;j<3;j++) {
         const char* existing=previous(HF_HEATSINK_TEXT_IDS[i][j],NULL,NULL,NULL);char first=0;

@@ -42,7 +42,7 @@ static int sickle_native_read(void* context, uintptr_t address, void* output, si
 typedef struct HfSickleComponentPlan
 {
     const HfSickleComponentSpec* spec;
-    uintptr_t row;
+    uintptr_t row, table;
     uint8_t owners[730u * 16u];
     uint8_t source[1232u];
     uint8_t expected[1232u];
@@ -147,10 +147,11 @@ static int sickle_component_proof(const HfSickleOps* ops, uintptr_t game,
     if (current_map != map || current_map < 26151684u)
         return 0;
     current_entities = current_map - 26151684u;
-    if (current_entities != entities || !sickle_add_address(entities, spec->group, &group) ||
-        !sickle_read(ops, group, header, sizeof(header)) ||
+    if (current_entities != entities || !hf_component_map(ops->read,ops->context,owner,spec->group,spec->header,&group) ||
+        group != plan->table ||
+        !sickle_read(ops, group-28u, header, sizeof(header)) ||
         memcmp(header, spec->header, sizeof(header)) != 0 ||
-        !sickle_read(ops, group + 28u, owners, (size_t)spec->count * 16u) ||
+        !sickle_read(ops, group, owners, (size_t)spec->count * 16u) ||
         memcmp(owners, plan->owners, (size_t)spec->count * 16u) != 0)
         return 0;
     return 1;
@@ -173,8 +174,8 @@ static int sickle_resolve_component(const HfSickleOps* ops, uintptr_t game,
 
     memset(plan, 0, sizeof(*plan));
     plan->spec = spec;
-    if (!sickle_add_address(entities, spec->group, &group) ||
-        !sickle_read(ops, group, header, sizeof(header)) ||
+    if (!hf_component_map(ops->read,ops->context,owner,spec->group,spec->header,&group) ||
+        !sickle_read(ops, group-28u, header, sizeof(header)) ||
         memcmp(header, spec->header, sizeof(header)) != 0)
     {
         (void)snprintf(reason, capacity, "Sickle %s group header changed", spec->label);
@@ -182,7 +183,7 @@ static int sickle_resolve_component(const HfSickleOps* ops, uintptr_t game,
     }
     owners_size = (size_t)spec->count * 16u;
     if (owners_size > sizeof(plan->owners) ||
-        !sickle_read(ops, group + 28u, plan->owners, owners_size))
+        !sickle_read(ops, group, plan->owners, owners_size))
     {
         *retry = HF_SICKLE_RETRY_NOT_READY;
         (void)snprintf(reason, capacity, "Sickle %s owner map is not ready", spec->label);
@@ -216,7 +217,7 @@ static int sickle_resolve_component(const HfSickleOps* ops, uintptr_t game,
         (void)snprintf(reason, capacity, "Sickle %s component ownership is not unique", spec->label);
         return 0;
     }
-    row_offset = 28u + owners_size + (uint64_t)spec->index * spec->stride;
+    row_offset = owners_size + (uint64_t)spec->index * spec->stride;
     if (!sickle_add_address(group, row_offset, &row) || spec->stride > sizeof(plan->source) ||
         ops->data_access == NULL || !ops->data_access(ops->context, row, spec->stride, 0) ||
         !sickle_read(ops, row, plan->source, spec->stride))
@@ -237,6 +238,7 @@ static int sickle_resolve_component(const HfSickleOps* ops, uintptr_t game,
         return 0;
     }
     plan->row = row;
+    plan->table = group;
     memcpy(plan->expected, plan->source, spec->stride);
     if (spec->edit_size > 0u)
         memcpy(plan->expected + spec->edit_offset, spec->edit, spec->edit_size);

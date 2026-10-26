@@ -1,3 +1,4 @@
+#include "component_lookup.h"
 #include "vg70_profile.h"
 #include "vg70_source_guard.generated.h"
 
@@ -677,6 +678,8 @@ static int vg70_stage_word(const HfVg70MemoryOps* ops, HfVg70WordEdit* edits,
                            size_t edit_capacity, size_t* edit_count, uintptr_t address,
                            const uint8_t after[4], char* reason, size_t reason_capacity);
 
+static int vg70_component_owners_current(const HfVg70MemoryOps*, const HfVg70NativePlan*);
+
 static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr_t game,
                                               const HfVg70NativePlan* component_plan,
                                               uint32_t* changed_fields,
@@ -716,6 +719,11 @@ static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr
     }
     if (component_plan != NULL)
     {
+        if (!vg70_component_owners_current(ops,component_plan)) {
+            result=attempted?HF_VG70_FATAL:HF_VG70_REFUSED;
+            vg70_set_reason(reason,reason_capacity,attempted?
+                "FATAL: VG-70 active component ownership changed during commit":"VG-70 active component ownership changed");goto done;
+        }
         component_addresses[0] = component_plan->weapon_address;
         component_addresses[1] = component_plan->projectile_address;
         component_addresses[2] = component_plan->magazine_address;
@@ -766,6 +774,11 @@ static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr
     }
     if (component_plan != NULL)
     {
+        if (!vg70_component_owners_current(ops,component_plan)) {
+            result=attempted?HF_VG70_FATAL:HF_VG70_REFUSED;
+            vg70_set_reason(reason,reason_capacity,attempted?
+                "FATAL: VG-70 active component ownership changed during commit":"VG-70 active component ownership changed");goto done;
+        }
         for (i = 0u; i < HF_VG70_COMPONENT_COUNT; ++i)
         {
             const size_t size = component_sizes[i];
@@ -791,6 +804,11 @@ static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr
     }
     for (i = 0u; i < edit_count; ++i)
     {
+        if (component_plan && !vg70_component_owners_current(ops,component_plan)) {
+            result=attempted?HF_VG70_FATAL:HF_VG70_REFUSED;
+            vg70_set_reason(reason,reason_capacity,attempted?
+                "FATAL: VG-70 active component ownership changed during commit":"VG-70 active component ownership changed");goto done;
+        }
         attempted = i + 1u;
         if (ops->write(ops->context, edits[i].address, edits[i].after, sizeof(edits[i].after)) != 0 ||
             !vg70_read(ops, edits[i].address, actual, sizeof(actual)) ||
@@ -806,6 +824,11 @@ static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr
     }
     if (component_plan != NULL)
     {
+        if (!vg70_component_owners_current(ops,component_plan)) {
+            result=attempted?HF_VG70_FATAL:HF_VG70_REFUSED;
+            vg70_set_reason(reason,reason_capacity,attempted?
+                "FATAL: VG-70 active component ownership changed during commit":"VG-70 active component ownership changed");goto done;
+        }
         for (i = 0u; i < HF_VG70_COMPONENT_COUNT; ++i)
         {
             const size_t size = component_sizes[i];
@@ -835,6 +858,11 @@ static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr
     }
     if (component_plan != NULL)
     {
+        if (!vg70_component_owners_current(ops,component_plan)) {
+            result=attempted?HF_VG70_FATAL:HF_VG70_REFUSED;
+            vg70_set_reason(reason,reason_capacity,attempted?
+                "FATAL: VG-70 active component ownership changed during commit":"VG-70 active component ownership changed");goto done;
+        }
         for (i = 0u; i < HF_VG70_COMPONENT_COUNT; ++i)
         {
             const size_t size = component_sizes[i];
@@ -894,7 +922,7 @@ HfVg70ApplyResult hf_vg70_apply_all_profiles(const HfVg70MemoryOps* ops, uintptr
 #define HF_VG70_PROJECTILE_MANAGER_SLOT UINT64_C(0x33266D8)
 #define HF_VG70_MAGAZINE_MANAGER_SLOT UINT64_C(0x3326648)
 
-static int vg70_add_signed(uintptr_t base, int32_t offset, uintptr_t* output)
+static inline int vg70_add_signed(uintptr_t base, int32_t offset, uintptr_t* output)
 {
     if (offset < 0)
     {
@@ -957,18 +985,14 @@ static int vg70_map_lookup(const HfVg70MemoryOps* ops, uintptr_t manager, uint32
     return 1;
 }
 
-static int vg70_component_prepare(const HfVg70MemoryOps* ops, uintptr_t entities,
+static int vg70_component_prepare(const HfVg70MemoryOps* ops, uintptr_t root,
                                   const HfVg70ComponentSpec* spec, uintptr_t* row,
                                   char* reason, size_t capacity)
 {
-    uintptr_t group, map, address;
-    uint8_t header[28], owner[16], source[HF_VG70_WEAPON_SIZE];
-    if (!vg70_add_signed(entities, spec->group, &group) ||
-        !vg70_read(ops, group, header, sizeof(header)) ||
-        memcmp(header, spec->header, sizeof(header)) != 0 ||
-        !vg70_add_signed(entities, spec->map, &map) ||
-        !vg70_read(ops, map, owner, sizeof(owner)) || memcmp(owner, spec->owner, sizeof(owner)) != 0 ||
-        !vg70_add_signed(entities, spec->row, &address) ||
+    uintptr_t address;
+    uint8_t source[HF_VG70_WEAPON_SIZE];
+    if (!hf_component_record(ops->read,ops->context,root,(uint32_t)(26151684+spec->group),
+            spec->header,(uint32_t)(26151684+spec->map),spec->owner,spec->stride,&address) ||
         spec->stride > sizeof(source) || !vg70_data_access(ops, address, spec->stride) ||
         !vg70_read(ops, address, source, spec->stride) ||
         (memcmp(source, spec->before, spec->stride) != 0 &&
@@ -984,7 +1008,7 @@ static int vg70_component_prepare(const HfVg70MemoryOps* ops, uintptr_t entities
 int hf_vg70_native_prepare(const HfVg70MemoryOps* ops, uintptr_t game,
                            HfVg70NativePlan* plan, char* reason, size_t reason_capacity)
 {
-    uintptr_t owner_slot, projectile_slot, expected_projectile_map;
+    uintptr_t owner_slot, projectile_slot;
     if (reason != NULL && reason_capacity > 0u)
         reason[0] = '\0';
     if (ops == NULL || ops->read == NULL || ops->write == NULL || ops->data_access == NULL ||
@@ -1005,20 +1029,27 @@ int hf_vg70_native_prepare(const HfVg70MemoryOps* ops, uintptr_t game,
         vg70_set_reason(reason, reason_capacity, "VG-70 game entity owner or component maps are unavailable");
         return 0;
     }
-    if (!vg70_component_prepare(ops, plan->entities, &HF_VG70_COMPONENTS[0], &plan->weapon_address,
+    if (!vg70_component_prepare(ops, plan->owner, &HF_VG70_COMPONENTS[0], &plan->weapon_address,
                                 reason, reason_capacity) ||
-        !vg70_component_prepare(ops, plan->entities, &HF_VG70_COMPONENTS[1], &plan->projectile_address,
+        !vg70_component_prepare(ops, plan->owner, &HF_VG70_COMPONENTS[1], &plan->projectile_address,
                                 reason, reason_capacity) ||
-        !vg70_component_prepare(ops, plan->entities, &HF_VG70_COMPONENTS[2], &plan->magazine_address,
-                                reason, reason_capacity) ||
-        !vg70_add_signed(plan->entities, HF_VG70_COMPONENTS[0].table_map, &owner_slot) ||
-        owner_slot != plan->entities ||
-        !vg70_add_signed(plan->entities, HF_VG70_COMPONENTS[1].table_map, &expected_projectile_map) ||
-        expected_projectile_map != plan->projectile_map)
+        !vg70_component_prepare(ops, plan->owner, &HF_VG70_COMPONENTS[2], &plan->magazine_address,
+                                reason, reason_capacity))
     {
         if (reason != NULL && reason_capacity > 0u && reason[0] == '\0')
             vg70_set_reason(reason, reason_capacity, "VG-70 component owner-table anchor changed");
         return 0;
+    }
+    return 1;
+}
+
+static int vg70_component_owners_current(const HfVg70MemoryOps* ops,const HfVg70NativePlan* plan) {
+    uintptr_t root=0;const uintptr_t rows[3]={plan->weapon_address,plan->projectile_address,plan->magazine_address};
+    if (!vg70_read_pointer(ops,plan->game+0x346bf98u,&root) || root!=plan->owner) return 0;
+    for (size_t i=0;i<3;i++) {
+        const HfVg70ComponentSpec* s=&HF_VG70_COMPONENTS[i];uintptr_t row=0;
+        if (!hf_component_record(ops->read,ops->context,root,(uint32_t)(26151684+s->group),s->header,
+                (uint32_t)(26151684+s->map),s->owner,s->stride,&row) || row!=rows[i]) return 0;
     }
     return 1;
 }
@@ -1084,7 +1115,7 @@ int hf_vg70_native_discover(const HfVg70MemoryOps* ops, HfVg70NativePlan* plan,
         *count = 0u;
     if (reason != NULL && reason_capacity > 0u)
         reason[0] = '\0';
-    if (ops == NULL || plan == NULL || instances == NULL || count == NULL || capacity == 0u || capacity > 512u ||
+    if (ops == NULL || plan == NULL || !vg70_component_owners_current(ops,plan) || instances == NULL || count == NULL || capacity == 0u || capacity > 512u ||
         !vg70_address(plan->game, HF_VG70_OWNER_SLOT, &owner_slot) ||
         !vg70_read_pointer(ops, owner_slot, &current_owner) || current_owner != plan->owner ||
         !vg70_address(current_owner, HF_VG70_OWNER_WEAPON_MAP, &weapon_map_slot) ||
@@ -1279,7 +1310,7 @@ int hf_vg70_native_validate(const HfVg70MemoryOps* ops, const HfVg70NativePlan* 
     uintptr_t psi_refs, projectile_states, rate_states, rpm_states, projectile_rows;
     uintptr_t magazine_refs, magazine_ammo, magazine_effective, magazine_rows;
     size_t i;
-    if (ops == NULL || plan == NULL || count > 512u || (count > 0u && instances == NULL) ||
+    if (ops == NULL || plan == NULL || !vg70_component_owners_current(ops,plan) || count > 512u || (count > 0u && instances == NULL) ||
         !vg70_address(plan->game, HF_VG70_OWNER_SLOT, &address) ||
         !vg70_read_pointer(ops, address, &owner) || owner != plan->owner ||
         !vg70_address(owner, HF_VG70_OWNER_WEAPON_MAP, &address) ||

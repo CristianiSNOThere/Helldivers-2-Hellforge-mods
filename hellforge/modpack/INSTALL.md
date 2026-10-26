@@ -1,6 +1,6 @@
 # Super Earth Arsenal native pack
 
-Super Earth Arsenal modpack for HellForge SDK 11 and game build 25480438.
+Super Earth Arsenal modpack for HellForge SDK 11 or newer and game build 25480438.
 Choose from 25 independent options and 29 One True Flag damage presets.
 Python 3.10 or later configures the selection. PowerShell 7 and HellForge's
 pinned compiler prepare the local assets.
@@ -37,3 +37,5 @@ disabled options do not retain assets from an earlier selection.
 
 To remove the pack, close the game and disable or move its folder out of
 HellForge's `mods` directory. The pack does not change the Steam installation.
+
+With Scope of Authority Backport, use version 2.14.15 on HellForge 0.1.28. The pack's options and both Sickle heatsinks remain available with the backport enabled.

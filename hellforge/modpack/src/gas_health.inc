@@ -2,6 +2,8 @@
  * The accepted Lua source addresses one read-only health export through the game build's
  * entity owner map, validates the complete record, then writes exactly one protected scalar. */
 #include "gas_health_source_guard.generated.h"
+static const uint8_t HF_GAS_HEALTH_TABLE_HEADER[28]={227,93,145,179,76,68,76,68,1,0,0,0,227,93,145,179,128,127,169,0,1,0,0,0,0,0,0,0};
+static const uint8_t HF_GAS_HEALTH_OWNER[16]={151,250,77,41,77,51,28,77,76,0,0,0,0,0,0,0};
 
 #if defined(HF_PORT_TEST_GAS)
 extern int hf_gas_test_health_readonly(uintptr_t address, size_t size);
@@ -77,7 +79,7 @@ static int hf_gas_health_data_readonly(uintptr_t address, size_t size)
             return 0;
         region_base = (uintptr_t)info.BaseAddress;
         region_size = (uintptr_t)info.RegionSize;
-        if (info.State != MEM_COMMIT || info.Type != MEM_PRIVATE || info.Protect != PAGE_READONLY ||
+        if (info.State != MEM_COMMIT || info.Type != MEM_PRIVATE || (info.Protect != PAGE_READONLY && info.Protect != PAGE_READWRITE) ||
             region_size == 0u || region_base > UINTPTR_MAX - region_size)
             return 0;
         region_end = region_base + region_size;
@@ -95,9 +97,7 @@ static int hf_gas_health_resolve(const HfApi* api, uintptr_t* record_address,
                                  char* reason, size_t capacity)
 {
     HfGasRunner reader;
-    uintptr_t game_base, owner_slot, owner, map_slot, entities, address;
-    uintptr_t map_pointer;
-    uint64_t map_value;
+    uintptr_t game_base, owner_slot, owner, address;
     size_t image_size = 0u;
 
     if (api == NULL || api->module_base == NULL || api->read == NULL || record_address == NULL)
@@ -113,26 +113,9 @@ static int hf_gas_health_resolve(const HfApi* api, uintptr_t* record_address,
         sizeof(uint64_t) > image_size - (size_t)HF_GAS_HEALTH_OWNER_RVA ||
         !hf_gas_add_address(game_base, (uintptr_t)HF_GAS_HEALTH_OWNER_RVA, &owner_slot) ||
         !hf_gas_read_pointer(&reader, owner_slot, &owner) ||
-        !hf_gas_add_address(owner, (uintptr_t)HF_GAS_HEALTH_ENTITY_MAP_OFFSET, &map_slot) ||
-        !hf_gas_read_pointer(&reader, map_slot, &map_pointer) ||
-        (uint64_t)map_pointer < HF_GAS_HEALTH_ENTITY_MAP_BIAS)
-    {
-        (void)snprintf(reason, capacity, "the accepted Gas player-health owner-map pointer is unavailable or invalid");
-        return 0;
-    }
-    map_value = (uint64_t)map_pointer - HF_GAS_HEALTH_ENTITY_MAP_BIAS;
-    if (map_value < UINT64_C(0x10000) || map_value >= UINT64_C(0x800000000000) ||
-        map_value > UINTPTR_MAX)
-    {
-        (void)snprintf(reason, capacity, "the accepted Gas player-health entity base is invalid");
-        return 0;
-    }
-    entities = (uintptr_t)map_value;
-    if (!hf_gas_add_address(entities, (uintptr_t)HF_GAS_HEALTH_RECORD_OFFSET, &address) ||
-        address >= (uintptr_t)UINT64_C(0x800000000000) ||
-        address > UINTPTR_MAX - HF_GAS_HEALTH_RECORD_SIZE)
-    {
-        (void)snprintf(reason, capacity, "the accepted Helldiver health record address is invalid");
+        !hf_component_record(hf_component_api_read,(void*)api,owner,7825176u,
+            HF_GAS_HEALTH_TABLE_HEADER,7832292u,HF_GAS_HEALTH_OWNER,HF_GAS_HEALTH_RECORD_SIZE,&address)) {
+        (void)snprintf(reason,capacity,"the active Helldiver health table or exact owner mapping changed");
         return 0;
     }
     *record_address = address;
