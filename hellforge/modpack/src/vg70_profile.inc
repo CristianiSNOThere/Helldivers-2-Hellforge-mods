@@ -262,7 +262,8 @@ int hf_vg70_cadence(const uint8_t* input, size_t size, uint32_t current_rpm,
     if (!isfinite(ratio) || ratio < 0.5f || ratio > 2.0f)
         return 0;
     memcpy(output, input, size);
-    put_f32(output, 12u, 60.0f / ((float)target_rpm * ratio));
+    if (current_rpm != target_rpm)
+        put_f32(output, 12u, 60.0f / ((float)target_rpm * ratio));
     *multiplier = ratio;
     return 1;
 }
@@ -1899,21 +1900,48 @@ cleanup:
     return result;
 }
 
-static int vg70_rate_value(float value, uint32_t* output)
+/* Selector rows contain effective rates after weather and other native modifiers.
+ * Component rows and projectile-profile selection continue to use base RPM.
+ * Accept only one common bounded scale of an exact supported vector, with the
+ * selected effective RPM agreeing. A foreign/mixed vector is never normalized. */
+static int vg70_effective_rate_selection(const uint8_t rate[HF_VG70_RATE_STATE_SIZE],
+                                         const uint8_t rpm[HF_VG70_CURRENT_RPM_SIZE],
+                                         uint32_t base_vector[3], uint32_t* base_rpm,
+                                         float* scale)
 {
-    if (output == NULL || !isfinite(value))
+    static const uint32_t vectors[2][3] = {{300u, 550u, 750u}, {550u, 1000u, 750u}};
+    float effective[3], factor, selected;
+    uint32_t slot, candidate, i;
+    if (rate == NULL || rpm == NULL || base_vector == NULL || base_rpm == NULL || scale == NULL)
         return 0;
-    if (close_f32(value, 300.0f))
-        *output = 300u;
-    else if (close_f32(value, 550.0f))
-        *output = 550u;
-    else if (close_f32(value, 750.0f))
-        *output = 750u;
-    else if (close_f32(value, 1000.0f))
-        *output = 1000u;
-    else
+    slot = get_u32(rate, 28u);
+    if (slot > 2u)
         return 0;
-    return 1;
+    for (i = 0u; i < 3u; ++i)
+    {
+        effective[i] = get_f32(rate, 16u + i * 4u);
+        if (!isfinite(effective[i]) || effective[i] <= 0.0f)
+            return 0;
+    }
+    selected = get_f32(rpm, 4u);
+    if (!isfinite(selected) || fabsf(selected - effective[slot]) > 0.0005f)
+        return 0;
+    factor = effective[2] / 750.0f;
+    if (!isfinite(factor) || factor < 0.5f || factor > 2.0f)
+        return 0;
+    for (candidate = 0u; candidate < 2u; ++candidate)
+    {
+        for (i = 0u; i < 3u; ++i)
+            if (fabsf(effective[i] - (float)vectors[candidate][i] * factor) > 0.0005f)
+                break;
+        if (i != 3u)
+            continue;
+        memcpy(base_vector, vectors[candidate], sizeof(vectors[candidate]));
+        *base_rpm = vectors[candidate][slot];
+        *scale = factor;
+        return 1;
+    }
+    return 0;
 }
 
 static int vg70_stage_bytes(const HfVg70MemoryOps* ops, HfVg70WordEdit* edits,
@@ -2040,21 +2068,33 @@ HfVg70ApplyResult hf_vg70_native_configure(const HfVg70MemoryOps* ops,
         uint8_t rate_state_after[HF_VG70_RATE_STATE_SIZE];
         uint8_t current_rpm_after[HF_VG70_CURRENT_RPM_SIZE];
         uint8_t projectile_state_after[HF_VG70_PROJECTILE_STATE_SIZE];
+        uint8_t base_rate_state[HF_VG70_RATE_STATE_SIZE];
+        uint8_t base_current_rpm[HF_VG70_CURRENT_RPM_SIZE];
         uint32_t current_vector[3], current_rpm, selected_slot, memory_slot;
         HfVg70ModeMemory* mode_memory;
         HfVg70Selection selection;
-        float cadence_multiplier;
+        float cadence_multiplier, rate_scale;
         int prior = vg70_current_mode_memory(next_memories, memory_capacity, item->id, item->entity);
 
-        if (!vg70_rate_value(get_f32(item->rate_state_row, 16u), &current_vector[0]) ||
-            !vg70_rate_value(get_f32(item->rate_state_row, 20u), &current_vector[1]) ||
-            !vg70_rate_value(get_f32(item->rate_state_row, 24u), &current_vector[2]) ||
-            !vg70_rate_value(get_f32(item->current_rpm_row, 4u), &current_rpm))
+        if (!vg70_effective_rate_selection(item->rate_state_row, item->current_rpm_row,
+                                           current_vector, &current_rpm, &rate_scale))
         {
-            vg70_set_reason(reason, reason_capacity, "VG-70 selector contains an unsupported RPM value");
+            if (reason != NULL && reason_capacity > 0u)
+                (void)snprintf(reason, reason_capacity,
+                               "VG-70 effective RPM state unsupported (rates %.6g/%.6g/%.6g, current %.6g, slot %u)",
+                               (double)get_f32(item->rate_state_row, 16u),
+                               (double)get_f32(item->rate_state_row, 20u),
+                               (double)get_f32(item->rate_state_row, 24u),
+                               (double)get_f32(item->current_rpm_row, 4u),
+                               get_u32(item->rate_state_row, 28u));
             goto cleanup;
         }
         selected_slot = get_u32(item->rate_state_row, 28u);
+        memcpy(base_rate_state, item->rate_state_row, sizeof(base_rate_state));
+        memcpy(base_current_rpm, item->current_rpm_row, sizeof(base_current_rpm));
+        for (j = 0u; j < 3u; ++j)
+            put_f32(base_rate_state, 16u + (size_t)j * 4u, (float)current_vector[j]);
+        put_f32(base_current_rpm, 4u, (float)current_rpm);
         if (prior >= 0)
             memory_slot = (uint32_t)prior;
         else
@@ -2078,9 +2118,9 @@ HfVg70ApplyResult hf_vg70_native_configure(const HfVg70MemoryOps* ops,
             !hf_vg70_magazine(item->magazine_row, sizeof(item->magazine_row), magazine_after) ||
             !hf_vg70_weapon_state(item->weapon_state_row, sizeof(item->weapon_state_row),
                                   item->mode, weapon_state_after) ||
-            !hf_vg70_rate_state(item->rate_state_row, sizeof(item->rate_state_row),
+            !hf_vg70_rate_state(base_rate_state, sizeof(base_rate_state),
                                 selection.slot, selection.rates, rate_state_after) ||
-            !hf_vg70_current_rpm_state(item->current_rpm_row, sizeof(item->current_rpm_row),
+            !hf_vg70_current_rpm_state(base_current_rpm, sizeof(base_current_rpm),
                                        selection.rpm, current_rpm_after) ||
             !hf_vg70_cadence(item->projectile_state_row, sizeof(item->projectile_state_row),
                              current_rpm, selection.rpm, projectile_state_after, &cadence_multiplier))
@@ -2088,6 +2128,11 @@ HfVg70ApplyResult hf_vg70_native_configure(const HfVg70MemoryOps* ops,
             vg70_set_reason(reason, reason_capacity, "VG-70 component or mode state differs from the accepted profile");
             goto cleanup;
         }
+        /* Preserve effective native rates. Cadence uses base RPM so its existing
+         * ratio retains both this scale and any independent timing modifier. */
+        for (j = 0u; j < 3u; ++j)
+            put_f32(rate_state_after, 16u + (size_t)j * 4u, (float)selection.rates[j] * rate_scale);
+        put_f32(current_rpm_after, 4u, (float)selection.rpm * rate_scale);
         (void)cadence_multiplier;
         if (!vg70_stage_bytes(ops, edits, edit_capacity, &edit_count, item->weapon,
                               item->weapon_row, weapon_after, sizeof(weapon_after), reason, reason_capacity) ||

@@ -1,8 +1,8 @@
 # Helldivers 2 Hellforge mods
 
-## Super Earth Arsenal Modpack v2.4.5
+## Super Earth Arsenal Modpack v2.4.6
 
-[Download v2.4.5](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.5) | [Installation](hellforge/modpack/INSTALL.md) | [Complete player guide](hellforge/modpack/PLAYER-GUIDE.md)
+[Download v2.4.6](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.6) | [Installation](hellforge/modpack/INSTALL.md) | [Complete player guide](hellforge/modpack/PLAYER-GUIDE.md)
 
 26 independently selectable weapon and equipment options, plus 29 One True Flag damage presets. Includes two-round AP10 Railgun magazines with maximum damage at 80% charge, a 20-round Loyalist with 0.5 sway, backpackless AC-8, Rapid/Supercharge ARC-3, 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul, and selectable Sickle heatsinks.
 
@@ -12,7 +12,9 @@ Compatible with Scope of Authority Backport 2.14.15 on HellForge engine 0.1.28. 
 
 ## Enemy Rebalance
 
-A separate HellForge project. Its release will be published separately.
+[Download Enemy Rebalance v0.7.0](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-enemy-rebalance-v0.7.0) | [Complete changes and installation](hellforge/enemy-rebalance/README.md)
+
+Full explosion damage for regular Bile Titans; lower Impaler and Overseer armor health; slower Alpha Warriors; 35–45-second Alpha Commander summons; a longer Charger recovery pause; and 25% wider projectile spread for eligible Automatons, excluding Tanks, Factory Striders and Cyborgs.
 
 The [Arsenal selectable modpack](https://github.com/CristianiSNOThere/Super-Earth-Arsenal-Modpack) is available in its separate repository.
 
@@ -135,7 +137,7 @@ Base aim sway is set to 0.9. Normal damage is set to 90 and damage against durab
 
 ## VG-70 Variable Portable Maxigun Rework
 
-Keeps its primary slot, reload while moving and backpack-free operation, with magazine capacity set to 150 rounds. Auto offers three rates: at 550 rounds per minute each bullet deals 110 normal damage and 29 against durable parts; at 750 it deals 90 and 24; at 1,000 it deals 75 and 20. Volley fires 15 bullets together, each dealing 40 normal damage and 11 against durable parts, using the selected 550, 750 or 1,000 rounds-per-minute setting. Total fires all remaining rounds at once, each dealing 28 normal damage and 8 against durable parts, with spread reduced to setting 0.75 in both directions. All three modes use medium armor penetration, level 3.
+Keeps its primary slot, reload while moving and backpack-free operation, with magazine capacity set to 150 rounds. Auto offers three rates: at 550 rounds per minute each bullet deals 110 normal damage and 29 against durable parts; at 750 it deals 90 and 24; at 1,000 it deals 75 and 20. Volley fires 15 bullets together, each dealing 40 normal damage and 11 against durable parts, using the selected 550, 750 or 1,000 rounds-per-minute setting. Total fires all remaining rounds at once, each dealing 28 normal damage and 8 against durable parts, with spread reduced to setting 0.75 in both directions. All three modes use medium armor penetration, level 3. All three modes retain planetary fire-rate modifiers, including Extreme Cold's 10% reduction.
 
 Spare magazines remain at 6 starting, 7 maximum and 7 from resupply. The handling rating is set to 40, and aim sway to 0.9. Recoil falls by 15% in every mode: side-to-side movement decreases from 5 to 4.25 and vertical movement from 10 to 8.5; side-to-side camera kick decreases from 4 to 3.4 and vertical camera kick from 8 to 6.8. Total keeps its original right-arm self-injury and knockdown. Muzzle flashes stay aligned during sustained Auto fire. Reload timing, projectile speed and sounds are retained.
 

@@ -1,0 +1,12 @@
+{
+  "format": 1,
+  "id": "superearth.titan-impaler-balance",
+  "name": "Enemy Rebalance",
+  "version": "0.7.0",
+  "description": "Regular Bile Titans take full explosion damage. Impaler head: 900 HP; leg flesh: 500 HP. Alpha Warrior movement speed -20%. Alpha Commander summon cooldown: 35-45 seconds, up from 15-20 seconds. Elevated Overseer armor HP -25%; Crescent Overseer armor HP -50%. Charger braking uses the updated live-game animation. The raised-rear recovery pause lasts half a second longer. Eligible Automaton projectile weapons have 25% wider horizontal and vertical spread. Tanks, Factory Striders and Cyborgs retain their existing spread.",
+  "gameplay": true,
+  "code": {
+    "dll": "titan_impaler_balance.dll",
+    "sdk": 13
+  }
+}

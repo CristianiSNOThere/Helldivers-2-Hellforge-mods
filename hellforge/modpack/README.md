@@ -1,6 +1,6 @@
-# Super Earth Arsenal Modpack for HellForge v2.4.5
+# Super Earth Arsenal Modpack for HellForge v2.4.6
 
-[Download v2.4.5](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.5) | [Installation](INSTALL.md) | [Complete weapon and equipment changes](PLAYER-GUIDE.md)
+[Download v2.4.6](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.6) | [Installation](INSTALL.md) | [Complete weapon and equipment changes](PLAYER-GUIDE.md)
 
 26 independently selectable options and 29 One True Flag damage presets. Edit `pack-config.json` to choose your mods. Requires HellForge SDK 13 or newer, game build 25480438, Python 3.10 or later and PowerShell 7. Prepare the selected assets using [INSTALL.md](INSTALL.md).
 
@@ -121,7 +121,7 @@ Base aim sway is set to 0.9. Normal damage is set to 90 and damage against durab
 
 ## VG-70 Variable Portable Maxigun Rework
 
-Keeps its primary slot, reload while moving and backpack-free operation, with magazine capacity set to 150 rounds. Auto offers three rates: at 550 rounds per minute each bullet deals 110 normal damage and 29 against durable parts; at 750 it deals 90 and 24; at 1,000 it deals 75 and 20. Volley fires 15 bullets together, each dealing 40 normal damage and 11 against durable parts, using the selected 550, 750 or 1,000 rounds-per-minute setting. Total fires all remaining rounds at once, each dealing 28 normal damage and 8 against durable parts, with spread reduced to setting 0.75 in both directions. All three modes use medium armor penetration, level 3.
+Keeps its primary slot, reload while moving and backpack-free operation, with magazine capacity set to 150 rounds. Auto offers three rates: at 550 rounds per minute each bullet deals 110 normal damage and 29 against durable parts; at 750 it deals 90 and 24; at 1,000 it deals 75 and 20. Volley fires 15 bullets together, each dealing 40 normal damage and 11 against durable parts, using the selected 550, 750 or 1,000 rounds-per-minute setting. Total fires all remaining rounds at once, each dealing 28 normal damage and 8 against durable parts, with spread reduced to setting 0.75 in both directions. All three modes use medium armor penetration, level 3. All three modes retain planetary fire-rate modifiers, including Extreme Cold's 10% reduction.
 
 Spare magazines remain at 6 starting, 7 maximum and 7 from resupply. The handling rating is set to 40, and aim sway to 0.9. Recoil falls by 15% in every mode: side-to-side movement decreases from 5 to 4.25 and vertical movement from 10 to 8.5; side-to-side camera kick decreases from 4 to 3.4 and vertical camera kick from 8 to 6.8. Total keeps its original right-arm self-injury and knockdown. Muzzle flashes stay aligned during sustained Auto fire. Reload timing, projectile speed and sounds are retained.
 
