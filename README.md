@@ -4,7 +4,7 @@
 
 [Download v2.4.8](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.8) | [Installation](hellforge/modpack/INSTALL.md) | [Complete player guide](hellforge/modpack/PLAYER-GUIDE.md)
 
-26 independently selectable weapon and equipment options, plus 29 One True Flag damage presets. Includes a primary-slot Breaching Hammer with demolition force 50 and enemy-only Large Stun, two-round AP10 Railgun magazines with maximum damage at 80% charge, a 20-round Loyalist with 0.5 sway, backpackless AC-8, Rapid/Supercharge ARC-3, 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul, and selectable Sickle heatsinks.
+26 weapon and equipment mods, plus 29 One True Flag damage presets. Includes a primary-slot Breaching Hammer with demolition force 50 and enemy-only Large Stun, two-round AP10 Railgun magazines with maximum damage at 80% charge, a 20-round Loyalist with 0.5 sway, backpackless AC-8, Rapid/Supercharge ARC-3, 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul, and selectable Sickle heatsinks.
 
 Requires HellForge SDK 13 or newer, Helldivers 2 build 25480438, Python 3.10 or later and PowerShell 7. Follow the installation guide to choose options and prepare assets from your own HellForge installation. Reselect Sickle heatsinks after starting the game.
 

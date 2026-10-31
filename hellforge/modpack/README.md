@@ -2,7 +2,7 @@
 
 [Download v2.4.8](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.8) | [Installation](INSTALL.md) | [Complete weapon and equipment changes](PLAYER-GUIDE.md)
 
-26 independently selectable options and 29 One True Flag damage presets. Edit `pack-config.json` to choose your mods. Requires HellForge SDK 13 or newer, game build 25480438, Python 3.10 or later and PowerShell 7. Prepare the selected assets using [INSTALL.md](INSTALL.md).
+26 weapon and equipment mods and 29 One True Flag damage presets. Source builds can be configured through `pack-config.json`. Requires HellForge SDK 13 or newer, game build 25480438, Python 3.10 or later and PowerShell 7. Prepare the assets using [INSTALL.md](INSTALL.md).
 
 ## 40-K Meltagun
 
