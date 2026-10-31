@@ -3,14 +3,8 @@
 #define HF_ARC3_DAMAGE_ROW_OFFSET 15072u
 #define HF_ARC3_ARC_TABLE_SIZE 1708u
 #define HF_ARC3_ARC_ROW_OFFSET 44u
-#define HF_ARC3_CHARGE_GROUP_BACK 1644u
-#define HF_ARC3_CHARGE_GROUP_SIZE 2724u
-#define HF_ARC3_PRIVATE_REGION_SIZE 46616576u
-#define HF_ARC3_CHARGE_IN_REGION 7566708u
-#define HF_ARC3_WEAPON_IN_REGION 26566228u
 #define HF_ARC3_SCAN_BLOCK_SIZE 65536u
 #define HF_ARC3_SCAN_SECTION_LIMIT 33554432u
-#define HF_ARC3_SCAN_REGIONS_PER_TICK 256u
 
 typedef struct HfArc3ModuleDiscovery
 {
@@ -43,19 +37,6 @@ typedef struct HfArc3ModuleDiscovery
     int failed;
 } HfArc3ModuleDiscovery;
 
-typedef struct HfArc3PrivateDiscovery
-{
-    uintptr_t cursor;
-    size_t regions;
-    size_t charge_count;
-    size_t weapon_count;
-    uintptr_t charge_row;
-    uintptr_t weapon_row;
-    int initialized;
-    int complete;
-    int failed;
-} HfArc3PrivateDiscovery;
-
 typedef struct HfArc3Runner
 {
     const HfApi* api;
@@ -64,7 +45,7 @@ typedef struct HfArc3Runner
     HfSickleCrypto crypto;
     HfArc3ScRuntime supercharge;
     HfArc3ModuleDiscovery module_discovery;
-    HfArc3PrivateDiscovery private_discovery;
+    HfArcActiveJoin active_components;
     uintptr_t executable;
     uintptr_t game;
     uint64_t next_attempt_ms;
@@ -99,11 +80,27 @@ static int hf_arc3_api_read(void* context, uintptr_t address, void* output, size
            runner->api->read(address, output, size) == 0;
 }
 
+static int hf_arc3_active_read(void* context,uintptr_t at,void* out,size_t size) {
+    HfArc3Runner* runner=context;return runner->api->read(at,out,size);
+}
+static uintptr_t hf_arc3_active_record(void* context,const char* name,uint64_t id,uint32_t* size) {
+    HfArc3Runner* runner=context;return runner->api->component_record(name,id,size);
+}
+static HfArcActiveIo hf_arc3_active_io(HfArc3Runner* runner) {
+    HfArcActiveIo io={runner,hf_arc3_active_read,hf_arc3_active_record};return io;
+}
+static int hf_arc3_active_current(HfArc3Runner* runner) {
+    if(!runner || !runner->api || !runner->active_components.weapon || !runner->api->component_record)return 0;
+    HfArcActiveIo io=hf_arc3_active_io(runner);HfArcActiveJoin current={0};
+    return hf_arc_active_join(&io,runner->game,&current) &&
+        !memcmp(&current,&runner->active_components,sizeof(current));
+}
+
 static int hf_arc3_api_write(void* context, uintptr_t address, const void* input, size_t size,
                              int protected_write)
 {
     HfArc3Runner* runner = (HfArc3Runner*)context;
-    return runner != NULL && runner->api->write != NULL &&
+    return runner != NULL && runner->api->write != NULL && hf_arc3_active_current(runner) &&
            sickle_native_page_access(address, size, protected_write ? 0 : 1,
                                      MEM_PRIVATE, MEM_PRIVATE) &&
            runner->api->write(address, input, size) == 0;
@@ -111,8 +108,8 @@ static int hf_arc3_api_write(void* context, uintptr_t address, const void* input
 
 static int hf_arc3_api_can_write(void* context, uintptr_t address, size_t size, int protected_write)
 {
-    (void)context;
-    return sickle_native_page_access(address, size, protected_write ? 0 : 1,
+    HfArc3Runner* runner=context;
+    return hf_arc3_active_current(runner) && sickle_native_page_access(address, size, protected_write ? 0 : 1,
                                      MEM_PRIVATE, MEM_PRIVATE);
 }
 
@@ -132,7 +129,6 @@ static void hf_arc3_log_once(HfArc3Runner* runner, const char* message)
 
 static int hf_arc3_valid_damage_table(HfArc3Runner* runner, uintptr_t table);
 static int hf_arc3_valid_arc_table(HfArc3Runner* runner, uintptr_t table);
-static int hf_arc3_valid_charge_record(HfArc3Runner* runner, uintptr_t address);
 
 static int hf_arc3_header_matches(const HfApi* api, uintptr_t address,
                                   const uint8_t* header, int damage_header)
@@ -357,86 +353,10 @@ static int hf_arc3_module_validation_step(HfArc3Runner* runner,
     return scan->damage_valid_count > 1u || scan->arc_valid_count > 1u ? -1 : 0;
 }
 
-static int hf_arc3_private_discovery_step(HfArc3Runner* runner,
-                                          uintptr_t* charge, uintptr_t* weapon)
-{
-    HfArc3PrivateDiscovery* scan = &runner->private_discovery;
-    unsigned queried_regions = 0u;
-    if (scan->failed)
-        return -1;
-    if (!scan->initialized)
-    {
-        scan->cursor = (uintptr_t)65536u;
-        scan->initialized = 1;
-    }
-    if (scan->complete)
-        return scan->charge_count == 1u && scan->weapon_count == 1u ?
-               (*charge = scan->charge_row, *weapon = scan->weapon_row, 1) :
-               (scan->charge_count > 1u || scan->weapon_count > 1u ? -1 : 0);
-    while ((uint64_t)scan->cursor < UINT64_C(0x800000000000) &&
-           queried_regions < HF_ARC3_SCAN_REGIONS_PER_TICK)
-    {
-        MEMORY_BASIC_INFORMATION info;
-        SIZE_T queried = VirtualQuery((LPCVOID)scan->cursor, &info, sizeof(info));
-        uintptr_t next;
-        if (queried != sizeof(info) || info.RegionSize == 0u)
-        {
-            scan->complete = 1;
-            break;
-        }
-        next = (uintptr_t)info.BaseAddress + (uintptr_t)info.RegionSize;
-        if (next <= scan->cursor)
-        {
-            scan->failed = 1;
-            return -1;
-        }
-        ++scan->regions;
-        ++queried_regions;
-        if (info.State == MEM_COMMIT && info.Type == MEM_PRIVATE &&
-            info.Protect == PAGE_READONLY && info.RegionSize == HF_ARC3_PRIVATE_REGION_SIZE)
-        {
-            uintptr_t base = (uintptr_t)info.BaseAddress;
-            uintptr_t candidate_charge = base + HF_ARC3_CHARGE_IN_REGION;
-            uintptr_t candidate_weapon = base + HF_ARC3_WEAPON_IN_REGION;
-            if (hf_arc3_valid_charge_record(runner, candidate_charge))
-            {
-                scan->charge_row = candidate_charge;
-                if (++scan->charge_count > 1u)
-                    return -1;
-            }
-            if (sickle_native_data_access(NULL, candidate_weapon, sizeof(HF_ARC3_WEAPON_ROW), 0))
-            {
-                uint8_t row[sizeof(HF_ARC3_WEAPON_ROW)];
-                if (runner->api->read(candidate_weapon, row, sizeof(row)) == 0 &&
-                    memcmp(row, HF_ARC3_WEAPON_ROW, sizeof(row)) == 0)
-                {
-                    scan->weapon_row = candidate_weapon;
-                    if (++scan->weapon_count > 1u)
-                        return -1;
-                }
-            }
-        }
-        scan->cursor = next;
-    }
-    if (scan->regions >= 262144u && (uint64_t)scan->cursor < UINT64_C(0x800000000000))
-        return -1;
-    if ((uint64_t)scan->cursor >= UINT64_C(0x800000000000))
-        scan->complete = 1;
-    if (!scan->complete)
-        return 2;
-    if (scan->charge_count == 1u && scan->weapon_count == 1u)
-    {
-        *charge = scan->charge_row;
-        *weapon = scan->weapon_row;
-        return 1;
-    }
-    return scan->charge_count > 1u || scan->weapon_count > 1u ? -1 : 0;
-}
-
 static void hf_arc3_reset_discovery(HfArc3Runner* runner)
 {
     memset(&runner->module_discovery, 0, sizeof(runner->module_discovery));
-    memset(&runner->private_discovery, 0, sizeof(runner->private_discovery));
+    memset(&runner->active_components, 0, sizeof(runner->active_components));
 }
 
 static int hf_arc3_valid_damage_table(HfArc3Runner* runner, uintptr_t table)
@@ -487,39 +407,11 @@ static int hf_arc3_valid_arc_table(HfArc3Runner* runner, uintptr_t table)
                   sizeof(HF_ARC3_ARC_ROW)) == 0;
 }
 
-static int hf_arc3_valid_charge_record(HfArc3Runner* runner, uintptr_t address)
-{
-    uint8_t record[216], group[HF_ARC3_CHARGE_GROUP_SIZE];
-    size_t i, owners = 0u;
-    if (!sickle_native_data_access(NULL, address - HF_ARC3_CHARGE_GROUP_BACK,
-                                   sizeof(group), 0) ||
-        runner->api->read(address, record, sizeof(record)) != 0 ||
-        (record[184] != 0u && record[184] != 1u))
-        return 0;
-    if (memcmp(record, HF_ARC3_CHARGE_ROW, 184u) != 0 ||
-        memcmp(record + 185u, HF_ARC3_CHARGE_ROW + 185u, sizeof(record) - 185u) != 0 ||
-        runner->api->read(address - HF_ARC3_CHARGE_GROUP_BACK, group, sizeof(group)) != 0 ||
-        memcmp(group, HF_ARC3_CHARGE_HEADER, sizeof(HF_ARC3_CHARGE_HEADER)) != 0 ||
-        memcmp(group + HF_ARC3_CHARGE_GROUP_BACK, record, sizeof(record)) != 0)
-        return 0;
-    for (i = 0u; i < 20u; ++i)
-    {
-        size_t offset = 28u + i * 16u;
-        if (memcmp(group + offset, HF_ARC3_CHARGE_OWNER, sizeof(HF_ARC3_CHARGE_OWNER)) == 0)
-        {
-            ++owners;
-            if (hf_arc3_u32(group, offset + 8u) != 6u)
-                return 0;
-        }
-    }
-    return owners == 1u;
-}
-
 static int hf_arc3_find_records(HfArc3Runner* runner, uintptr_t records[4], char* reason,
                                 size_t capacity)
 {
     HfArc3ModuleDiscovery* scan = &runner->module_discovery;
-    int scan_result, table_result, private_result;
+    int scan_result, table_result;
     uintptr_t damage_row = 0u, arc_row = 0u, charge_row = 0u, weapon_row = 0u;
     scan_result = hf_arc3_module_discovery_step(runner);
     if (scan_result < 0)
@@ -551,22 +443,12 @@ static int hf_arc3_find_records(HfArc3Runner* runner, uintptr_t records[4], char
                        (unsigned)scan->arc_valid_count, (unsigned)scan->arc_candidate_count);
         return 0;
     }
-    private_result = hf_arc3_private_discovery_step(runner, &charge_row, &weapon_row);
-    if (private_result == 2)
-    {
-        hf_arc3_reason(reason, capacity, "Scanning ARC-3 private records in bounded region batches");
-        return 2;
+    HfArcActiveIo io=hf_arc3_active_io(runner);
+    if(!hf_arc_active_join(&io,runner->game,&runner->active_components)) {
+        hf_arc3_reason(reason,capacity,"ARC active WeaponData/charge ownership, SDK record or component header guard differs");return -1;
     }
-    if (private_result < 0)
-    {
-        hf_arc3_reason(reason, capacity, "ARC-3 charge/weapon private records are ambiguous or unreadable");
-        return -1;
-    }
-    if (private_result == 0)
-    {
-        hf_arc3_reason(reason, capacity, "ARC-3 charge/weapon records are not ready yet");
-        return 0;
-    }
+    weapon_row=runner->active_components.weapon;
+    charge_row=runner->active_components.charge;
     records[0] = damage_row;
     records[1] = arc_row;
     records[2] = charge_row;
@@ -613,6 +495,12 @@ static void hf_arc3_native_tick(HfMod* mod, float dt, void* user)
         return;
     if (runner->supercharge.prepared)
     {
+        if(!hf_arc3_active_current(runner)) {
+            runner->done=1;hf_arc3_log_once(runner,"ARC active component ownership changed; synchronization stopped");return;
+        }
+        if(!hf_arc_private_owned()) {
+            runner->done=1;hf_arc3_log_once(runner,"ARC-3 private registry ownership changed; synchronization stopped");return;
+        }
         if (!hf_arc3_sc_synchronize(&runner->memory, &runner->supercharge))
             runner->done = 1;
         if (runner->supercharge.status[0] != '\0')
@@ -729,6 +617,7 @@ static void hf_arc3_begin_native(const HfApi* api, HfMod* mod)
     runner->memory.data_access = hf_arc3_private_access;
     if (api->size < (uint32_t)(offsetof(HfApi, on_game_thread) + sizeof(api->on_game_thread)) ||
         api->on_game_thread == NULL || api->module_base == NULL || api->read == NULL || api->write == NULL ||
+        api->component_record == NULL ||
         api->on_game_thread(mod, hf_arc3_native_tick, runner) == 0)
     {
         runner->done = 1;

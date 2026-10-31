@@ -24,12 +24,19 @@ pinned compiler prepare the local assets.
    Both output folders must be new. Preparation checks the game inputs and
    generated resources. It does not install or enable the mod.
 
-5. Copy the configured source folder into HellForge's `mods` folder. Copy the
+5. Build the configured selection with HellForge’s SDK and bundled compiler:
+
+   ```powershell
+   python "C:/Mods/Arsenal-selected/tools/build_native.py" --install "C:/HellForge"
+   ```
+
+   This builds the C and C++ sources and creates the DLL for game build 25480438.
+6. Copy the compiled selection into HellForge's `mods` folder. Copy the
    contents of `Arsenal-local-assets/data` into that mod's `data` folder. Keep
    any previous installation as a backup outside `mods`.
-6. Enable the native pack in HellForge and launch. HellForge builds its C
-   source using the bundled SDK and compiler. Use this native pack in place
-   of the Arsenal Lua pack for the same session.
+7. Enable the native pack in HellForge and launch. HellForge loads the included
+   game-specific DLL. Use this native pack in place of the Arsenal Lua pack
+   for the same session.
 
 To change a selection, close the game and repeat configuration and local asset
 preparation into new folders. Replace the installed selection yourself so that
@@ -38,8 +45,9 @@ disabled options do not retain assets from an earlier selection.
 To remove the pack, close the game and disable or move its folder out of
 HellForge's `mods` directory. The pack does not change the Steam installation.
 
-With Scope of Authority Backport, use version 2.14.15 on HellForge 0.1.28. The pack's options and both Sickle heatsinks remain available with the backport enabled.
+Keep your current Scope of Authority Backport installation and settings. The pack's options and both Sickle heatsinks remain available with the backport enabled.
 
-Gas Overhaul can be used with the 150-health Health Rework at either 2 or 2.8 health per second regeneration.
+Gas Overhaul can be used with the 150-health Health Rework. Keep your chosen health, regeneration and stim settings.
 
-Existing 25-option configuration files keep their saved choices when configured; the new Loyalist option starts disabled. Enable `plas-15-loyalist` to use its 20-round magazine and 0.5 sway.
+The CQC-20 option replaces the modpack’s support-weapon version with the primary hammer. Disable the separate Primary Breaching Hammer mod when using this version.
+For a source rebuild after composing a selection, run `python tools/build_native.py --install PATH_TO_HELLFORGE`. The package includes its full source and a DLL pinned to game build 25480438.

@@ -67,6 +67,9 @@ static int hf_component_api_read(void* context,uintptr_t at,void* bytes,size_t s
 #endif
 
 #include "registry_bridge.inc"
+#if HF_PORT_VG_70_VARIABLE && HF_PORT_ALLOW_NATIVE_RUNTIME
+#include "vg70_registered.inc"
+#endif
 #include "sickle_port.inc"
 #if HF_PORT_PLAS_15_LOYALIST
 #include "loyalist_magazine_guard.generated.h"
@@ -80,9 +83,13 @@ static int hf_component_api_read(void* context,uintptr_t at,void* bytes,size_t s
     defined(HF_PORT_TEST_PRIVATE_PROFILES)
 #include "private_profiles.inc"
 #endif
+#if HF_PORT_CQC_20_BREACHING_HAMMER && HF_PORT_ALLOW_NATIVE_RUNTIME
+#define HFX_PRIMARY_HAMMER 1u
+#endif
 #if HF_PORT_PUNISHER_PLASMA && HF_PORT_ALLOW_NATIVE_RUNTIME
 #include "punisher_port.inc"
 #endif
+#include "hammer_combat.inc"
 #if HF_PORT_PLAS_1_SCORCHER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
 #include "scorcher_private.inc"
 #endif
@@ -96,7 +103,9 @@ static int hf_component_api_read(void* context,uintptr_t at,void* bytes,size_t s
 #if HF_PORT_ARC_3_RAPID_SUPERCHARGE && HF_PORT_ALLOW_NATIVE_RUNTIME
 #include "arc3_source_guard.generated.h"
 #include "arc3_port.inc"
+#include "arc3_registered.inc"
 #include "arc3_supercharge.inc"
+#include "arc3_active_components.h"
 #include "arc3_runtime.inc"
 #endif
 #if HF_PORT_PLAS_39_ACCELERATOR_RIFLE && HF_PORT_ALLOW_NATIVE_RUNTIME
@@ -1507,6 +1516,11 @@ static void vg70_native_tick(HfMod* mod, float dt, void* user)
         size_t count = 0u;
         uint32_t new_rows = 0u, changed = 0u;
         HfVg70ApplyResult result;
+        if(!hf_vg70_registered_owned()) {
+            runner->done=1;
+            vg70_log_once(runner,"VG-70 registered profile ownership changed; instance updates stopped");
+            return;
+        }
         if (!hf_vg70_native_discover(&runner->memory, &runner->plan, runner->instances,
                                      HF_VG70_MAX_INSTANCES, &count, reason, sizeof(reason)))
         {
@@ -1567,6 +1581,7 @@ static void vg70_begin_native(const HfApi* api, HfMod* mod)
     runner->memory.read = vg70_api_read;
     runner->memory.write = vg70_api_write;
     runner->memory.data_access = vg70_api_data_access;
+    runner->memory.profile = hf_vg70_registered_profile;
     if (api->size < (uint32_t)(offsetof(HfApi, on_game_thread) + sizeof(api->on_game_thread)) ||
         api->on_game_thread == NULL ||
         api->on_game_thread(mod, vg70_native_tick, runner) == 0)
@@ -1922,6 +1937,8 @@ static void ApplyWhenReady(HfMod* mod, HfEvent event, void* user)
     }
 }
 
+int hf_primary_hammer_init(const HfApi*,HfMod*);
+
 HF_MOD_EXPORT int hellforge_mod_init(const HfApi* api, HfMod* mod)
 {
     const uint32_t required_size = (uint32_t)(offsetof(HfApi, set_stat) + sizeof(api->set_stat));
@@ -1997,6 +2014,23 @@ HF_MOD_EXPORT int hellforge_mod_init(const HfApi* api, HfMod* mod)
 #endif
 #if HF_PORT_SICKLE_LASER_AR && HF_PORT_ALLOW_NATIVE_RUNTIME
     sickle_heatsinks_begin(api, mod);
+#endif
+
+#if HF_PORT_VG_70_VARIABLE && HF_PORT_ALLOW_NATIVE_RUNTIME
+    if(!hf_vg70_register(api,mod))
+        api->log(mod,"VG-70 private profile registration unavailable; only that option will refuse without changing stock profiles");
+#endif
+
+#if HF_PORT_ARC_3_RAPID_SUPERCHARGE && HF_PORT_ALLOW_NATIVE_RUNTIME
+    if(!hf_arc_private_register(api,mod))
+        api->log(mod,"ARC-3 Supercharge private registration unavailable; stock donors will remain unchanged");
+#endif
+
+#if HF_PORT_CQC_20_BREACHING_HAMMER && HF_PORT_ALLOW_NATIVE_RUNTIME
+    if(!hf_hammer_register_combat(api,mod))
+        api->log(mod,"Primary hammer combat profile registration unavailable; original combat retained");
+    if(hf_primary_hammer_init(api,mod))
+        api->log(mod,"Primary hammer registration unavailable; only that entry will be refused");
 #endif
 
     if (api->on(mod, HF_EVENT_NETWORK_READY, ApplyWhenReady, (void*)api) != 0 ||

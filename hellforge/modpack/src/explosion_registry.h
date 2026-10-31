@@ -9,7 +9,11 @@
 #include <limits.h>
 
 #define HFX_STOCK_SLOTS 423u
-#define HFX_SLOTS 425u
+#ifndef HFX_PRIMARY_HAMMER
+#define HFX_PRIMARY_HAMMER 0u
+#endif
+#define HFX_PRIVATE_ROWS (2u+HFX_PRIMARY_HAMMER)
+#define HFX_SLOTS (HFX_STOCK_SLOTS+HFX_PRIVATE_ROWS)
 #define HFX_TABLE_RVA 0x37CC920u
 #define HFX_ROW_SIZE 152u
 
@@ -28,16 +32,17 @@ typedef struct HfxIo {
 } HfxIo;
 typedef struct HfxBlock {
     uint64_t slots[HFX_SLOTS];
-    uint8_t rows[2][HFX_ROW_SIZE];
-    uint64_t effects[2];
+    uint8_t rows[HFX_PRIVATE_ROWS][HFX_ROW_SIZE];
+    uint64_t effects[HFX_PRIVATE_ROWS];
 } HfxBlock;
 typedef struct HfxPlan {
     uintptr_t game,allocation;
     size_t image_size;
     HfxBlock desired;
-    uint8_t sources[2][HFX_ROW_SIZE];
+    uint8_t sources[HFX_PRIVATE_ROWS][HFX_ROW_SIZE];
     uint8_t after[HFX_PATCH_COUNT][16];
     uint32_t attempted;
+    uint32_t extra_ready;
     int state; /* 0 unused, 1 prepared, 2 installed, -1 quarantined */
 } HfxPlan;
 
@@ -88,8 +93,8 @@ static int hfx_prepare(const HfxIo* io,HfxPlan* p,uintptr_t game,size_t image_si
        !hfx_address(game,image_size) || image_size<HFX_TABLE_RVA+HFX_STOCK_SLOTS*8u ||
        !hfx_address(allocation,sizeof(HfxBlock)) || (allocation&7u) ||
        !(allocation+sizeof(HfxBlock)<=game || allocation>=game+image_size) ||
-       normal_damage<650u || normal_damage>713u || pellet_damage<650u ||
-       pellet_damage>713u || normal_damage==pellet_damage)return 0;
+       !((normal_damage>=650u && normal_damage<=713u && pellet_damage>=650u && pellet_damage<=713u && normal_damage!=pellet_damage) ||
+         (HFX_PRIMARY_HAMMER && !normal_damage && !pellet_damage)))return 0;
     memset(p,0,sizeof(*p));p->game=game;p->allocation=allocation;p->image_size=image_size;
     if(!hfx_codes_match(io,p,0) || !hfx_read(io,allocation,actual,sizeof(actual)) ||
        memcmp(actual,zero,sizeof(zero)) ||
@@ -106,15 +111,17 @@ static int hfx_prepare(const HfxIo* io,HfxPlan* p,uintptr_t game,size_t image_si
         memcpy(stable,row,sizeof(stable));memset(stable+40,0,8);
         if(!io->hash(io->context,stable,sizeof(stable),hashes[i]))return 0;
         hfx_put32(row,HFX_STOCK_SLOTS+i);
-        hfx_put32(row+4,i?pellet_damage:normal_damage);
-        hfx_putf(row+16,i?0.5f:3.5f);hfx_putf(row+20,i?0.5f:6.5f);
-        hfx_putf(row+24,i?0.5f:8.0f);
+        if(normal_damage) {
+            hfx_put32(row+4,i?pellet_damage:normal_damage);
+            hfx_putf(row+16,i?0.5f:3.5f);hfx_putf(row+20,i?0.5f:6.5f);
+            hfx_putf(row+24,i?0.5f:8.0f);
+        }
         array=allocation+offsetof(HfxBlock,effects)+i*8u;memcpy(row+40,&array,8);
         p->desired.slots[HFX_STOCK_SLOTS+i]=allocation+offsetof(HfxBlock,rows)+i*HFX_ROW_SIZE;
     }
     for(i=0;i<HFX_PATCH_COUNT;i++) {
         const HfxPin* pin=&HFX_PINS[i];memcpy(p->after[i],pin->bytes,pin->size);
-        if(pin->kind==3u)operand=pin->value+2u;
+        if(pin->kind==3u)operand=pin->value+HFX_PRIVATE_ROWS;
         else if(pin->kind==1u)operand=(int64_t)allocation+pin->value-(int64_t)(game+pin->rva+pin->size);
         else operand=(int64_t)allocation+pin->value-(int64_t)game;
         if(operand<INT32_MIN || operand>INT32_MAX)return 0;
@@ -149,15 +156,32 @@ static int hfx_rollback(const HfxIo* io,HfxPlan* p) {
     p->attempted=0;p->state=failed?-1:0;return !failed;
 }
 
+#if HFX_PRIMARY_HAMMER
+#include "hammer_combat_guard.generated.h"
+static int hfx_add_hammer(const HfxIo* io,HfxPlan* p,uint32_t damage) {
+    uint8_t row[HFX_ROW_SIZE],stable[HFX_ROW_SIZE];uint64_t pointer,count,effect;
+    if(!p || p->state!=1 || p->extra_ready || damage<650u || damage>713u ||
+       !hfx_read(io,(uintptr_t)p->desired.slots[19],row,sizeof(row)))return 0;
+    memcpy(stable,row,sizeof(stable));memset(stable+40,0,8);
+    memcpy(&pointer,row+40,8);memcpy(&count,row+48,8);
+    if(memcmp(stable,HF_HAMMER_BLAST,sizeof(stable)) || count!=1 ||
+       !hfx_read(io,(uintptr_t)pointer,&effect,8) || memcmp(&effect,HF_HAMMER_EFFECT,8))return 0;
+    memcpy(p->sources[2],row,sizeof(row));memcpy(p->desired.rows[2],row,sizeof(row));p->desired.effects[2]=effect;
+    hfx_put32(p->desired.rows[2],425u);hfx_put32(p->desired.rows[2]+4,damage);
+    pointer=p->allocation+offsetof(HfxBlock,effects)+16u;memcpy(p->desired.rows[2]+40,&pointer,8);
+    p->desired.slots[425]=p->allocation+offsetof(HfxBlock,rows)+2u*HFX_ROW_SIZE;p->extra_ready=1;return 1;
+}
+#endif
+
 static int hfx_commit(const HfxIo* io,HfxPlan* p) {
-    static const uint32_t donors[2]={290u,355u};
+    static const uint32_t donors[3]={290u,355u,19u};
     uint64_t slots[HFX_STOCK_SLOTS];HfxBlock block;uint32_t i;uint8_t code[16];
     uint8_t zero[sizeof(HfxBlock)]={0},row[HFX_ROW_SIZE];uint64_t pointer,effect;
-    if(!p || p->state!=1 || !hfx_codes_match(io,p,0) ||
+    if(!p || p->state!=1 || (HFX_PRIMARY_HAMMER && !p->extra_ready) || !hfx_codes_match(io,p,0) ||
        !hfx_stock_slots(io,p->game+HFX_TABLE_RVA,slots) ||
        memcmp(slots,p->desired.slots,sizeof(slots)))return 0;
     if(!hfx_read(io,p->allocation,&block,sizeof(block)) || memcmp(&block,zero,sizeof(block)))return 0;
-    for(i=0;i<2;i++) {
+    for(i=0;i<HFX_PRIVATE_ROWS;i++) {
         if(!hfx_read(io,(uintptr_t)slots[donors[i]],row,sizeof(row)) ||
            memcmp(row,p->sources[i],sizeof(row)))return 0;
         memcpy(&pointer,row+40,8);

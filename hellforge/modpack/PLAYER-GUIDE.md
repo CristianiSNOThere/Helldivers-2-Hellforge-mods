@@ -38,7 +38,9 @@ Supercharge charges in about 3.4 to 3.75 seconds, with its middle threshold at 3
 
 ## CQC-20 Breaching Hammer
 
-Sets armor penetration to level 7 for direct hits and both the smaller and larger blast areas. Sets starting, resupply and maximum magazine counts to 21 each.
+Replaces the modpack’s support-weapon version with a primary-slot CQC-20 Breaching Hammer. It uses native melee handling and cannot be modified: no attachments or mastery. Sets blast armor penetration to level 7 at direct, slight and large impact angles. Starting, resupply and maximum spare explosive-charge counts are 21 each.
+
+Melee strikes and the explosive blast have demolition force 50. Suppresses player flinching while the primary hammer is held. When hosting, its blast applies Large Stun to enemies within a 6-metre radius of the impact point (12 metres across), excluding Helldivers; normal enemy stun resistance still applies. Keeps the 0.5 m inner damage radius, 3 m outer damage radius and 12 m shockwave radius.
 
 ## Gas Overhaul
 
@@ -48,7 +50,7 @@ Gas confusion strength is doubled on susceptible enemies, producing stronger slo
 
 These gas changes cover the Sterilizer, Dog Breath, Re-Educator, Speargun, gas grenades and mines, Gas Mortar Sentry, Eagle Gas Airstrike, Orbital Gas Strike and shared gas hazards. Advanced Filtration armour provides 100% immunity to gas damage and gas status effects, increased from 80%; other armour passives keep their existing bonuses. Natural Acid Storm weather still reduces Helldiver armour, and its shared effect duration is 15 seconds.
 
-Works with the separate Health Rework mod: Normal supports 150 HP with either 2 or 2.8 health regenerated per second; Casual uses 160 HP and 3 per second. Keeps the selected preset's health, regeneration and stim settings. Use one health preset at a time.
+Works with the separate Health Rework mod: Normal supports 150 HP with 0.5, 2 or 2.8 health regenerated per second; Casual uses 160 HP and 3 per second. Keeps the selected preset's health, regeneration and stim settings. Use one health preset at a time.
 
 ## One True Flag
 
@@ -140,3 +142,4 @@ Makes the GL-52 easier to aim by raising handling from 25 to 35. Increases maxim
 ## PLAS-15 Loyalist
 
 Increases magazine capacity from 8 to 20 rounds and reduces sway from 1.0 to 0.5, giving 50% less weapon wobble. Each reload refills the 20-round magazine. Keeps its normal and charged shots and its existing spare-magazine counts.
+

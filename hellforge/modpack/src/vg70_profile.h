@@ -32,12 +32,21 @@ typedef struct HfVg70ModeMemory
     uint32_t active;
 } HfVg70ModeMemory;
 
+typedef struct HfVg70ProfileBinding
+{
+    uint32_t id;
+    uintptr_t row, slot, source_slot;
+} HfVg70ProfileBinding;
+
 typedef struct HfVg70MemoryOps
 {
     void* context;
     int (*read)(void* context, uintptr_t address, void* output, size_t size);
     int (*write)(void* context, uintptr_t address, const void* input, size_t size);
     int (*data_access)(void* context, uintptr_t address, size_t size);
+    /* Resolve an SDK-registered private row plus both active registry slots.
+     * kind is 1 DamageInfo, 2 ProjectileSettings. Zero means refuse. */
+    int (*profile)(void* context, int kind, uint32_t donor, HfVg70ProfileBinding* out);
 } HfVg70MemoryOps;
 
 typedef enum HfVg70ApplyResult

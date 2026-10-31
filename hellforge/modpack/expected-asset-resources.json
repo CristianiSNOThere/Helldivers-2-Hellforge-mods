@@ -317,5 +317,8 @@
         }
       }
     }
-  }
+  },
+  "data_specs": [
+    "hellforge-data.json"
+  ]
 }

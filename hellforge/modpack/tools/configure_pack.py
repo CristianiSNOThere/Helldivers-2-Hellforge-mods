@@ -50,15 +50,21 @@ def compose(mod, config_path, out):
     ignore=shutil.ignore_patterns('__pycache__','*.pyc')
     shutil.copytree(mod/'src',out/'src',ignore=ignore);shutil.copytree(mod/'tools',out/'tools',ignore=ignore)
     shutil.copy2(mod/'hellforge-mod.json',out/'hellforge-mod.json')
+    # The primary hammer keeps its exact existing data spec and resource identity.
+    data_specs=[]
+    if options['cqc-20-breaching-hammer']:
+        recipe=mod/'hellforge-data.json'
+        if not recipe.is_file():raise ValueError('Primary hammer data spec is missing')
+        shutil.copy2(recipe,out/recipe.name);data_specs.append(recipe.name)
     for name in ('INSTALL.md','PLAYER-GUIDE.md'):
         if (mod/name).is_file():shutil.copy2(mod/name,out/name)
     (out/'data').mkdir()
     (out/'src/pack_config.h').write_text('\n'.join(lines),encoding='utf-8',newline='\n')
     (out/'src/port_edits.generated.h').write_text(edit_header,encoding='utf-8',newline='\n')
     (out/'pack-config.json').write_text(json.dumps(config,indent=2)+'\n',encoding='utf-8')
-    (out/'expected-asset-resources.json').write_text(json.dumps({'schema':1,'archives':archives},indent=2)+'\n',encoding='utf-8')
+    (out/'expected-asset-resources.json').write_text(json.dumps({'schema':1,'archives':archives,'data_specs':data_specs},indent=2)+'\n',encoding='utf-8')
     result={'enabled':[option for option,value in options.items() if value],'scalar_edits':len(edits),
-            'expected_asset_instances':sum(len(rows) for rows in archives.values()),'staged':False}
+            'expected_asset_instances':sum(len(rows) for rows in archives.values()),'data_specs':data_specs,'staged':False}
     (out/'selection-receipt.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     return result
 

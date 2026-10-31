@@ -1,6 +1,9 @@
 /* A mod-owned explosion table and two owned projectile edges. Stock explosion
  * data stays under HellForge's live-field API and is never edited here. */
 #include "explosion_registry.h"
+#if HFX_PRIMARY_HAMMER
+static int hf_hammer_blast_append(const HfApi*,HfxPlan*);
+#endif
 typedef struct HfPunisherExplosions {
     HfxPlan registry;
     uintptr_t projectiles[2];
@@ -114,7 +117,11 @@ static int hf_punisher_explosion_bind(const HfApi* api,const HfPunisherContent* 
     if(state->registry.state==0) {
         uintptr_t allocation=hf_explosion_allocate(game,size);
         if(!allocation || !hfx_prepare(&io,&state->registry,game,size,allocation,
-                content->normal_damage,content->pellet_damage) || !hfx_commit(&io,&state->registry))goto refused;
+                content->normal_damage,content->pellet_damage)
+#if HFX_PRIMARY_HAMMER
+             || !hf_hammer_blast_append(api,&state->registry)
+#endif
+             || !hfx_commit(&io,&state->registry))goto refused;
     }
     if(!hfx_owned(&io,&state->registry))goto refused;
     for(unsigned i=0;i<2;i++) {

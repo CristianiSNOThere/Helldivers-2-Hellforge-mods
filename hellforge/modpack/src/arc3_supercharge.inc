@@ -50,6 +50,7 @@ typedef struct HfArc3ScTransaction
 typedef struct HfArc3ScProfiles
 {
     uintptr_t game;
+    uintptr_t charge_source;
     uint8_t weapon[sizeof(HF_ARC3_EXPECT_WEAPON)];
     uint8_t charge[sizeof(HF_ARC3_EXPECT_CHARGE)];
     uint8_t charge_super[sizeof(HF_ARC3_EXPECT_CHARGE)];
@@ -194,7 +195,7 @@ static int hf_arc3_sc_word_edit(HfArc3ScTransaction* txn, const HfArc3MemoryOps*
            hf_arc3_sc_add_edit(txn, address, before, after, protected_write);
 }
 
-static int hf_arc3_sc_stage_row(HfArc3ScTransaction* txn, const HfArc3MemoryOps* ops,
+static inline int hf_arc3_sc_stage_row(HfArc3ScTransaction* txn, const HfArc3MemoryOps* ops,
                                 uintptr_t address, const uint8_t* before,
                                 const uint8_t* after, size_t size, int protected_write)
 {
@@ -419,6 +420,7 @@ static int hf_arc3_sc_prepare(const HfArc3MemoryOps* ops, uintptr_t game,
     uint8_t arc11[sizeof(HF_ARC3_EXPECT_ARC11)];
     uint8_t normalized_charge[sizeof(HF_ARC3_EXPECT_CHARGE)];
     uintptr_t arcweapon_address, damage547_address, arc11_address;
+    uint32_t private_arc_id=0;
     HfArc3ScTransaction txn;
     size_t i;
     int result;
@@ -474,12 +476,8 @@ static int hf_arc3_sc_prepare(const HfArc3MemoryOps* ops, uintptr_t game,
         hf_arc3_sc_reason(reason, capacity, "ARC-3 Supercharge source guards are unreadable");
         return HF_ARC3_REFUSED;
     }
-    if (!hf_arc3_sc_stage_row(&txn, ops, damage547_address, damage547,
-                              HF_ARC3_SUPER_DAMAGE547, sizeof(damage547), 0) ||
-        !hf_arc3_sc_stage_row(&txn, ops, arc11_address, arc11,
-                              HF_ARC3_SUPER_ARC11, sizeof(arc11), 1))
-    {
-        hf_arc3_sc_reason(reason, capacity, "ARC-3 Supercharge transaction exceeded its bounded edit capacity");
+    if(!hf_arc_private_bind(damage547_address,arc11_address,&private_arc_id)) {
+        hf_arc3_sc_reason(reason,capacity,"ARC-3 private registration or native lookup ownership refused; stock donors preserved");
         return HF_ARC3_REFUSED;
     }
     {
@@ -501,9 +499,9 @@ static int hf_arc3_sc_prepare(const HfArc3MemoryOps* ops, uintptr_t game,
     if (result != HF_ARC3_APPLIED)
         return result;
     if (!hf_arc3_sc_read(ops, damage547_address, damage547, sizeof(damage547)) ||
-        memcmp(damage547, HF_ARC3_SUPER_DAMAGE547, sizeof(damage547)) != 0 ||
+        memcmp(damage547, HF_ARC3_EXPECT_DAMAGE547, sizeof(damage547)) != 0 ||
         !hf_arc3_sc_read(ops, arc11_address, arc11, sizeof(arc11)) ||
-        memcmp(arc11, HF_ARC3_SUPER_ARC11, sizeof(arc11)) != 0 ||
+        memcmp(arc11, HF_ARC3_EXPECT_ARC11, sizeof(arc11)) != 0 ||
         !hf_arc3_sc_read(ops, weapon_row, weapon, sizeof(weapon)) ||
         hf_arc3_sc_u32(weapon, 144u) != HF_ARC3_SELECTOR_PRIMARY ||
         hf_arc3_sc_u32(weapon, 148u) != HF_ARC3_SELECTOR_SECONDARY ||
@@ -514,6 +512,7 @@ static int hf_arc3_sc_prepare(const HfArc3MemoryOps* ops, uintptr_t game,
     }
     memset(profiles, 0, sizeof(*profiles));
     profiles->game = game;
+    profiles->charge_source = charge_row;
     memcpy(profiles->weapon, weapon, sizeof(weapon));
     memcpy(profiles->charge, charge, sizeof(charge));
     memcpy(profiles->charge_super, charge, sizeof(charge));
@@ -538,7 +537,7 @@ static int hf_arc3_sc_prepare(const HfArc3MemoryOps* ops, uintptr_t game,
     profiles->charge_super[185] = 0u;
     memcpy(profiles->arc, arcweapon, sizeof(arcweapon));
     memcpy(profiles->arc_super, arcweapon, sizeof(arcweapon));
-    profiles->arc_super[0] = 11u;
+    memcpy(profiles->arc_super,&private_arc_id,4);
     hf_arc3_sc_reason(reason, capacity, "ARC-3 Supercharge profile prepared and source-guarded");
     return HF_ARC3_APPLIED;
 }
@@ -571,6 +570,22 @@ static int hf_arc3_sc_group_layout(uint32_t kind, size_t* header_size,
         return 1;
     }
     return 0;
+}
+
+static int hf_arc3_sc_row_matches(uint32_t kind,const uint8_t* actual,const uint8_t* expected,size_t size)
+{
+    if(kind!=1u)return memcmp(actual,expected,size)==0;
+    return size==216u && actual[184]<=1u && expected[184]<=1u &&
+           memcmp(actual,expected,184u)==0 && memcmp(actual+185u,expected+185u,size-185u)==0;
+}
+
+static int hf_arc3_sc_refresh_auto(const HfArc3MemoryOps* ops,HfArc3ScProfiles* profiles)
+{
+    uint8_t charge[216];
+    if(!profiles->charge_source)return 1;
+    if(!hf_arc3_sc_read(ops,profiles->charge_source,charge,sizeof(charge)) ||
+       !hf_arc3_sc_row_matches(1u,charge,profiles->charge,sizeof(charge)))return 0;
+    profiles->charge[184]=charge[184];profiles->charge_super[184]=charge[184];return 1;
 }
 
 static int hf_arc3_sc_plan_group(const HfArc3MemoryOps* ops,
@@ -616,7 +631,7 @@ static int hf_arc3_sc_plan_group(const HfArc3MemoryOps* ops,
         target = rows + (uintptr_t)index * stride;
         if (!hf_arc3_sc_read(ops, target, row, stride) ||
             !hf_arc3_sc_guard(txn, ops, target, stride) ||
-            (memcmp(row, rapid, stride) != 0 && memcmp(row, super, stride) != 0))
+            (!hf_arc3_sc_row_matches(kind,row,rapid,stride) && !hf_arc3_sc_row_matches(kind,row,super,stride)))
             return 0;
         for (i = 0u; i < stride; i += 4u)
             if (!hf_arc3_sc_add_edit(txn, target + i, row + i, desired + i, 0))
@@ -736,19 +751,20 @@ static int hf_arc3_sc_current_profile(const HfArc3MemoryOps* ops,
         !hf_arc3_sc_read(ops, arc_rows + (uintptr_t)arc_map.index * HF_ARC3_SC_ARC_STRIDE,
                          arc, sizeof(arc)))
         return -1;
-    if (memcmp(charge, profiles->charge, sizeof(charge)) == 0 &&
+    if (hf_arc3_sc_row_matches(1u,charge,profiles->charge,sizeof(charge)) &&
         memcmp(arc, profiles->arc, sizeof(arc)) == 0)
-        return 1;
-    if (memcmp(charge, profiles->charge_super, sizeof(charge)) == 0 &&
+        return charge[184]==profiles->charge[184]?1:0;
+    if (hf_arc3_sc_row_matches(1u,charge,profiles->charge_super,sizeof(charge)) &&
         memcmp(arc, profiles->arc_super, sizeof(arc)) == 0)
-        return 2;
+        return charge[184]==profiles->charge_super[184]?2:0;
     return -1;
 }
 
-static int hf_arc3_sc_apply_profile(const HfArc3MemoryOps* ops,
+static int hf_arc3_sc_apply_profile_ex(const HfArc3MemoryOps* ops,
                                     const HfArc3ScProfiles* profiles,
                                     uintptr_t weapon_manager, uintptr_t charge_manager,
                                     uintptr_t arc_manager, uint32_t id, uint32_t mode,
+                                    const HfArc3ScEntity* migration,uint32_t stock_mode,
                                     uint32_t* changed, char* reason, size_t capacity)
 {
     HfArc3ScTransaction txn;
@@ -774,8 +790,39 @@ static int hf_arc3_sc_apply_profile(const HfArc3MemoryOps* ops,
         hf_arc3_sc_reason(reason, capacity, "ARC private profile ownership, capacity, or guards changed");
         return HF_ARC3_REFUSED;
     }
+    if(migration) {
+        uint8_t current[24],word[4];
+        if(migration->id!=id || !((stock_mode==5u && mode==1u) || (stock_mode==6u && mode==2u)) ||
+           !hf_arc3_sc_read(ops,migration->entity,current,24) || memcmp(current,migration->identity,24) ||
+           !hf_arc3_sc_guard(&txn,ops,migration->entity,24) ||
+           !hf_arc3_sc_read(ops,migration->weapon_ref_address,current,8) || memcmp(current,migration->entity_ref,8) ||
+           !hf_arc3_sc_guard(&txn,ops,migration->weapon_ref_address,8) ||
+           !hf_arc3_sc_read(ops,migration->charge_ref_address,current,8) || memcmp(current,migration->entity_ref,8) ||
+           !hf_arc3_sc_guard(&txn,ops,migration->charge_ref_address,8) ||
+           !hf_arc3_sc_guard(&txn,ops,migration->state_address,28) ||
+           !hf_arc3_sc_read(ops,migration->mode_address,current,4) || hf_arc3_sc_u32(current,0)!=stock_mode) {
+            hf_arc3_sc_reason(reason,capacity,"ARC stock spawn mode or instance ownership changed");return HF_ARC3_REFUSED;
+        }
+        hf_arc3_sc_word(mode,word);
+        if(!hf_arc3_sc_word_edit(&txn,ops,migration->mode_address,word,0))return HF_ARC3_REFUSED;
+    }
+    if(profiles->charge_source) {
+        uint8_t source[4];
+        if(!hf_arc3_sc_read(ops,profiles->charge_source+184u,source,4u) ||
+           source[0]!=profiles->charge[184] ||
+           !hf_arc3_sc_guard(&txn,ops,profiles->charge_source+184u,4u)) {
+            hf_arc3_sc_reason(reason,capacity,"ARC companion auto-fire flag changed before transaction");return HF_ARC3_REFUSED;
+        }
+    }
     result = hf_arc3_sc_commit(ops, &txn, changed, reason, capacity);
     return result;
+}
+
+static int hf_arc3_sc_apply_profile(const HfArc3MemoryOps* ops,const HfArc3ScProfiles* profiles,
+    uintptr_t weapon_manager,uintptr_t charge_manager,uintptr_t arc_manager,uint32_t id,uint32_t mode,
+    uint32_t* changed,char* reason,size_t capacity) {
+    return hf_arc3_sc_apply_profile_ex(ops,profiles,weapon_manager,charge_manager,arc_manager,id,mode,
+                                      NULL,0,changed,reason,capacity);
 }
 
 static int hf_arc3_sc_busy(const HfArc3MemoryOps* ops, uintptr_t state_address,
@@ -889,7 +936,7 @@ static int hf_arc3_sc_discover(HfArc3MemoryOps const* ops, HfArc3ScRuntime* runt
     HfArc3ScManager weapon, charge, arc;
     uintptr_t refs;
     uint32_t owned, capacity, slot;
-    size_t found = 0u;
+    size_t found = 0u;unsigned deferred_stock=0;
     uint8_t reference_bytes[HF_ARC3_SC_MAX_CONTEXTS * 8u];
     if (!hf_arc3_sc_resolve_managers(ops, &runtime->profiles, &weapon, &charge, &arc))
         return 0;
@@ -906,7 +953,7 @@ static int hf_arc3_sc_discover(HfArc3MemoryOps const* ops, HfArc3ScRuntime* runt
         HfArc3ScMapResult weapon_map, state_map;
         uintptr_t entity_address, weapon_refs, state_refs, mode_array, state_array;
         uintptr_t weapon_ref_address, charge_ref_address, mode_address, state_address;
-        uint32_t id, mode;
+        uint32_t id, mode,stock_mode=0;
         int present, is_busy;
         int current_profile;
         HfArc3ScEntity* entity;
@@ -949,8 +996,14 @@ static int hf_arc3_sc_discover(HfArc3MemoryOps const* ops, HfArc3ScRuntime* runt
             !hf_arc3_sc_read(ops, mode_address, reference_bytes, 4u))
             return 0;
         mode = hf_arc3_sc_u32(reference_bytes, 0u);
-        if (mode != 1u && mode != 2u)
+        if(mode==5u || mode==6u) {
+            stock_mode=mode;mode=mode==5u?1u:2u;
+            if(!hf_arc3_sc_busy(ops,state_address,&is_busy))return 0;
+            if(is_busy){deferred_stock++;continue;}
+        } else if (mode != 1u && mode != 2u) {
+            (void)snprintf(runtime->status,sizeof(runtime->status),"ARC instance %u has unsupported fire mode %u; synchronization stopped",id,mode);
             return 0;
+        }
         entity = &runtime->entities[found];
         memset(entity, 0, sizeof(*entity));
         entity->id = id;
@@ -961,6 +1014,15 @@ static int hf_arc3_sc_discover(HfArc3MemoryOps const* ops, HfArc3ScRuntime* runt
         entity->charge_ref_address = charge_ref_address;
         entity->mode_address = mode_address;
         entity->state_address = state_address;
+        if(stock_mode) {
+            uint32_t changed=0;char reason[256];
+            current_profile=hf_arc3_sc_current_profile(ops,charge.manager,charge.header,arc.manager,arc.header,&runtime->profiles,id);
+            if(current_profile<0 || !hf_arc3_sc_profile_present(ops,charge.header,arc.header,id,&present))return 0;
+            int result=hf_arc3_sc_apply_profile_ex(ops,&runtime->profiles,weapon.manager,charge.manager,arc.manager,
+                id,mode,entity,stock_mode,&changed,reason,sizeof(reason));
+            if(result!=HF_ARC3_APPLIED){hf_arc3_sc_reason(runtime->status,sizeof(runtime->status),reason);return 0;}
+            entity->applied_mode=mode;++found;continue;
+        }
         {
             HfArc3ScTransaction selector;
             uint32_t changed = 0u;
@@ -994,7 +1056,9 @@ static int hf_arc3_sc_discover(HfArc3MemoryOps const* ops, HfArc3ScRuntime* runt
     runtime->charge_manager = charge.manager;
     runtime->weapon_mode_array = (uintptr_t)hf_arc3_sc_u64(weapon.header, 0x60u);
     runtime->charge_state_array = (uintptr_t)hf_arc3_sc_u64(charge.header, 0x40u);
-    if (found == 0u)
+    if(deferred_stock)
+        (void)snprintf(runtime->status,sizeof(runtime->status),"Waiting for %u stock ARC spawn state(s) to become idle",deferred_stock);
+    else if (found == 0u)
         (void)snprintf(runtime->status, sizeof(runtime->status), "Ready: waiting for ARC instance");
     else
         (void)snprintf(runtime->status, sizeof(runtime->status), "Ready: %u ARC instance(s)", (unsigned)found);
@@ -1008,11 +1072,15 @@ static int hf_arc3_sc_synchronize(const HfArc3MemoryOps* ops,
     size_t i;
     if (runtime == NULL || !runtime->prepared || runtime->stopped)
         return 0;
+    if(!hf_arc3_sc_refresh_auto(ops,&runtime->profiles)) {
+        runtime->stopped=1u;hf_arc3_sc_reason(runtime->status,sizeof(runtime->status),"ARC global charge source changed outside the supported companion auto-fire flag");return 0;
+    }
     ++runtime->frame;
     if (runtime->entity_count == 0u || runtime->frame % 30u == 1u)
     {
         if (runtime->frame % 30u != 1u)
             return 1;
+        runtime->status[0]='\0';
         if (!hf_arc3_sc_discover(ops, runtime))
         {
             if (runtime->status[0] == '\0')

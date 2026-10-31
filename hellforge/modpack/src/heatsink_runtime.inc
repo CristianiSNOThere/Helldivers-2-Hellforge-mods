@@ -398,7 +398,8 @@ static int hs_localization(void) {
     int peer_owned=0;
     if (!loader_owned && !engine_owned) {
         size_t peer_size=0;uintptr_t peer=HS.api->module_base("scope_of_authority.dll",&peer_size);
-        if (peer && peer_size>0x7df0u && current==peer+0x7dd0u) {
+        if (peer && peer_size>0x7df0u &&
+            (current==peer+0x7dd0u || current==peer+0x8130u)) {
             char hash[65];
             if (HS.peer_text_base==peer) peer_owned=1;
             else if (sickle_hash_module_file(&HS.crypto,peer,hash) &&

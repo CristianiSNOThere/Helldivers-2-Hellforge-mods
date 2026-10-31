@@ -8,6 +8,14 @@
 #include <string.h>
 
 static const uint32_t HF_VG70_AUTO_RATES[3] = {550u, 1000u, 750u};
+static uint32_t HF_VG70_PRIVATE_PROJECTILES[5];
+static uint32_t HF_VG70_PRIVATE_DAMAGES[5];
+static const uint32_t HF_VG70_PROJECTILE_DONORS[5]={333u,335u,336u,337u,338u};
+static const uint32_t HF_VG70_DAMAGE_DONORS[5]={540u,541u,585u,586u,587u};
+static uint32_t vg70_projectile_id(uint32_t donor) {
+    for(size_t i=0;i<5;i++)if(HF_VG70_PROJECTILE_DONORS[i]==donor)return HF_VG70_PRIVATE_PROJECTILES[i];
+    return 0;
+}
 static const uint32_t HF_VG70_FIRE_NODES[7] = {
     0x51c7f869u, 0x305559a7u, 0x1f6cba2fu, 0xfa44604fu,
     0x152c80cbu, 0xf5c2ebc6u, 0xb193e9e2u
@@ -62,6 +70,7 @@ static int supported_current_rpm(uint32_t rpm)
 
 static int supported_projectile(uint32_t id)
 {
+    for(size_t i=0;i<5;i++)if(HF_VG70_PRIVATE_PROJECTILES[i] && id==HF_VG70_PRIVATE_PROJECTILES[i])return 1;
     return id == 94u || id == 333u || id == 335u || id == 336u || id == 337u || id == 338u;
 }
 
@@ -322,18 +331,25 @@ typedef struct HfVg70PreparedTable
     uint8_t root_slot_bytes[8], header[24], descriptor[16];
     uint8_t* before_all;
     uint8_t* after_all;
-    uintptr_t registry_slots[8], registry_values[8];
+    uintptr_t registry_slots[16], registry_values[16];
     uint32_t registry_count;
+    uintptr_t private_rows[8];
+    uint8_t private_before[8][272],private_after[8][272];
+    uint32_t private_count;
+    HfVg70ProfileBinding private_bindings[8];
+    uint32_t private_donors[8];
 } HfVg70PreparedTable;
 
 typedef struct HfVg70WordEdit
 {
     uintptr_t address;
     uint8_t before[4], after[4];
+    uint32_t owner_kind,owner_donor;
+    HfVg70ProfileBinding owner;
 } HfVg70WordEdit;
 
 #define HF_VG70_MAX_SHARED_EDITS 512u
-#define HF_VG70_MAX_REGISTRY_ROWS 8u
+#define HF_VG70_MAX_REGISTRY_ROWS 16u
 
 static uint64_t vg70_u64(const uint8_t bytes[8])
 {
@@ -423,100 +439,60 @@ static int vg70_record_row(const HfVg70MemoryOps* ops, uintptr_t game,
                            HfVg70WordEdit* edits, size_t* edit_count,
                            char* reason, size_t capacity)
 {
-    uint8_t normalized_before[272], normalized_after[272];
-    const HfVg70TableSpec* table = prepared->spec;
-    const size_t offset = (size_t)record->index * (size_t)table->stride;
-    const uint8_t* actual;
-    uintptr_t row_address;
-    uintptr_t registry_slot;
-    uintptr_t lookup;
-    uint8_t lookup_bytes[8];
-    uint32_t query = 0u;
-    size_t i;
-    int is_before;
-    int is_after;
-
-    if (record->index >= table->count || record->size != table->stride ||
-        offset > (size_t)table->count * table->stride ||
-        record->size > (size_t)table->count * table->stride - offset ||
-        !vg70_address(prepared->rows, (uint64_t)offset, &row_address) ||
-        !vg70_data_access(ops, row_address, record->size))
-    {
-        vg70_set_reason(reason, capacity, "VG-70 target profile row is out of bounds or inaccessible");
-        return 0;
+    const HfVg70TableSpec* table=prepared->spec;
+    const size_t offset=(size_t)record->index*table->stride;
+    const int kind=table->stride==76u?1:2;
+    uintptr_t source=0,lookup=0;
+    HfVg70ProfileBinding binding={0};
+    uint8_t original[272],before[272],after[272],actual[272];
+    uint32_t index=prepared->private_count;
+    (void)game;
+    if(!ops->profile || record->index>=table->count || record->size!=table->stride ||
+       index>=8 || !vg70_address(prepared->rows,offset,&source) ||
+       !ops->profile(ops->context,kind,record->id,&binding) ||
+       binding.id<(kind==1?650u:351u) || binding.id>=(kind==1?714u:415u) ||
+       binding.row==source || binding.slot==binding.source_slot ||
+       !vg70_read_pointer(ops,binding.source_slot,&lookup) || lookup!=source ||
+       !vg70_read_pointer(ops,binding.slot,&lookup) || lookup!=binding.row ||
+       !vg70_data_access(ops,binding.row,record->size) ||
+       !vg70_read(ops,binding.row,actual,record->size))goto refused;
+    memcpy(original,record->before,record->size);
+    if(record->foliage_query){
+        uint32_t query=get_u32(prepared->before_all+offset,244);
+        if(query!=0 && query!=2)goto refused;put_u32(original,244,query);
     }
-    actual = prepared->before_all + offset;
-    if (get_u32(actual, 0u) != record->id)
-    {
-        vg70_set_reason(reason, capacity, "VG-70 profile row identity or index changed");
-        return 0;
+    /* All serialized stock rows remain byte-identical, including donors. */
+    if(memcmp(prepared->before_all+offset,original,record->size))goto refused;
+    memcpy(before,record->before,record->size);memcpy(after,record->after,record->size);
+    put_u32(before,0,binding.id);put_u32(after,0,binding.id);
+    if(kind==2){
+        HfVg70ProfileBinding damage={0};
+        if(!ops->profile(ops->context,1,get_u32(record->after,60),&damage) || damage.id<650u || damage.id>=714u)goto refused;
+        /* add_projectile installs the new damage edge when it clones the donor. */
+        put_u32(before,60,damage.id);put_u32(after,60,damage.id);
+        if(record->foliage_query){uint32_t q=get_u32(actual,244);if(q!=0 && q!=2)goto refused;put_u32(before,244,q);put_u32(after,244,q);}
     }
-    if (!vg70_address(game, (uint64_t)table->registry + (uint64_t)record->id * 8u, &registry_slot) ||
-        !vg70_read(ops, registry_slot, lookup_bytes, sizeof(lookup_bytes)))
-    {
-        vg70_set_reason(reason, capacity, "VG-70 native lookup slot is unavailable");
-        return 0;
-    }
-    lookup = (uintptr_t)vg70_u64(lookup_bytes);
-    if (lookup != row_address)
-    {
-        vg70_set_reason(reason, capacity, "VG-70 native lookup is redirected or owned by another mod");
-        return 0;
-    }
-    if (prepared->registry_count >= HF_VG70_MAX_REGISTRY_ROWS)
-    {
-        vg70_set_reason(reason, capacity, "VG-70 profile registry guard capacity exceeded");
-        return 0;
-    }
-    prepared->registry_slots[prepared->registry_count] = registry_slot;
-    prepared->registry_values[prepared->registry_count] = row_address;
-    ++prepared->registry_count;
-
-    memcpy(normalized_before, record->before, record->size);
-    memcpy(normalized_after, record->after, record->size);
-    if (record->foliage_query != 0u)
-    {
-        query = get_u32(actual, 244u);
-        if (query != 0u && query != 2u)
-        {
-            vg70_set_reason(reason, capacity, "VG-70 foliage-query compatibility value is unsupported");
-            return 0;
-        }
-        put_u32(normalized_before, 244u, query);
-        put_u32(normalized_after, 244u, query);
-    }
-    is_before = memcmp(actual, normalized_before, record->size) == 0;
-    is_after = memcmp(actual, normalized_after, record->size) == 0;
-    if (!is_before && !is_after)
-    {
-        vg70_set_reason(reason, capacity, "VG-70 shared profile row differs from accepted base and target");
-        return 0;
-    }
-
-    memcpy(prepared->after_all + offset, normalized_after, record->size);
-    if (!is_before)
-        return 1;
-    for (i = 0u; i < record->size; i += 4u)
-    {
-        HfVg70WordEdit* edit;
-        if (memcmp(normalized_before + i, normalized_after + i, 4u) == 0)
-            continue;
-        if (*edit_count >= HF_VG70_MAX_SHARED_EDITS ||
-            !vg70_address(row_address, (uint64_t)i, &row_address) ||
-            !vg70_data_access(ops, row_address, 4u))
-        {
-            vg70_set_reason(reason, capacity, "VG-70 shared profile edit limit or access guard failed");
-            return 0;
-        }
-        edit = &edits[*edit_count];
-        edit->address = row_address;
-        memcpy(edit->before, normalized_before + i, 4u);
-        memcpy(edit->after, normalized_after + i, 4u);
-        ++*edit_count;
-        /* The row base is needed for the next word. */
-        row_address -= (uintptr_t)i;
+    if(memcmp(actual,before,record->size) && memcmp(actual,after,record->size))goto refused;
+    if(prepared->registry_count+2>HF_VG70_MAX_REGISTRY_ROWS)goto refused;
+    prepared->registry_slots[prepared->registry_count]=binding.source_slot;
+    prepared->registry_values[prepared->registry_count++]=source;
+    prepared->registry_slots[prepared->registry_count]=binding.slot;
+    prepared->registry_values[prepared->registry_count++]=binding.row;
+    prepared->private_rows[index]=binding.row;
+    prepared->private_bindings[index]=binding;prepared->private_donors[index]=record->id;
+    memcpy(prepared->private_before[index],actual,record->size);
+    memcpy(prepared->private_after[index],after,record->size);
+    ++prepared->private_count;
+    for(size_t i=0;i<record->size;i+=4){
+        if(!memcmp(actual+i,after+i,4))continue;
+        if(*edit_count>=HF_VG70_MAX_SHARED_EDITS)goto refused;
+        HfVg70WordEdit* edit=&edits[(*edit_count)++];edit->address=binding.row+i;
+        edit->owner_kind=kind;edit->owner_donor=record->id;edit->owner=binding;
+        memcpy(edit->before,actual+i,4);memcpy(edit->after,after+i,4);
     }
     return 1;
+refused:
+    vg70_set_reason(reason,capacity,"VG-70 private registration, stock donor, active registry ownership or row bytes changed");return 0;
 }
 
 static int vg70_prepare_table(const HfVg70MemoryOps* ops, uintptr_t game,
@@ -646,7 +622,23 @@ static int vg70_validate_table(const HfVg70MemoryOps* ops, const HfVg70PreparedT
             actual != table->registry_values[i])
             return 0;
     }
+    for(i=0;i<table->private_count;i++) {
+        uint8_t bytes[272];HfVg70ProfileBinding current={0};
+        const HfVg70ProfileBinding* saved=&table->private_bindings[i];
+        if(!ops->profile || !ops->profile(ops->context,table->spec->stride==76u?1:2,table->private_donors[i],&current) ||
+           current.id!=saved->id || current.row!=saved->row || current.slot!=saved->slot || current.source_slot!=saved->source_slot ||
+           !vg70_read(ops,table->private_rows[i],bytes,table->spec->stride) ||
+           memcmp(bytes,after?table->private_after[i]:table->private_before[i],table->spec->stride))return 0;
+    }
     return 1;
+}
+
+static int vg70_edit_owned(const HfVg70MemoryOps* ops,const HfVg70WordEdit* edit) {
+    HfVg70ProfileBinding current={0};
+    if(!edit->owner_kind)return 1;
+    return ops->profile && ops->profile(ops->context,edit->owner_kind,edit->owner_donor,&current) &&
+        current.id==edit->owner.id && current.row==edit->owner.row &&
+        current.slot==edit->owner.slot && current.source_slot==edit->owner.source_slot;
 }
 
 static int vg70_rollback(const HfVg70MemoryOps* ops, const HfVg70WordEdit* edits,
@@ -657,7 +649,7 @@ static int vg70_rollback(const HfVg70MemoryOps* ops, const HfVg70WordEdit* edits
     while (attempted > 0u)
     {
         const HfVg70WordEdit* edit = &edits[--attempted];
-        if (!vg70_read(ops, edit->address, actual, sizeof(actual)))
+        if (!vg70_edit_owned(ops,edit) || !vg70_read(ops, edit->address, actual, sizeof(actual)))
         {
             failed = 1;
             continue;
@@ -680,6 +672,14 @@ static int vg70_stage_word(const HfVg70MemoryOps* ops, HfVg70WordEdit* edits,
                            const uint8_t after[4], char* reason, size_t reason_capacity);
 
 static int vg70_component_owners_current(const HfVg70MemoryOps*, const HfVg70NativePlan*);
+
+static int vg70_component_matches(size_t index,const uint8_t* row,size_t size) {
+    uint8_t after[HF_VG70_WEAPON_SIZE];
+    if(!memcmp(row,HF_VG70_COMPONENTS[index].before,size))return 1;
+    memcpy(after,HF_VG70_COMPONENTS[index].after,size);
+    if(index==1){uint32_t id=vg70_projectile_id(336u);if(!id)return 0;put_u32(after,0,id);}
+    return !memcmp(row,after,size);
+}
 
 static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr_t game,
                                               const HfVg70NativePlan* component_plan,
@@ -734,8 +734,7 @@ static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr
             size_t offset;
             if (!vg70_data_access(ops, component_addresses[i], size) ||
                 !vg70_read(ops, component_addresses[i], component_before[i], size) ||
-                (memcmp(component_before[i], HF_VG70_COMPONENTS[i].before, size) != 0 &&
-                 memcmp(component_before[i], HF_VG70_COMPONENTS[i].after, size) != 0))
+                !vg70_component_matches(i,component_before[i],size))
             {
                 vg70_set_reason(reason, reason_capacity,
                                 "VG-70 component source row changed before the global profile transaction");
@@ -748,7 +747,7 @@ static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr
             }
             else if (i == 1u)
             {
-                if (!hf_vg70_projectile_weapon(component_before[i], size, 336u, rates, component_after[i]))
+                if (!hf_vg70_projectile_weapon(component_before[i], size, vg70_projectile_id(336u), rates, component_after[i]))
                     goto component_refused;
             }
             else if (!hf_vg70_magazine(component_before[i], size, component_after[i]))
@@ -809,6 +808,21 @@ static HfVg70ApplyResult vg70_apply_profiles(const HfVg70MemoryOps* ops, uintptr
             result=attempted?HF_VG70_FATAL:HF_VG70_REFUSED;
             vg70_set_reason(reason,reason_capacity,attempted?
                 "FATAL: VG-70 active component ownership changed during commit":"VG-70 active component ownership changed");goto done;
+        }
+        for(size_t e=0;e<edit_count;e++)if(!vg70_edit_owned(ops,&edits[e])) {
+            rollback_ok=vg70_rollback(ops,edits,attempted);
+            result=rollback_ok?HF_VG70_REFUSED:HF_VG70_FATAL;
+            vg70_set_reason(reason,reason_capacity,rollback_ok?
+                "VG-70 registration ownership changed; foreign rows preserved":
+                "FATAL: VG-70 registration ownership changed; foreign rows preserved, owned transaction quarantined");goto done;
+        }
+        for(size_t t=0;t<HF_VG70_TABLE_COUNT;t++)for(uint32_t r=0;r<prepared[t].registry_count;r++) {
+            uintptr_t value=0;
+            if(!vg70_read_pointer(ops,prepared[t].registry_slots[r],&value) || value!=prepared[t].registry_values[r]) {
+                int restored=vg70_rollback(ops,edits,attempted);
+                result=restored?HF_VG70_REFUSED:HF_VG70_FATAL;
+                vg70_set_reason(reason,reason_capacity,"VG-70 registry ownership changed during commit; foreign pointer preserved");goto done;
+            }
         }
         attempted = i + 1u;
         if (ops->write(ops->context, edits[i].address, edits[i].after, sizeof(edits[i].after)) != 0 ||
@@ -996,8 +1010,7 @@ static int vg70_component_prepare(const HfVg70MemoryOps* ops, uintptr_t root,
             spec->header,(uint32_t)(26151684+spec->map),spec->owner,spec->stride,&address) ||
         spec->stride > sizeof(source) || !vg70_data_access(ops, address, spec->stride) ||
         !vg70_read(ops, address, source, spec->stride) ||
-        (memcmp(source, spec->before, spec->stride) != 0 &&
-         memcmp(source, spec->after, spec->stride) != 0))
+        !vg70_component_matches((size_t)(spec-HF_VG70_COMPONENTS),source,spec->stride))
     {
         vg70_set_reason(reason, capacity, "VG-70 exact component source row or owner mapping changed");
         return 0;
@@ -1526,6 +1539,7 @@ static int vg70_stage_word(const HfVg70MemoryOps* ops, HfVg70WordEdit* edits,
         vg70_set_reason(reason, reason_capacity, "VG-70 private cache edit bound was exceeded");
         return 0;
     }
+    memset(&edits[*edit_count],0,sizeof(edits[*edit_count]));
     edits[*edit_count].address = address;
     memcpy(edits[*edit_count].before, before, sizeof(before));
     memcpy(edits[*edit_count].after, after, sizeof(before));
@@ -2114,7 +2128,7 @@ HfVg70ApplyResult hf_vg70_native_configure(const HfVg70MemoryOps* ops,
                                boot_sweep_done && prior < 0, &selection) ||
             !hf_vg70_weapon_data(item->weapon_row, sizeof(item->weapon_row), item->mode, weapon_after) ||
             !hf_vg70_projectile_weapon(item->projectile_row, sizeof(item->projectile_row),
-                                       selection.projectile, selection.rates, projectile_after) ||
+                                       vg70_projectile_id(selection.projectile), selection.rates, projectile_after) ||
             !hf_vg70_magazine(item->magazine_row, sizeof(item->magazine_row), magazine_after) ||
             !hf_vg70_weapon_state(item->weapon_state_row, sizeof(item->weapon_state_row),
                                   item->mode, weapon_state_after) ||
