@@ -1,8 +1,8 @@
 # Helldivers 2 Hellforge mods
 
-## Super Earth Arsenal Modpack — current source v2.4.8
+## Super Earth Arsenal Modpack v2.4.8
 
-[Latest packaged release v2.4.6](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.6) | [Installation](hellforge/modpack/INSTALL.md) | [Complete player guide](hellforge/modpack/PLAYER-GUIDE.md)
+[Download v2.4.8](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.8) | [Installation](hellforge/modpack/INSTALL.md) | [Complete player guide](hellforge/modpack/PLAYER-GUIDE.md)
 
 26 independently selectable weapon and equipment options, plus 29 One True Flag damage presets. Includes a primary-slot Breaching Hammer with demolition force 50 and enemy-only Large Stun, two-round AP10 Railgun magazines with maximum damage at 80% charge, a 20-round Loyalist with 0.5 sway, backpackless AC-8, Rapid/Supercharge ARC-3, 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul, and selectable Sickle heatsinks.
 
