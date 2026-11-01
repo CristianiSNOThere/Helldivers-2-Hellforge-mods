@@ -1,13 +1,13 @@
 # Super Earth Arsenal native pack
 
 Super Earth Arsenal modpack for HellForge SDK 13 or newer and game build 25480438.
-Choose from 26 independent options and 29 One True Flag damage presets.
+Choose from 27 source configuration options and 29 One True Flag damage presets.
 Python 3.10 or later configures the selection. PowerShell 7 and HellForge's
 pinned compiler prepare the local assets.
 
 1. Close the game. Extract the source pack into a new folder.
 2. Set each option to `true` or `false` in `pack-config.json`. The Flag's
-   `normal` and `durable` values select its damage preset. All 26 options are
+   `normal` and `durable` values select its damage preset. All 27 options are
    listed; names and behavior are in [PLAYER-GUIDE.md](PLAYER-GUIDE.md).
 3. Create a new configured source folder:
 

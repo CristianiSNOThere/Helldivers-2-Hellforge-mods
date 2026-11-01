@@ -27,7 +27,8 @@
     "adjudicator-heavy": true,
     "punisher-plasma": true,
     "gl52-de-escalator": true,
-    "plas-15-loyalist": true
+    "plas-15-loyalist": true,
+    "rock-solid": true
   },
   "flag": {
     "normal": 300,

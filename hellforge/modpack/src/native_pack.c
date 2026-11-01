@@ -34,6 +34,9 @@ static int hf_component_api_read(void* context,uintptr_t at,void* bytes,size_t s
 #endif
 #endif
 
+#ifndef HF_PORT_ROCK_SOLID
+#define HF_PORT_ROCK_SOLID 0u
+#endif
 #ifndef HF_PORT_VG_70_VARIABLE
 #define HF_PORT_VG_70_VARIABLE 0u
 #endif
@@ -64,6 +67,11 @@ static int hf_component_api_read(void* context,uintptr_t at,void* bytes,size_t s
 #define HF_PORT_ALLOW_NATIVE_RUNTIME 0u
 #else
 #define HF_PORT_ALLOW_NATIVE_RUNTIME 1u
+#endif
+
+#if HF_PORT_ROCK_SOLID && HF_PORT_ALLOW_NATIVE_RUNTIME
+#include "rock_solid.inc"
+#include "rock_solid_text.inc"
 #endif
 
 #include "registry_bridge.inc"
@@ -323,7 +331,11 @@ static void hf_stats_retry_add(const char* option)
 static void hf_stats_retry_start(HfMod* mod, const HfApi* api)
 {
     size_t i;
-    if (HF_STATS_RETRY.count == 0u || HF_STATS_RETRY.registered)
+    int needs_driver = HF_STATS_RETRY.count != 0u;
+#if HF_PORT_ROCK_SOLID && HF_PORT_ALLOW_NATIVE_RUNTIME
+    needs_driver |= hf_rock_needs_driver();
+#endif
+    if (!needs_driver || HF_STATS_RETRY.registered)
         return;
     if (api == NULL)
     {
@@ -333,6 +345,9 @@ static void hf_stats_retry_start(HfMod* mod, const HfApi* api)
     if (api->size < (uint32_t)(offsetof(HfApi, on_game_thread) + sizeof(api->on_game_thread)) ||
         api->on_game_thread == NULL)
     {
+#if HF_PORT_ROCK_SOLID && HF_PORT_ALLOW_NATIVE_RUNTIME
+        hf_rock_driver_failed(api,mod);
+#endif
         for (i = 0u; i < HF_STATS_RETRY.count; ++i)
             api->log(mod, "Refused %s: stats snapshot field is unreadable and HellForge game-thread retry is unavailable",
                      HF_STATS_RETRY.options[i]);
@@ -343,6 +358,9 @@ static void hf_stats_retry_start(HfMod* mod, const HfApi* api)
     HF_STATS_RETRY.mod = mod;
     if (api->on_game_thread(mod, hf_stats_retry_tick, &HF_STATS_RETRY) == 0)
     {
+#if HF_PORT_ROCK_SOLID && HF_PORT_ALLOW_NATIVE_RUNTIME
+        hf_rock_driver_failed(api,mod);
+#endif
         for (i = 0u; i < HF_STATS_RETRY.count; ++i)
             api->log(mod, "Refused %s: stats snapshot field is unreadable and HellForge game-thread retry could not be registered",
                      HF_STATS_RETRY.options[i]);
@@ -359,7 +377,13 @@ static void hf_stats_retry_tick(HfMod* mod, float dt, void* user)
     HfStatsRetryState* retry = (HfStatsRetryState*)user;
     size_t index = 0u;
     (void)dt;
-    if (retry == NULL || retry != &HF_STATS_RETRY || retry->api == NULL || retry->count == 0u)
+    if (retry == NULL || retry != &HF_STATS_RETRY || retry->api == NULL)
+        return;
+#if HF_PORT_ROCK_SOLID && HF_PORT_ALLOW_NATIVE_RUNTIME
+    hf_rock_tick(mod,dt,(void*)retry->api);
+    hf_rock_text_tick(mod,dt,(void*)retry->api);
+#endif
+    if (retry->count == 0u)
         return;
     if (hf_port_monotonic_ms() >= retry->deadline_ms)
     {
@@ -1960,12 +1984,16 @@ HF_MOD_EXPORT int hellforge_mod_init(const HfApi* api, HfMod* mod)
     if (HF_PORT_EDIT_COUNT == 0u && !HF_PORT_SICKLE_LASER_AR && !HF_PORT_VG_70_VARIABLE &&
         !HF_PORT_ARC_3_RAPID_SUPERCHARGE && !HF_PORT_PLAS_39_ACCELERATOR_RIFLE &&
         !HF_PORT_PUNISHER_PLASMA && !HF_PORT_ADJUDICATOR_HEAVY &&
-        !HF_PORT_GL52_DE_ESCALATOR && !HF_PORT_TENDERIZER_ARMOR_SOFTENER && !HF_PORT_RS_422_RAILGUN)
+        !HF_PORT_GL52_DE_ESCALATOR && !HF_PORT_TENDERIZER_ARMOR_SOFTENER && !HF_PORT_RS_422_RAILGUN && !HF_PORT_ROCK_SOLID)
     {
         api->log(mod, "Configuration loaded: no native gameplay options are enabled; Flag preset is %u/%u",
                  (unsigned)HF_PORT_FLAG_NORMAL_DAMAGE, (unsigned)HF_PORT_FLAG_DURABLE_DAMAGE);
         return 0;
     }
+
+#if HF_PORT_ROCK_SOLID && HF_PORT_ALLOW_NATIVE_RUNTIME
+    (void)hf_rock_begin(api,mod);
+#endif
 
 #if HF_PORT_PLAS_45_EPOCH
     if (api->add_damage != NULL)

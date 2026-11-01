@@ -18,12 +18,13 @@ def compose(mod, config_path, out):
     config=json.loads(Path(config_path).read_text(encoding='utf-8'))
     if config.get('schema')!=1 or config.get('baseline')!='2.4.1':raise ValueError('Unknown config schema/baseline')
     options=config.get('options');known=catalog['options']
-    # Older 25-option files preserve all existing choices; the new option is off.
-    if isinstance(options,dict) and set(options)==set(known)-{'plas-15-loyalist'}:
-        options={**options,'plas-15-loyalist':False}
+    # Preserve earlier source selections. Newly added options start disabled.
+    if isinstance(options,dict) and set(options) in (
+            set(known)-{'rock-solid'}, set(known)-{'rock-solid','plas-15-loyalist'}):
+        options={option:options.get(option,False) for option in known}
         config={**config,'options':options}
-    if not isinstance(options,dict) or set(options)!=set(known) or len(known)!=26:
-        raise ValueError('Option keys must match all 26 option IDs (or the prior 25-option selection)')
+    if not isinstance(options,dict) or set(options)!=set(known) or len(known)!=27:
+        raise ValueError('Option keys must match all 27 option IDs (or a prior 25/26-option selection)')
     if not all(type(value)is bool for value in options.values()):raise ValueError('Options must be JSON booleans')
     flag=config.get('flag')
     if not isinstance(flag,dict) or set(flag)!={'normal','durable'}:raise ValueError('Invalid Flag preset')

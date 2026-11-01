@@ -1,10 +1,10 @@
 # Helldivers 2 Hellforge mods
 
-## Super Earth Arsenal Modpack v2.4.8
+## Super Earth Arsenal Modpack v2.4.9
 
-[Download v2.4.8](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.8) | [Installation](hellforge/modpack/INSTALL.md) | [Complete player guide](hellforge/modpack/PLAYER-GUIDE.md)
+[Download v2.4.9](https://github.com/CristianiSNOThere/Helldivers-2-Hellforge-mods/releases/tag/hellforge-modpack-v2.4.9) | [Installation](hellforge/modpack/INSTALL.md) | [Complete player guide](hellforge/modpack/PLAYER-GUIDE.md)
 
-26 weapon and equipment mods, plus 29 One True Flag damage presets. Includes a primary-slot Breaching Hammer with demolition force 50 and enemy-only Large Stun, two-round AP10 Railgun magazines with maximum damage at 80% charge, a 20-round Loyalist with 0.5 sway, backpackless AC-8, Rapid/Supercharge ARC-3, 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul, and selectable Sickle heatsinks.
+27 weapon, equipment and armor mods, plus 29 One True Flag damage presets. Includes a primary-slot Breaching Hammer with demolition force 50 and enemy-only Large Stun, two-round AP10 Railgun magazines with maximum damage at 80% charge, a 20-round Loyalist with 0.5 sway, backpackless AC-8, Rapid/Supercharge ARC-3, 150-round VG-70, dual-mode Punisher Plasma, Gas Overhaul, selectable Sickle heatsinks, and 50% incoming melee damage reduction for Rock-Solid armor.
 
 Requires HellForge SDK 13 or newer, Helldivers 2 build 25480438, Python 3.10 or later and PowerShell 7. Follow the installation guide to choose options and prepare assets from your own HellForge installation. Reselect Sickle heatsinks after starting the game.
 
@@ -162,3 +162,7 @@ Makes the GL-52 easier to aim by raising handling from 25 to 35. Increases maxim
 ## PLAS-15 Loyalist
 
 Increases magazine capacity from 8 to 20 rounds and reduces sway from 1.0 to 0.5, giving 50% less weapon wobble. Each reload refills the 20-round magazine. Keeps its normal and charged shots and its existing spare-magazine counts.
+
+## Rock-Solid Melee Protection
+
+Adds 50% incoming melee damage reduction to Helldivers using the Rock-Solid armor passive. Keeps its 40% melee damage bonus and resistance to being knocked prone. The passive's in-game description includes the new protection.

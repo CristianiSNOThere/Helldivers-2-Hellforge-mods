@@ -1,6 +1,6 @@
 {
   "dll": "super_earth_arsenal.dll",
-  "sha256": "285e9be9b58cc40dadbefdb98155dbb27a206d3e722149f35f44412e7d3d84af",
+  "sha256": "aa9db88beeb32ba8e6433ffea6f641280c6ace5da630daa7d58bc2121aed38d6",
   "game": "25480438",
   "source_sha256": {
     "src/ac8_source_guard.generated.h": "ac299679f95b0525ca5da85ba9e910c6e81981327ec4d518ea6dc478b359e79a",
@@ -37,8 +37,8 @@
     "src/loyalist_magazine_guard.generated.h": "42cbada231551c777ad2da066b6034f2349130be7d27bb3a5ce541c52e4c6a54",
     "src/loyalist_sway_guard.generated.h": "f3cb05ea16e8544bf6e0ce00e3ad064ff5dc7d4ade74a372f1091afb508b75af",
     "src/mastery_overlay.h": "78e4d81ed338d48d4f56394d9430b2564e045cd6e3f33f464216d88d1601e443",
-    "src/native_pack.c": "479fbd152dcf6cfe864fb4dfd8d595f1bf275ae62b3930ca4adc784c1b67f622",
-    "src/pack_config.h": "2e8f59cf1a231e9b7a9c1f400e7811ad0070f2fcb803e51cf2ad1c3d61712154",
+    "src/native_pack.c": "f50422dc9532538319ece972aef194057a12202321a2dadf6f28e03fbfe731d6",
+    "src/pack_config.h": "eda68d68df50e229670b05c78ba0a711584e9c6f3cfc5829282530dd70985097",
     "src/peer_text_guard.h": "4eeb22cf60f2f6e9034749e37ba09952ea836fad9e34ef4e1c34ecb8c0eefd0d",
     "src/plas39_native.inc": "0c880cef79de210d97002a4032816aa3755d482fd7ac7f56857296d7bdf8d1d2",
     "src/plas39_profile.h": "dbe393c570d54f76c1393c0841cafff01f69db268a1a8f79795ce9666c83b526",
@@ -62,6 +62,9 @@
     "src/railgun_guard.generated.h": "a860304ef9cfeb1ad2a0cf7d735c33a33901fc8b83654fe81d1c91e6fe8aa294",
     "src/railgun_private.inc": "e76a1898f536f5ce16c65a8e12332feb9f0db88edd09c41129e328baf60841e0",
     "src/registry_bridge.inc": "39bfdeb850217ad541599e130c629d0ef0b1716718cdf344594ce3bf10977b6d",
+    "src/rock_solid.inc": "da3c468491b2b7a6ad09444db1da7b1c5fe7a5efeb455dc6177f485f30eb979a",
+    "src/rock_solid_pins.generated.h": "e468f57a835ebdaf25f2780662e471152f583bac4478de6f513b8c358c042672",
+    "src/rock_solid_text.inc": "96cc1bf5cd64e3d2238577912476aa7082528bad7dadad8c7204617dc7ffb2c3",
     "src/sai_attachment_core.inc": "b4358b245b8f8fe5cc64c8655a009de65b53060d979460217e1f5da82075e71e",
     "src/sai_attachment_native.inc": "69dd51bac4a44b00a5ae0985cee0b41f93fa01cde1ff912bc69ba43209d2c737",
     "src/sai_attachment_source.generated.h": "37259dc3ebc84b5cfda24ce5291036cc558c784409d0a7869cb82c1a0b51352b",

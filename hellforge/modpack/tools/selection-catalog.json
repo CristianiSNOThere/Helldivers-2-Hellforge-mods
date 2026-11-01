@@ -105,6 +105,10 @@
     "plas-15-loyalist": {
       "name": "PLAS-15 Loyalist",
       "macro": "HF_PORT_PLAS_15_LOYALIST"
+    },
+    "rock-solid": {
+      "name": "Rock-Solid Melee Protection",
+      "macro": "HF_PORT_ROCK_SOLID"
     }
   },
   "flag_normal": [

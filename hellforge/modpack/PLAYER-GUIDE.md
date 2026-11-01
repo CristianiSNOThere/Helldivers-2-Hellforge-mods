@@ -143,3 +143,6 @@ Makes the GL-52 easier to aim by raising handling from 25 to 35. Increases maxim
 
 Increases magazine capacity from 8 to 20 rounds and reduces sway from 1.0 to 0.5, giving 50% less weapon wobble. Each reload refills the 20-round magazine. Keeps its normal and charged shots and its existing spare-magazine counts.
 
+## Rock-Solid Melee Protection
+
+Adds 50% incoming melee damage reduction to Helldivers using the Rock-Solid armor passive. Keeps its 40% melee damage bonus and resistance to being knocked prone. The passive's in-game description includes the new protection.
